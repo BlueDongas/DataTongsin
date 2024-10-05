@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 # 다운로드할 파일을 요청하는 함수
 def request_file(client_socket):
     print("request_file")
@@ -14,9 +15,10 @@ def connect_to_server(server_address, server_port, server_name): #client handler
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect((server_address, server_port))
         print(f"Connected to {server_name} on port {server_port}")
-        request_thread = threading.Thread(target=request_file, args=(client_socket))
-        receive_thread = threading.Thread(target=request_file, args=(client_socket))
-        
+        time.sleep(10)
+        request_thread = threading.Thread(target=request_file, args=(client_socket,))
+        receive_thread = threading.Thread(target=request_file, args=(client_socket,))
+
         request_thread.start()
         receive_thread.start()
         print("good job jaewook")
