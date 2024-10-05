@@ -2,9 +2,11 @@ import socket
 import threading
 
 def handle_cache(cache_socket, cache_id):
+    print("handle_cache")
     return 0
 
 def handle_client(client_socket, client_id):
+    print("handle_client")
     return 0
 
 def accept_cache(server_socket, num_cache):

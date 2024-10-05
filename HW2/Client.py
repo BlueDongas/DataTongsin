@@ -2,9 +2,11 @@ import socket
 import threading
 # 다운로드할 파일을 요청하는 함수
 def request_file(client_socket):
+    print("request_file")
     return 0
 # 서버들로부터 정보를 받는 함수
 def receive_file(client_socket):
+    print("receive_file")
     return 0
 
 def connect_to_server(server_address, server_port, server_name): #client handler
@@ -17,7 +19,7 @@ def connect_to_server(server_address, server_port, server_name): #client handler
         
         request_thread.start()
         receive_thread.start()
-        
+        print("good job jaewook")
         request_thread.join()
         receive_thread.join()
     finally:
