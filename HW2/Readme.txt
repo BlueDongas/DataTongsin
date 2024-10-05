@@ -38,7 +38,7 @@ aws 외부서버에 data server와 cache server 2개 총 3개의 서버를 실�
 3. cache server에 파일이 존재하지 않고, 다운도 불가능한 상태라면 data server로 직접 다운받도록 한다.
 4. 0~3을 반복한다.
 알고리즘
-가나다라마사바
+
 ## Error or Additional Message Handling
 
 ##Additional Comments
