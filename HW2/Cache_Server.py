@@ -44,9 +44,15 @@ def cache_server(port):
 
     data_socket = connect_to_data_server_as_client()  # 데이터 서버와 연결
     
-    while True:
-        client_socket, addr = server_socket.accept()
-        threading.Thread(target=handle_client, args=(client_socket, addr, data_socket)).start()
+    try:
+        while True:
+            client_socket, addr = server_socket.accept()
+            threading.Thread(target=handle_client, args=(client_socket, addr, data_socket)).start()
+    except KeyboardInterrupt:
+        print("Shutting down cache server.")
+    finally:
+        server_socket.close()
+        data_socket.close()
 
 if __name__ == "__main__":
     port = int(input("Enter cache server port (20000 or 30000): "))  # 포트를 입력받아 캐시 서버 실행
