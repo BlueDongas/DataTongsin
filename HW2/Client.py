@@ -99,23 +99,39 @@ def connect_to_server(server_address, server_port, server_name, request_queue): 
 # 클라이언트가 데이터 서버와 2개의 캐시 서버에 각각 연결
 def client():
     # 각 서버에 대한 정보를 설정
-    Data_server = ('localhost', 10000, 'Data Server') #7454 이상 요청하기
+    Data_server = ('localhost', 10000, 'Data Server') #7412 이상 요청하기
     Even_Cache_server = ('localhost', 20000, 'Cache Server 1') #짝수 요청
     Odd_Cache_server = ('localhost', 30000, 'Cache Server 2')  #홀수 요청
 
     Odd_list = [] #홀수
     Even_list = [] #짝수 
     Data_request_queue = [] #데이터 서버로 부터 요청받을 파일들 
+    
+    target = 7412
+    average = 0
+    sum = 0
+    count = 0
 
     for _ in range(1000):
         file_number = random.randint(1,10000)
-        if file_number >= 7454:
+        if file_number > target:
             Data_request_queue.append(file_number)
         else:
             if file_number % 2 == 0:
                 Even_list.append(file_number)
             else : 
                 Odd_list.append(file_number)
+
+        # target의 값을 적응형으로 변경
+        sum += file_number
+        count += 1
+        average = sum / count
+
+        if average * 1.26 > target:
+            target += 1
+        elif average * 1.26 < target:
+            target -= 1
+
         file_queue.put(file_number)
     
     Data_thread = threading.Thread(target=connect_to_server, args=(Data_server[0],Data_server[1],Data_server[2],Data_request_queue))
