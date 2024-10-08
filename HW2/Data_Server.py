@@ -1,18 +1,32 @@
 import socket
 import threading
+import pickle
 
 # 가상 파일 목록 및 크기 (1 ~ 10000번 파일, 크기는 파일 번호에 비례)
 virtual_files = {i: i for i in range(1, 10001)}
 Data_Clock = 0
 connected_clients = 0  # 연결된 클라이언트 수 추적
 client_lock = threading.Lock()
+
+
+
 # 캐시 서버가 요청한 파일을 처리하는 함수
 def handle_cache(cache_socket, cache_id):
-    print("handle_cache")
+    try:
+        cache_socket.sendall(pickle.dumps(cache_id))
+    except Exception as e:
+        print(f"Error send cache_id : {e}")
+    finally:
+        cache_socket.close()
 
 # 클라이언트가 요청한 파일을 처리하는 함수
 def handle_client(client_socket, client_id):
-    print("handle_client")
+    try:
+        client_socket.sendall(pickle.dumps(client_id)) # 해당 클라이언트한테 고유 ID 전달
+    except Exception as e:
+        print(f"Error : {e}")    
+    finally:
+        client_socket.close()
 
 # 캐시 서버를 처리하는 함수
 def accept_cache(server_socket, num_cache):

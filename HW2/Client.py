@@ -6,13 +6,11 @@ import random
 import struct
 import pickle
 
-worker_id = None
+client_id = None
 log_file = None
 
 file_queue = queue.Queue() #다운받을 리스트
 file_queue_lock = threading.Lock()
-
-
 
 def send_result(client_socket, result):
     data_to_send = pickle.dumps(result)
@@ -23,7 +21,7 @@ def send_result(client_socket, result):
 
 # 다운로드할 파일을 요청하는 함수
 def request_file(client_socket,request_queue,server_name):
-    print(request_queue)
+    flag_rq = "request"
     try:
         while True:
             with file_queue_lock:
@@ -36,7 +34,7 @@ def request_file(client_socket,request_queue,server_name):
             try:
                 if file_number == request_queue[0]:
                     print(f"Request file{file_number} to {server_name}")
-                    send_result(client_socket,file_number)
+                    send_result(client_socket,file_number,flag_rq)
                     request_queue.pop(0)
                 else:
                     continue
@@ -78,7 +76,31 @@ def receive_file(client_socket,server_name):
             print("Error receiving data because {e}")
     return 0
 
-def connect_to_server(server_address, server_port, server_name, request_queue): #client handler
+def connect_to_data_server(server_address, server_port, server_name, request_queue):
+    global client_id
+    try:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.settimeout(10)
+        client_socket.connect((server_address, server_port))
+
+        client_id = pickle.loads(client_socket.recv(1024))
+
+        print(f"Connected to {server_name} on port {server_port}")
+        time.sleep(10)
+        request_thread = threading.Thread(target=request_file, args=(client_socket,request_queue,server_name))
+        receive_thread = threading.Thread(target=request_file, args=(client_socket,server_name))
+
+        request_thread.start()
+        receive_thread.start()
+        print("good job jaewook")
+        request_thread.join()
+        receive_thread.join()
+    finally:
+        client_socket.close()
+        print(f"Connection closed for client")
+
+
+def connect_to_cache_server(server_address, server_port, server_name, request_queue): #client handler
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect((server_address, server_port))
@@ -118,9 +140,9 @@ def client():
                 Odd_list.append(file_number)
         file_queue.put(file_number)
     
-    Data_thread = threading.Thread(target=connect_to_server, args=(Data_server[0],Data_server[1],Data_server[2],Data_request_queue))
-    Even_Cache_thread = threading.Thread(target=connect_to_server, args=(Even_Cache_server[0],Even_Cache_server[1],Even_Cache_server[2],Even_list))
-    Odd_Cache_thread = threading.Thread(target=connect_to_server, args=(Odd_Cache_server[0],Odd_Cache_server[1],Odd_Cache_server[2],Odd_list))
+    Data_thread = threading.Thread(target=connect_to_data_server, args=(Data_server[0],Data_server[1],Data_server[2],Data_request_queue))
+    Even_Cache_thread = threading.Thread(target=connect_to_cache_server, args=(Even_Cache_server[0],Even_Cache_server[1],Even_Cache_server[2],Even_list))
+    Odd_Cache_thread = threading.Thread(target=connect_to_cache_server, args=(Odd_Cache_server[0],Odd_Cache_server[1],Odd_Cache_server[2],Odd_list))
     
     Data_thread.start()
     Even_Cache_thread.start()
