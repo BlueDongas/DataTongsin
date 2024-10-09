@@ -1,9 +1,7 @@
 import socket
 import threading
 import time
-import list
 import random
-import struct
 import pickle
 
 client_id = None
