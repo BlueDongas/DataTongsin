@@ -2,43 +2,50 @@ import socket
 import threading
 import pickle
 import queue
+
 # 가상 파일 목록 및 크기 (1 ~ 10000번 파일, 크기는 파일 번호에 비례)
 virtual_files = {i: i for i in range(1, 10001)}
 client_lock = threading.Lock()
 file_number_queue = queue.Queue()
 file_number_queue_semaphore = threading.Semaphore(4)
 
+# 클라이언트가 요청한 파일을 처리하는 함수
 def receive_cache_file(cache_socket, cache_id):
-    try:
-        # 파일 번호를 받아서 해당 파일을 전송하는 로직
-        receive_file = cache_socket.recv(1024)
-        file_number = pickle.loads(receive_file)
-        
-        file_number_queue.put(file_number)
-        print(f"cache {cache_id} requested file {file_number}.")
-        #클락 + 속도 구하는 로직 추가
+    while True:
+        try:
+            # 파일 번호를 받아서 해당 파일을 전송하는 로직
+            receive_file = cache_socket.recv(1024)
+            file_number = pickle.loads(receive_file)
+            
+            file_number_queue.put(file_number)
+            print(f"Cache {cache_id} requested file {file_number}.")
+            # 클락 + 속도 구하는 로직 추가
 
-    except Exception as e:
-        print(f"Error sending file to client {cache_id}: {e}")
-    finally:
-        cache_socket.close()
+        except Exception as e:
+            print(f"Error sending file to client {cache_id}: {e}")
+            break
+        finally:
+            cache_socket.close()
 
 def send_cache_file(cache_socket, cache_id):
-    try:
-        file_number = file_number_queue.get()
-        download_time = file_number / 2000 # 2Mbps 다운로드
-        send_data = pickle.dumps(download_time)
-        cache_socket.sendall(send_data) #clock 보내기 변경해야댐
-        
-        print(f"send file {file_number} to {cache_id}")
-    except Exception as e:
-        print(f"Error sending file to cache {cache_id}: {e}")
-    finally:
-        cache_socket.close()
+    while True:
+        try:
+            file_number = file_number_queue.get()
+            download_time = file_number / 2000  # 2Mbps 다운로드 시간 계산
+            send_data = pickle.dumps(download_time)
+            cache_socket.sendall(send_data)
+            
+            print(f"Send file {file_number} to {cache_id}")
+        except Exception as e:
+            print(f"Error sending file to cache {cache_id}: {e}")
+            break
+        finally:
+            cache_socket.close()
+
 # 캐시 서버가 요청한 파일을 처리하는 함수
 def handle_cache(cache_socket, cache_id):
     try:
-        cache_socket.sendall(pickle.dumps(cache_id)) # 해당 클라이언트한테 고유 ID 전달
+        cache_socket.sendall(pickle.dumps(cache_id))  # 해당 클라이언트한테 고유 ID 전달
         receive_cache_thread = threading.Thread(target=receive_cache_file, args=(cache_socket, cache_id))
         send_cache_thread = threading.Thread(target=send_cache_file, args=(cache_socket, cache_id))
 
@@ -51,38 +58,41 @@ def handle_cache(cache_socket, cache_id):
         cache_socket.close()
 
 def receive_file(client_socket, client_id):
-    try:
-        # 파일 번호를 받아서 해당 파일을 전송하는 로직
-        receive_file = client_socket.recv(1024)
-        file_number = pickle.loads(receive_file)
-        
-        file_number_queue.put(file_number)
-        print(f"Client {client_id} requested file {file_number}.")
-        #클락 + 속도 구하는 로직 추가
+    while True:
+        try:
+            # 파일 번호를 받아서 해당 파일을 전송하는 로직
+            receive_file = client_socket.recv(1024)
+            file_number = pickle.loads(receive_file)
+            
+            file_number_queue.put(file_number)
+            print(f"Client {client_id} requested file {file_number}.")
+            # 클락 + 속도 구하는 로직 추가
 
-    except Exception as e:
-        print(f"Error sending file to client {client_id}: {e}")
-    finally:
-        client_socket.close()
+        except Exception as e:
+            print(f"Error receive file to client {client_id}: {e}")
+            break
+        finally:
+            client_socket.close()
 
 def send_file(client_socket, client_id):
-    try:
-        file_number = file_number_queue.get()
-        download_time = file_number / 1000 # 1Mbps 다운로드
-        send_data = pickle.dumps(download_time)
-        client_socket.sendall(send_data)
+    while True:
+        try:
+            file_number = file_number_queue.get()
+            download_time = file_number / 1000  # 1Mbps 다운로드 시간 계산
+            send_data = pickle.dumps(download_time)
+            client_socket.sendall(send_data)
+            
+            print(f"Send file {file_number} to {client_id}")
+        except Exception as e:
+            print(f"Error sending file to client {client_id}: {e}")
+            break
+        finally:
+            client_socket.close()
         
-        print(f"send file {file_number} to {client_id}")
-    except Exception as e:
-        print(f"Error sending file to client {client_id}: {e}")
-    finally:
-        client_socket.close()
-        
-    
 # 클라이언트가 요청한 파일을 처리하는 함수
 def handle_client(client_socket, client_id):
     try:
-        client_socket.sendall(pickle.dumps(client_id)) # 해당 클라이언트한테 고유 ID 전달
+        client_socket.sendall(pickle.dumps(client_id))  # 해당 클라이언트한테 고유 ID 전달
         receive_thread = threading.Thread(target=receive_file, args=(client_socket, client_id))
         send_thread = threading.Thread(target=send_file, args=(client_socket, client_id))
 

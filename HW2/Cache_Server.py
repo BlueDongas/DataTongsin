@@ -43,6 +43,7 @@ def receive_file_to_client(client_socket,data_socket):
 
         except Exception as e:
             print(f"Error to recive file to client")
+            break
 
 def send_file_to_client(client_socket,send_data):
     return 0
@@ -52,13 +53,13 @@ def send_file_to_client(client_socket,send_data):
 def handle_client(client_socket, address, data_socket):
     try:
         receive_thread = threading.Thread(target=receive_file_to_client,args=(client_socket,data_socket))
-        send_thread = threading.Thread(target=send_file_to_client,args=(client_socket))
+        #send_thread = threading.Thread(target=send_file_to_client,args=(client_socket, data))
 
         receive_thread.start()
-        send_thread.start()
+        #send_thread.start()
 
         receive_thread.join()
-        send_thread.join()
+        #send_thread.join()
     finally:
         client_socket.close()
         data_socket.close()
