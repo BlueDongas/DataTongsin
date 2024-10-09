@@ -28,7 +28,7 @@ def send_cache_file(cache_socket, cache_id):
         file_number = file_number_queue.get()
         download_time = file_number / 2000 # 2Mbps 다운로드
         send_data = pickle.dumps(download_time)
-        cache_socket.sendall(send_data)
+        cache_socket.sendall(send_data) #clock 보내기 변경해야댐
         
         print(f"send file {file_number} to {cache_id}")
     except Exception as e:
