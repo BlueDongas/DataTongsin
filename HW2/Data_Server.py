@@ -1,27 +1,43 @@
 import socket
 import threading
 import pickle
-
+import queue
 # 가상 파일 목록 및 크기 (1 ~ 10000번 파일, 크기는 파일 번호에 비례)
 virtual_files = {i: i for i in range(1, 10001)}
 Data_Clock = 0
 connected_clients = 0  # 연결된 클라이언트 수 추적
 client_lock = threading.Lock()
-file_number = 0
+file_number_queue = queue.Queue()
+file_number_queue_semaphore = threading.Semaphore(4)
 
+def receive_cache_file(cache_socket, cache_id):
+    try:
+        # 파일 번호를 받아서 해당 파일을 전송하는 로직
+        receive_file = cache_socket.recv(1024)
+        file_number = pickle.loads(receive_file)
+
+        print(f"Client {cache_id} requested file {file_number}.")
+        #클락 + 속도 구하는 로직 추가
+
+    except Exception as e:
+        print(f"Error sending file to client {cache_id}: {e}")
+    finally:
+        cache_socket.close()
+
+def send_cache_file(cache_socket, cache_id):
 
 # 캐시 서버가 요청한 파일을 처리하는 함수
 def handle_cache(cache_socket, cache_id):
     try:
         cache_socket.sendall(pickle.dumps(cache_id)) # 해당 클라이언트한테 고유 ID 전달
-        receive_thread = threading.Thread(target=receive_file, args=(cache_socket, cache_id))
-        send_thread = threading.Thread(target=send_file, args=(cache_socket, cache_id))
+        receive_cache_thread = threading.Thread(target=receive_cache_file, args=(cache_socket, cache_id))
+        send_cache_thread = threading.Thread(target=send_cache_file, args=(cache_socket, cache_id))
 
-        receive_thread.start()
-        send_thread.start()
+        receive_cache_thread.start()
+        send_cache_thread.start()
 
-        receive_thread.join()
-        send_thread.join()
+        receive_cache_thread.join()
+        send_cache_thread.join()
     finally:
         cache_socket.close()
 
@@ -30,7 +46,8 @@ def receive_file(client_socket, client_id):
         # 파일 번호를 받아서 해당 파일을 전송하는 로직
         receive_file = client_socket.recv(1024)
         file_number = pickle.loads(receive_file)
-
+        
+        file_number_queue.put(file_number)
         print(f"Client {client_id} requested file {file_number}.")
         #클락 + 속도 구하는 로직 추가
 
@@ -41,6 +58,7 @@ def receive_file(client_socket, client_id):
 
 def send_file(client_socket, client_id):
     try:
+        file_number = file_number_queue.get()
         send_file = pickle.dumps(file_number)
         client_socket.sendall(send_file)
         
