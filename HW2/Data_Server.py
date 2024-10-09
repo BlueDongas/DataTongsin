@@ -29,7 +29,7 @@ def send_cache_file(cache_socket, cache_id):
     while True:
         try:
             file_number = file_number_queue.get()
-            download_time = file_number / 2000  # 2Mbps 다운로드 시간 계산
+            download_time = int(file_number) / 2000  # 2Mbps 다운로드 시간 계산
             send_data = pickle.dumps(download_time)
             cache_socket.sendall(send_data)
             
@@ -72,7 +72,7 @@ def send_file(client_socket, client_id):
     while True:
         try:
             file_number = file_number_queue.get()
-            download_time = file_number / 1000  # 1Mbps 다운로드 시간 계산
+            download_time = int(file_number) / 1000  # 1Mbps 다운로드 시간 계산
             send_data = pickle.dumps(download_time)
             client_socket.sendall(send_data)
             

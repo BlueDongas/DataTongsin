@@ -22,7 +22,7 @@ def request_file(client_socket,request_list,server_name):
             with file_list_lock:
                 if not file_list:
                     print("All task complete")
-                    send_result(client_socket,"complete")
+                    #send_result(client_socket,"complete")
                     break
                 file_number = file_list[0]
             if not request_list:
@@ -119,7 +119,7 @@ def client():
     sum = 0
     count = 0
 
-    for _ in range(10):
+    for _ in range(10): #테스트용 나중에 1000개로 수정
         file_number = random.randint(1,10000)
         if file_number > target:
             Data_request_list.append(file_number)
