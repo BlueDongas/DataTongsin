@@ -60,9 +60,8 @@ def handle_client(client_socket, address, data_socket):
 
         receive_thread.join()
         #send_thread.join()
-    finally:
-        client_socket.close()
-        data_socket.close()
+    except Exception as e:
+        print(f"Error handle_clientbecause {e} ")
 
 def handle_data():
     return 0
