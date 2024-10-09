@@ -1,7 +1,7 @@
 import socket
 import threading
 import time
-import queue
+import list
 import random
 import struct
 import pickle
@@ -9,30 +9,32 @@ import pickle
 client_id = None
 log_file = None
 
-file_queue = queue.Queue() #다운받을 리스트
-file_queue_lock = threading.Lock()
+file_list = [] #다운받을 리스트
+file_list_lock = threading.Lock()
 
 def send_result(client_socket, result):
     data_to_send = pickle.dumps(result)
     client_socket.sendall(data_to_send)
 
 # 다운로드할 파일을 요청하는 함수
-def request_file(client_socket,request_queue,server_name):
+def request_file(client_socket,request_list,server_name):
     flag_rq = "request"
     try:
         while True:
-            with file_queue_lock:
-                if file_queue.empty():
+            with file_list_lock:
+                if not file_list:
                     print("All task complete")
                     break
-                file_number = file_queue.get()
-            if not request_queue:
+                file_number = file_list[0]
+            if not request_list:
                 continue
             try:
-                if file_number == request_queue[0]:
+                if file_number == request_list[0]:
+                    with file_list_lock:
+                        file_list.pop(0)
                     print(f"Request file{file_number} to {server_name}")
                     send_result(client_socket,file_number,flag_rq)
-                    request_queue.pop(0)
+                    request_list.pop(0)
                 else:
                     continue
             except Exception as e:
@@ -60,7 +62,7 @@ def receive_file(client_socket,server_name):
             print("Error receiving data because {e}")
     return 0
 
-def connect_to_data_server(server_address, server_port, server_name, request_queue):
+def connect_to_data_server(server_address, server_port, server_name, request_list):
     global client_id
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -71,7 +73,7 @@ def connect_to_data_server(server_address, server_port, server_name, request_que
 
         print(f"Connected to {server_name} on port {server_port}")
         time.sleep(10)
-        request_thread = threading.Thread(target=request_file, args=(client_socket,request_queue,server_name))
+        request_thread = threading.Thread(target=request_file, args=(client_socket,request_list,server_name))
         receive_thread = threading.Thread(target=receive_file, args=(client_socket,server_name))
 
         request_thread.start()
@@ -84,13 +86,13 @@ def connect_to_data_server(server_address, server_port, server_name, request_que
         print(f"Connection closed for client")
 
 
-def connect_to_cache_server(server_address, server_port, server_name, request_queue): #client handler
+def connect_to_cache_server(server_address, server_port, server_name, request_list): #client handler
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect((server_address, server_port))
         print(f"Connected to {server_name} on port {server_port}")
         time.sleep(10)
-        request_thread = threading.Thread(target=request_file, args=(client_socket,request_queue,server_name))
+        request_thread = threading.Thread(target=request_file, args=(client_socket,request_list,server_name))
         receive_thread = threading.Thread(target=receive_file, args=(client_socket,server_name))
 
         request_thread.start()
@@ -111,7 +113,7 @@ def client():
 
     Odd_list = [] #홀수
     Even_list = [] #짝수 
-    Data_request_queue = [] #데이터 서버로 부터 요청받을 파일들 
+    Data_request_list = [] #데이터 서버로 부터 요청받을 파일들 
     
     target = 7412
     average = 0
@@ -121,7 +123,7 @@ def client():
     for _ in range(1000):
         file_number = random.randint(1,10000)
         if file_number > target:
-            Data_request_queue.append(file_number)
+            Data_request_list.append(file_number)
         else:
             if file_number % 2 == 0:
                 Even_list.append(file_number)
@@ -138,9 +140,9 @@ def client():
         elif average * 1.26 < target:
             target -= 1
 
-        file_queue.put(file_number)
+        file_list.append(file_number)
     
-    Data_thread = threading.Thread(target=connect_to_data_server, args=(Data_server[0],Data_server[1],Data_server[2],Data_request_queue))
+    Data_thread = threading.Thread(target=connect_to_data_server, args=(Data_server[0],Data_server[1],Data_server[2],Data_request_list))
     Even_Cache_thread = threading.Thread(target=connect_to_cache_server, args=(Even_Cache_server[0],Even_Cache_server[1],Even_Cache_server[2],Even_list))
     Odd_Cache_thread = threading.Thread(target=connect_to_cache_server, args=(Odd_Cache_server[0],Odd_Cache_server[1],Odd_Cache_server[2],Odd_list))
     
