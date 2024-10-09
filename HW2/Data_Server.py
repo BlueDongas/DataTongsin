@@ -15,8 +15,9 @@ def receive_cache_file(cache_socket, cache_id):
         # 파일 번호를 받아서 해당 파일을 전송하는 로직
         receive_file = cache_socket.recv(1024)
         file_number = pickle.loads(receive_file)
-
-        print(f"Client {cache_id} requested file {file_number}.")
+        
+        file_number_queue.put(file_number)
+        print(f"cache {cache_id} requested file {file_number}.")
         #클락 + 속도 구하는 로직 추가
 
     except Exception as e:
@@ -25,7 +26,16 @@ def receive_cache_file(cache_socket, cache_id):
         cache_socket.close()
 
 def send_cache_file(cache_socket, cache_id):
-
+    try:
+        file_number = file_number_queue.get()
+        send_file = pickle.dumps(file_number)
+        cache_socket.sendall(send_file)
+        
+        print(f"send file {file_number} to {cache_id}")
+    except Exception as e:
+        print(f"Error sending file to cache {cache_id}: {e}")
+    finally:
+        cache_socket.close()
 # 캐시 서버가 요청한 파일을 처리하는 함수
 def handle_cache(cache_socket, cache_id):
     try:
