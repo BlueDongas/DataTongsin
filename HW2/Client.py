@@ -14,9 +14,6 @@ file_queue_lock = threading.Lock()
 
 def send_result(client_socket, result):
     data_to_send = pickle.dumps(result)
-
-    data_size = len(data_to_send)
-    client_socket.sendall(struct.pack('Q', data_size))
     client_socket.sendall(data_to_send)
 
 # 다운로드할 파일을 요청하는 함수
@@ -48,28 +45,14 @@ def request_file(client_socket,request_queue,server_name):
 def receive_file(client_socket,server_name):
     while True: 
         try:
-            packed_size = client_socket.recv(8)
-            if not packed_size:
-                print(f"failed to receive data because of data size.")
-                break
-            data_size = struct.unpack('Q',packed_size)[0]
-            data = b""
-            while len(data)<data_size:
-                packet = client_socket.recv(1024)
-                if not packet:
-                    print(f"Failed to receive packet.")
-                    break
-                data+=packet
+            receive_data = client_socket.recv(1024)
             try:
-                receive_result = pickle.loads(data)
+                receive_result = pickle.loads(receive_data)
                 print(f"Received data from {server_name}: {receive_result}")
             except pickle.UnpicklingError as e:
                 print(f"Error unpickling data : {e}")
                 break
             # 받은 데이터 정리할 코드 필요 
-
-
-
 
         except socket.timeout:
             print(f"Connection timed out ")
@@ -112,7 +95,7 @@ def connect_to_cache_server(server_address, server_port, server_name, request_qu
 
         request_thread.start()
         receive_thread.start()
-        print("good job jaewook")
+
         request_thread.join()
         receive_thread.join()
     finally:

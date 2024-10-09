@@ -28,8 +28,9 @@ def receive_cache_file(cache_socket, cache_id):
 def send_cache_file(cache_socket, cache_id):
     try:
         file_number = file_number_queue.get()
-        send_file = pickle.dumps(file_number)
-        cache_socket.sendall(send_file)
+        download_time = file_number / 2000 # 2Mbps 다운로드
+        send_data = pickle.dumps(download_time)
+        cache_socket.sendall(send_data)
         
         print(f"send file {file_number} to {cache_id}")
     except Exception as e:
@@ -69,8 +70,9 @@ def receive_file(client_socket, client_id):
 def send_file(client_socket, client_id):
     try:
         file_number = file_number_queue.get()
-        send_file = pickle.dumps(file_number)
-        client_socket.sendall(send_file)
+        download_time = file_number / 1000 # 1Mbps 다운로드
+        send_data = pickle.dumps(download_time)
+        client_socket.sendall(send_data)
         
         print(f"send file {file_number} to {client_id}")
     except Exception as e:
