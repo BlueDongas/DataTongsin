@@ -22,6 +22,7 @@ def request_file(client_socket,request_list,server_name):
             with file_list_lock:
                 if not file_list:
                     print("All task complete")
+                    send_result(client_socket,"complete")
                     break
                 file_number = file_list[0]
             if not request_list:
