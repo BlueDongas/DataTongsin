@@ -18,19 +18,7 @@ def request_to_data_server(cache_server_socket, data_socket):
 
 # 클라이언트 요청 처리
 def handle_client(client_socket, address, data_socket):
-    print(f"Client {address} connected to Cache Server.")
-    while True:
-        try:
-            data = client_socket.recv(1024)
-            if not data:
-                break
-            print(f"Received from Client {address}: {data.decode()}")
-            # 캐시에 파일이 없으면 데이터 서버에 요청
-            threading.Thread(target=connect_to_data_server, args=(client_socket, data_socket)).start()
-        except:
-            break
-    print(f"Client {address} disconnected.")
-    client_socket.close()
+    return 0
 
 # 데이터 서버에 연결
 def connect_to_data_server_as_client():
