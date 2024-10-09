@@ -24,8 +24,6 @@ def receive_cache_file(cache_socket, cache_id):
         except Exception as e:
             print(f"Error sending file to client {cache_id}: {e}")
             break
-        finally:
-            cache_socket.close()
 
 def send_cache_file(cache_socket, cache_id):
     while True:
@@ -39,8 +37,6 @@ def send_cache_file(cache_socket, cache_id):
         except Exception as e:
             print(f"Error sending file to cache {cache_id}: {e}")
             break
-        finally:
-            cache_socket.close()
 
 # 캐시 서버가 요청한 파일을 처리하는 함수
 def handle_cache(cache_socket, cache_id):
@@ -71,8 +67,6 @@ def receive_file(client_socket, client_id):
         except Exception as e:
             print(f"Error receive file to client {client_id}: {e}")
             break
-        finally:
-            client_socket.close()
 
 def send_file(client_socket, client_id):
     while True:
@@ -86,8 +80,6 @@ def send_file(client_socket, client_id):
         except Exception as e:
             print(f"Error sending file to client {client_id}: {e}")
             break
-        finally:
-            client_socket.close()
         
 # 클라이언트가 요청한 파일을 처리하는 함수
 def handle_client(client_socket, client_id):
@@ -111,7 +103,7 @@ def accept_cache(server_socket, num_cache):
     for cache_id in range(1, num_cache + 1):
         cache_socket, addr = server_socket.accept()
         cache_sockets.append((cache_socket, addr))
-        cache_socket.settimeout(10)
+        cache_socket.settimeout(100)
 
     threads = []
     for cache_id, (cache_socket, addr) in enumerate(cache_sockets, 1):

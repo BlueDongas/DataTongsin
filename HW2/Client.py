@@ -32,7 +32,7 @@ def request_file(client_socket,request_list,server_name):
                     with file_list_lock:
                         file_list.pop(0)
                     print(f"Request file{file_number} to {server_name}")
-                    send_result(client_socket,file_number,flag_rq)
+                    send_result(client_socket,file_number)
                     request_list.pop(0)
                 else:
                     continue
@@ -71,7 +71,7 @@ def connect_to_data_server(server_address, server_port, server_name, request_lis
         client_id = pickle.loads(client_socket.recv(1024))
 
         print(f"Connected to {server_name} on port {server_port}")
-        time.sleep(10)
+
         request_thread = threading.Thread(target=request_file, args=(client_socket,request_list,server_name))
         receive_thread = threading.Thread(target=receive_file, args=(client_socket,server_name))
 
@@ -119,7 +119,7 @@ def client():
     sum = 0
     count = 0
 
-    for _ in range(1000):
+    for _ in range(10):
         file_number = random.randint(1,10000)
         if file_number > target:
             Data_request_list.append(file_number)
