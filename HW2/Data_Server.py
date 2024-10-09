@@ -4,8 +4,6 @@ import pickle
 import queue
 # 가상 파일 목록 및 크기 (1 ~ 10000번 파일, 크기는 파일 번호에 비례)
 virtual_files = {i: i for i in range(1, 10001)}
-Data_Clock = 0
-connected_clients = 0  # 연결된 클라이언트 수 추적
 client_lock = threading.Lock()
 file_number_queue = queue.Queue()
 file_number_queue_semaphore = threading.Semaphore(4)
