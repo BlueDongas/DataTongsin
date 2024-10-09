@@ -7,24 +7,62 @@ virtual_files = {i: i for i in range(1, 10001)}
 Data_Clock = 0
 connected_clients = 0  # 연결된 클라이언트 수 추적
 client_lock = threading.Lock()
-
+file_number = 0
 
 
 # 캐시 서버가 요청한 파일을 처리하는 함수
 def handle_cache(cache_socket, cache_id):
     try:
-        cache_socket.sendall(pickle.dumps(cache_id))
-    except Exception as e:
-        print(f"Error send cache_id : {e}")
+        cache_socket.sendall(pickle.dumps(cache_id)) # 해당 클라이언트한테 고유 ID 전달
+        receive_thread = threading.Thread(target=receive_file, args=(cache_socket, cache_id))
+        send_thread = threading.Thread(target=send_file, args=(cache_socket, cache_id))
+
+        receive_thread.start()
+        send_thread.start()
+
+        receive_thread.join()
+        send_thread.join()
     finally:
         cache_socket.close()
 
+def receive_file(client_socket, client_id):
+    try:
+        # 파일 번호를 받아서 해당 파일을 전송하는 로직
+        receive_file = client_socket.recv(1024)
+        file_number = pickle.loads(receive_file)
+
+        print(f"Client {client_id} requested file {file_number}.")
+        #클락 + 속도 구하는 로직 추가
+
+    except Exception as e:
+        print(f"Error sending file to client {client_id}: {e}")
+    finally:
+        client_socket.close()
+
+def send_file(client_socket, client_id):
+    try:
+        send_file = pickle.dumps(file_number)
+        client_socket.sendall(send_file)
+        
+        print(f"send file {file_number} to {client_id}")
+    except Exception as e:
+        print(f"Error sending file to client {client_id}: {e}")
+    finally:
+        client_socket.close()
+        
+    
 # 클라이언트가 요청한 파일을 처리하는 함수
 def handle_client(client_socket, client_id):
     try:
         client_socket.sendall(pickle.dumps(client_id)) # 해당 클라이언트한테 고유 ID 전달
-    except Exception as e:
-        print(f"Error : {e}")    
+        receive_thread = threading.Thread(target=receive_file, args=(client_socket, client_id))
+        send_thread = threading.Thread(target=send_file, args=(client_socket, client_id))
+
+        receive_thread.start()
+        send_thread.start()
+
+        receive_thread.join()
+        send_thread.join()
     finally:
         client_socket.close()
 

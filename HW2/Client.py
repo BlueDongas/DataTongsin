@@ -62,6 +62,7 @@ def receive_file(client_socket,server_name):
                 data+=packet
             try:
                 receive_result = pickle.loads(data)
+                print(f"Received data from {server_name}: {receive_result}")
             except pickle.UnpicklingError as e:
                 print(f"Error unpickling data : {e}")
                 break
@@ -88,7 +89,7 @@ def connect_to_data_server(server_address, server_port, server_name, request_que
         print(f"Connected to {server_name} on port {server_port}")
         time.sleep(10)
         request_thread = threading.Thread(target=request_file, args=(client_socket,request_queue,server_name))
-        receive_thread = threading.Thread(target=request_file, args=(client_socket,server_name))
+        receive_thread = threading.Thread(target=receive_file, args=(client_socket,server_name))
 
         request_thread.start()
         receive_thread.start()
@@ -107,7 +108,7 @@ def connect_to_cache_server(server_address, server_port, server_name, request_qu
         print(f"Connected to {server_name} on port {server_port}")
         time.sleep(10)
         request_thread = threading.Thread(target=request_file, args=(client_socket,request_queue,server_name))
-        receive_thread = threading.Thread(target=request_file, args=(client_socket,server_name))
+        receive_thread = threading.Thread(target=receive_file, args=(client_socket,server_name))
 
         request_thread.start()
         receive_thread.start()
