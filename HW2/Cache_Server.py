@@ -6,15 +6,7 @@ cache_id = None
 log_file = None
 # 데이터 서버에 연결하여 데이터를 요청하는 클라이언트 역할
 def request_to_data_server(cache_server_socket, data_socket):
-    while True:
-        request = cache_server_socket.recv(1024)
-        if not request:
-            break
-        print(f"Cache Server requesting file from Data Server: {request.decode()}")
-        data_socket.send(request)  # 데이터 서버로 요청 전달
-        data_response = data_socket.recv(1024)
-        cache_server_socket.send(data_response)  # 클라이언트로 응답 전달
-    cache_server_socket.close()
+    return 0
 
 # 클라이언트 요청 처리
 def handle_client(client_socket, address, data_socket):
