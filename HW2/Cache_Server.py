@@ -19,7 +19,7 @@ def request_to_data_server(data_socket,file_number,client_socket):
 
 def receive_file_from_data_server(data_socket,file_number,client_socket):
     received_clock = data_socket.recv(1024)
-    clock = pickle.load(received_clock)
+    clock = pickle.loads(received_clock)
     #clock 처리
     print(f"recieve data : {clock}") # 클락받아서 받았다는 로그 출력으로 바꿔야댐
     send_data(client_socket,clock) #clock
