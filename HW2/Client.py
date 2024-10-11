@@ -58,7 +58,7 @@ def receive_file(client_socket,server_name):
             print(f"Connection timed out ")
             break
         except Exception as e:
-            print("Error receiving data because {e}")
+            print(f"Error receiving data because {e}")
             break
     return 0
 

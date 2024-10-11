@@ -24,8 +24,14 @@ def receive_cache_file(cache_socket, cache_id):
         cache_queue[cache_id] = queue.Queue()
     while True:
         try:
+            receive_data = b""
+            while True:
+                data = cache_socket.recv(4096)
+                if not data:
+                    break
+                receive_data+=data
+
             # 파일 번호를 받아서 해당 파일을 전송하는 로직
-            receive_data= cache_socket.recv(4096)
             received_cache_id,file_number = pickle.loads(receive_data)
             
             with cache_queue_lock:
@@ -86,7 +92,7 @@ def receive_file(client_socket, client_id):
                 if not data:
                     break
                 receive_file+=data
-                
+
             received_client_id,file_number = pickle.loads(receive_file)
 
             with client_queue_lock:
