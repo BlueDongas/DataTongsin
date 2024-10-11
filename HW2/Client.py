@@ -1,5 +1,5 @@
 import socket
-import threading
+import threading 
 import time
 import random
 import pickle
@@ -16,7 +16,6 @@ def send_result(client_socket, result):
 
 # 다운로드할 파일을 요청하는 함수
 def request_file(client_socket,request_list,server_name):
-    flag_rq = "request"
     try:
         while True:
             with file_list_lock:
@@ -30,12 +29,12 @@ def request_file(client_socket,request_list,server_name):
             try:
                 if file_number == request_list[0]:
                     with file_list_lock:
-                        file_list.pop(0)
+                        file_list.pop(0) #보내야할 요소를 전체 리스트에서 뺌
                     print(f"Request file{file_number} to {server_name}")
                     send_result(client_socket,file_number)
                     request_list.pop(0)
                 else:
-                    continue
+                    continue # 서버로 보내야할 리스트의 요소가 전체 리스트의 첫번째 요소와 같아질때까지 continue
             except Exception as e:
                 print(f"Failed to send request file{file_number} to {server_name}")
     except Exception as e:
@@ -46,7 +45,7 @@ def request_file(client_socket,request_list,server_name):
 def receive_file(client_socket,server_name):
     while True: 
         try:
-            receive_data = client_socket.recv(1024)
+            received_id,receive_data = client_socket.recv(1024)
             try:
                 receive_result = pickle.loads(receive_data)
                 print(f"Received data from {server_name}: {receive_result}")
