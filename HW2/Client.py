@@ -11,7 +11,7 @@ file_list = [] #다운받을 리스트
 file_list_lock = threading.Lock()
 
 def send_result(client_socket, result):
-    data_to_send = pickle.dumps(result)
+    data_to_send = pickle.dumps((client_id,result))
     client_socket.sendall(data_to_send)
 
 # 다운로드할 파일을 요청하는 함수
@@ -45,7 +45,7 @@ def request_file(client_socket,request_list,server_name):
 def receive_file(client_socket,server_name):
     while True: 
         try:
-            received_id,receive_data = client_socket.recv(1024)
+            receive_data = client_socket.recv(4096)
             try:
                 receive_result = pickle.loads(receive_data)
                 print(f"Received data from {server_name}: {receive_result}")
@@ -69,7 +69,7 @@ def connect_to_data_server(server_address, server_port, server_name, request_lis
         client_socket.settimeout(10)
         client_socket.connect((server_address, server_port))
 
-        client_id = pickle.loads(client_socket.recv(1024))
+        client_id = pickle.loads(client_socket.recv(4096))
 
         print(f"Connected to {server_name} on port {server_port}")
 
@@ -117,28 +117,42 @@ def client():
     
     target = 7412
     average = 0
-    sum = 0
+    odd_cache_sum = 0
+    even_cache_sum = 0
+    data_sum = 0
     count = 0
 
     for _ in range(10): #테스트용 나중에 1000개로 수정
         file_number = random.randint(1,10000)
-        if file_number > target:
-            Data_request_list.append(file_number)
-        else:
-            if file_number % 2 == 0:
+
+        if file_number % 2 == 0:
+            if even_cache_sum > data_sum * 1.21 / 2:
+                Data_request_list.append(file_number)
+            else:
                 Even_list.append(file_number)
-            else : 
+        else : 
+            if odd_cache_sum > data_sum * 1.21 / 2:
+                Data_request_list.append(file_number)
+            else:
                 Odd_list.append(file_number)
 
-        # target의 값을 적응형으로 변경
-        sum += file_number
-        count += 1
-        average = sum / count
+        # if file_number > target:
+        #     Data_request_list.append(file_number)
+        # else:
+        #     if file_number % 2 == 0:
+        #         Even_list.append(file_number)
+        #     else : 
+        #         Odd_list.append(file_number)
 
-        if average * 1.26 > target:
-            target += 1
-        elif average * 1.26 < target:
-            target -= 1
+        # # target의 값을 적응형으로 변경
+        # sum += file_number
+        # count += 1
+        # average = sum / count
+
+        # if average * 1.26 > target:
+        #     target += 1
+        # elif average * 1.26 < target:
+        #     target -= 1
 
         file_list.append(file_number)
     

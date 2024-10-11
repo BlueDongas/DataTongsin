@@ -2,19 +2,25 @@ import socket
 import threading 
 import pickle
 import random
+import queue
 
 cache_id = None
 log_file = None
+
 cache_memory = [] # cache memory
-cache_size = 200 * 1024
+
+client_queue = {} # 클라이언트 별 요청 큐를 관리하기 위한 딕셔너리
+client_queue_lock = threading.Lock()
+
+cache_size = 200 * 4096
 current_size = 0
 # 데이터 서버에 연결하여 데이터를 요청하는 클라이언트 역할
 
 
 def send_data(socket,data):
     global cache_id
-    send_data = pickle.dumps(data)
-    socket.sendall(cache_id,send_data)
+    send_data = pickle.dumps((cache_id,data))
+    socket.sendall(send_data)
 
 def request_to_data_server(data_socket,file_number,client_socket):
     print(f"request to data server {file_number}")
@@ -23,7 +29,7 @@ def request_to_data_server(data_socket,file_number,client_socket):
 
 def receive_file_from_data_server(data_socket,file_number,client_socket):
     global cache_memory, cache_size, current_size
-    received_clock = data_socket.recv(1024)
+    received_clock = data_socket.recv(4096)
     clock = pickle.loads(received_clock)
     #clock 처리
     print(f"recieve data : {clock}") # 클락받아서 받았다는 로그 출력으로 바꿔야댐
@@ -47,16 +53,29 @@ def receive_file_from_data_server(data_socket,file_number,client_socket):
 def receive_file_to_client(client_socket,data_socket):
     while True:
         try:
-            receive_data = client_socket.recv(1024)
-            receive_file = pickle.loads(receive_data)
+            receive_data = b""
+            while True:
+                data = client_socket.recv(4096)
+                if not data:
+                    break
+                receive_file+=data
+
+            received_client_id,receive_file = pickle.loads(receive_data)
             if receive_file == "complete":
                 print(f"All task complete")
                 break
-            # 캐시 메모리와 비교 후 추가 로직 필요
+            
+            if received_client_id not in client_queue:
+                client_queue[received_client_id] = queue.Queue()
+            
+            with client_queue_lock:
+                if received_client_id in client_queue:
+                    client_queue[received_client_id].put(receive_file)
+                    print(f"Receive request file {receive_file} to client {received_client_id}")
 
             if receive_file in cache_memory: # 캐시 히트 
                 send_data(client_socket,receive_file)
-                print(f"Cache hit!! send file {receive_file} to client")
+                print(f"Cache hit!! send file {receive_file} to client {received_client_id}")
             else: # 캐시 미스
                 print(f"Cache miss.. request file to data server")
                 request_to_data_server(data_socket,receive_file,client_socket)
@@ -64,10 +83,6 @@ def receive_file_to_client(client_socket,data_socket):
         except Exception as e:
             print(f"Error to recive file to client")
             break
-
-def send_file_to_client(client_socket,send_data):
-    return 0
-
 
 # 클라이언트 요청 처리
 def handle_client(client_socket, address, data_socket):
@@ -90,7 +105,7 @@ def connect_to_data_server_as_client():
     global cache_id
     data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     data_socket.connect(('localhost', 10000))  # 데이터 서버에 연결
-    cache_id = pickle.loads((data_socket.recv(1024)))
+    cache_id = pickle.loads((data_socket.recv(4096)))
     return data_socket
 
 # 캐시 서버는 클라이언트에 대해 서버 역할, 데이터 서버에 대해 클라이언트 역할을 수행

@@ -25,14 +25,13 @@ def receive_cache_file(cache_socket, cache_id):
     while True:
         try:
             # 파일 번호를 받아서 해당 파일을 전송하는 로직
-            receive_data= cache_socket.recv(1024)
+            receive_data= cache_socket.recv(4096)
             received_cache_id,file_number = pickle.loads(receive_data)
             
             with cache_queue_lock:
                 if received_cache_id in cache_queue:
                     cache_queue[received_cache_id].put(file_number)
                     print(f"Cache {cache_id} requested file {file_number}.")
-            #file_number_queue.put(file_number)
             # 클락 + 속도 구하는 로직 추가
 
         except Exception as e:
@@ -76,17 +75,25 @@ def handle_cache(cache_socket, cache_id):
 
 # 클라이언트가 요청한 파일을 처리하는 함수
 def receive_file(client_socket, client_id):
-    print(f"client id : {client_id}")
+    if client_id not in cache_queue:
+        cache_queue[client_id] = queue.Queue()
     while True:
         try:
             # 파일 번호를 받아서 해당 파일을 전송하는 로직
-            receive_file = client_socket.recv(1024)
-            file_number = pickle.loads(receive_file)
-            
-            file_number_queue.put(file_number)
-            print(f"Client {client_id} requested file {file_number}.")
-            # 클락 + 속도 구하는 로직 추가
+            receive_file = b""
+            while True:
+                data = client_socket.recv(4096)
+                if not data:
+                    break
+                receive_file+=data
+                
+            received_client_id,file_number = pickle.loads(receive_file)
 
+            with client_queue_lock:
+                if received_client_id in cache_queue:
+                    cache_queue[received_client_id].put(file_number)
+                    print(f"Client {client_id} requested file {file_number}.")
+            # 클락 + 속도 구하는 로직 추가
         except Exception as e:
             print(f"Error receive file to client {client_id}: {e}")
             break
@@ -94,8 +101,14 @@ def receive_file(client_socket, client_id):
 def send_file(client_socket, client_id):
     while True:
         try:
-            file_number = file_number_queue.get()
-            #download_time = int(file_number) / 1000  # 1Mbps 다운로드 시간 계산
+            if client_id not in client_queue:
+                continue
+            if client_queue[client_id].empty():
+                continue
+            
+            with client_queue_lock:
+                file_number = client_queue[client_id].get()
+
             send_data = pickle.dumps(file_number)
             client_socket.sendall(send_data)
             
