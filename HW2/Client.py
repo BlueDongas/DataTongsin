@@ -128,13 +128,17 @@ def client():
         if file_number % 2 == 0:
             if even_cache_sum > data_sum * 1.21 / 2:
                 Data_request_list.append(file_number)
+                data_sum += file_number
             else:
                 Even_list.append(file_number)
+                even_cache_sum += file_number
         else : 
             if odd_cache_sum > data_sum * 1.21 / 2:
                 Data_request_list.append(file_number)
+                data_sum += file_number
             else:
                 Odd_list.append(file_number)
+                odd_cache_sum += file_number
 
         # if file_number > target:
         #     Data_request_list.append(file_number)
