@@ -1,158 +1,141 @@
-import struct
 import socket
-import threading 
 import pickle
-import random
+import struct
+from concurrent.futures import ThreadPoolExecutor
+import threading
 import queue
 
-cache_id = None
-log_file = None
+# 캐시 메모리와 데이터 서버 연결 정보
+cache_memory = {}  # 캐시 메모리에 저장된 파일
+cache_size = 200 * 1024  # 200MB 캐시 크기
+client_queue = {}  # 클라이언트별 요청 큐
+cache_queue = {}  # 캐시별 요청 큐
+client_queue_lock = threading.Lock()  # 클라이언트 요청 큐를 위한 락
+cache_queue_lock = threading.Lock()  # 캐시 요청 큐를 위한 락
 
-cache_memory = [] # cache memory
-
-client_queue = {} # 클라이언트 별 요청 큐를 관리하기 위한 딕셔너리
-client_queue_lock = threading.Lock()
-
-cache_size = 200 * 4096
-current_size = 0
-
-# 데이터를 전송할 때 데이터 크기를 먼저 보내고 해당 크기만큼 데이터를 보냄
-def send_data(sock, data):
+# 데이터를 전송하는 스레드 풀에서 처리하는 함수 (캐시에서 또는 데이터 서버에서 파일을 가져와 전송)
+def send_data(client_socket, file_number, data_socket):
     try:
-        print(f"send data {data}")
-        serialized_data = pickle.dumps(data)
-        data_size = len(serialized_data)
-        sock.sendall(struct.pack('Q', data_size))
-        sock.sendall(serialized_data)
+        if file_number in cache_memory:
+            # 캐시에 파일이 있으면 캐시에서 데이터를 가져와 전송
+            data = cache_memory[file_number]
+            serialized_data = pickle.dumps(data)
+            data_size = len(serialized_data)
+            client_socket.sendall(struct.pack('Q', data_size))  # 데이터 크기 전송
+            client_socket.sendall(serialized_data)  # 실제 데이터 전송
+            print(f"Sent cached file {file_number} to client")
+        else:
+            # 캐시에 파일이 없으면 데이터 서버에서 요청
+            send_data_to_data_server(data_socket, file_number, client_socket)
+            print(f"Requested file {file_number} from Data Server")
     except Exception as e:
         print(f"Error while sending data: {e}")
 
-# 데이터를 수신할 때 데이터 크기를 먼저 받고 해당 크기만큼 데이터를 받음
-def receive_data(sock):
+# 데이터 서버에 파일을 요청하고 클라이언트에 전송하는 함수
+def send_data_to_data_server(data_socket, file_number, client_socket):
     try:
-        # 데이터 크기(8바이트)를 안전하게 수신하기 위한 루프
-        packed_size = b""
-        while len(packed_size) < 8:
-            packet = sock.recv(8 - len(packed_size))
-            if not packet:
-                print("No size information received. Closing connection.")
-                return None
-            packed_size += packet
+        # 데이터 서버에 파일 요청
+        send_request(data_socket, file_number)
         
+        # 데이터 서버로부터 파일 수신
+        packed_size = data_socket.recv(8)
         data_size = struct.unpack('Q', packed_size)[0]
-        data = b""
+        file_data = b""
+        while len(file_data) < data_size:
+            packet = data_socket.recv(4096)
+            file_data += packet
+        file_number = pickle.loads(file_data)
         
-        # 데이터 전체를 수신하기 위한 루프
-        while len(data) < data_size:
-            packet = sock.recv(4096)
-            if not packet:
-                print("Connection closed while receiving data.")
-                return None
-            data += packet
-            
-        return pickle.loads(data)
+        # 클라이언트에 파일 전송
+        client_socket.sendall(struct.pack('Q', data_size))
+        client_socket.sendall(file_data)
+
+        # 캐시에 파일 저장
+        cache_memory[file_number] = pickle.loads(file_data)
+        print(f"File {file_number} received from Data Server and sent to client")
     except Exception as e:
-        print(f"Error while receiving data: {e}")
-        return None
+        print(f"Error requesting data from Data Server: {e}")
 
-
-def request_to_data_server(data_socket, file_number, client_socket):
-    print(f"request to data server {file_number}")
-    send_data(data_socket, file_number)
-    threading.Thread(target=receive_file_from_data_server, args=(data_socket, file_number, client_socket)).start()
-
-def receive_file_from_data_server(data_socket, file_number, client_socket):
-    global cache_memory, cache_size, current_size
-    clock = receive_data(data_socket)
-    if clock is None:
-        return
-    # clock 처리
-    print(f"Received data: {clock}") # 클락받아서 받았다는 로그 출력으로 바꿔야댐
-    send_data(client_socket, clock) # clock
-
-    # 캐시 메모리에 추가
-    while current_size + file_number > cache_size and cache_memory:
-        # RR 알고리즘 사용해 캐시 메모리 비우기
-        remove_index = random.randint(0, len(cache_memory) - 1)
-        remove_file = cache_memory.pop(remove_index)
-        current_size -= remove_file
-        print(f"Remove file from cache to make space : {remove_file}")
-
-    # 파일 추가
-    cache_memory.append(file_number)
-    current_size += file_number
-    print(f"Added file {file_number} to cache")
-
-def receive_file_to_client(client_socket, data_socket):
-    while True:
-        try:
-            received_data = receive_data(client_socket)
-            if received_data is None:
-                break
-
-            received_client_id, receive_file = received_data
-            if receive_file == "complete":
-                print(f"All task complete")
-                break
-
-            if received_client_id not in client_queue:
-                client_queue[received_client_id] = queue.Queue()
-
-            with client_queue_lock:
-                if received_client_id in client_queue:
-                    client_queue[received_client_id].put(receive_file)
-                    print(f"Receive request file {receive_file} to client {received_client_id}")
-
-            if receive_file in cache_memory: # 캐시 히트 
-                send_data(client_socket, receive_file)
-                print(f"Cache hit!! send file {receive_file} to client {received_client_id}")
-            else: # 캐시 미스
-                print(f"Cache miss.. request file to data server")
-                request_to_data_server(data_socket, receive_file, client_socket)
-
-        except Exception as e:
-            print(f"Error to receive file to client: {e}")
-            break
-
-# 클라이언트 요청 처리
-def handle_client(client_socket, address, data_socket):
-    try:
-        receive_thread = threading.Thread(target=receive_file_to_client, args=(client_socket, data_socket))
-        receive_thread.start()
-        receive_thread.join()
-    except Exception as e:
-        print(f"Error handle_client because {e}")
-
-def connect_to_data_server_as_client():
-    global cache_id
-    data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    data_socket.connect(('localhost', 10000))  # 데이터 서버에 연결
-
-    # 데이터 서버에서 cache_id 수신
-    cache_id = receive_data(data_socket)
-    if cache_id is None:
-        raise Exception("Failed to receive cache_id from data server.")
-    return data_socket
-
-# 캐시 서버는 클라이언트에 대해 서버 역할, 데이터 서버에 대해 클라이언트 역할을 수행
-def cache_server(port):
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', port)) # 클라이언트 연결
-    server_socket.listen(4)  # 4개의 클라이언트 수용
-    print(f"Cache Server listening on port {port}...")
-
-    data_socket = connect_to_data_server_as_client()  # 데이터 서버와 연결
-    
+# 클라이언트 요청을 처리하는 스레드 풀에서 처리하는 함수
+def handle_client(client_socket, client_id, data_socket):
     try:
         while True:
-            client_socket, addr = server_socket.accept()
-            threading.Thread(target=handle_client, args=(client_socket, addr, data_socket)).start()
-    except KeyboardInterrupt:
-        print("Shutting down cache server.")
+            # 클라이언트로부터 요청을 받음
+            packed_size = client_socket.recv(8)
+            if not packed_size:
+                break  # 연결이 종료되면 루프를 빠져나감
+            data_size = struct.unpack('Q', packed_size)[0]
+            received_data = b""
+            while len(received_data) < data_size:
+                packet = client_socket.recv(4096)
+                received_data += packet
+
+            # 받은 데이터를 역직렬화하여 파일 번호 얻음
+            file_number = pickle.loads(received_data)
+            print(f"Client {client_id} requested file {file_number}")
+
+            # 요청 큐에 클라이언트가 요청한 파일 번호를 추가
+            with client_queue_lock:
+                if client_id not in client_queue:
+                    client_queue[client_id] = queue.Queue()
+                client_queue[client_id].put((client_socket, file_number))  # 요청을 큐에 넣음
+
+    except Exception as e:
+        print(f"Error handling client {client_id}: {e}")
     finally:
-        server_socket.close()
-        data_socket.close()
+        client_socket.close()
+
+# 데이터를 전송하는 스레드가 큐에서 요청을 처리
+def send_data_worker(data_socket):
+    while True:
+        with client_queue_lock:
+            # 모든 클라이언트의 큐를 순차적으로 처리
+            for client_id, q in list(client_queue.items()):
+                if not q.empty():
+                    client_socket, file_number = q.get()
+                    send_data(client_socket, file_number, data_socket)  # 파일을 전송
+
+# 데이터 서버에 파일 요청을 보내는 함수
+def send_request(data_socket, file_number):
+    try:
+        serialized_data = pickle.dumps(file_number)
+        data_size = len(serialized_data)
+        data_socket.sendall(struct.pack('Q', data_size))  # 데이터 크기 전송
+        data_socket.sendall(serialized_data)  # 파일 번호 전송
+    except Exception as e:
+        print(f"Error while sending request to Data Server: {e}")
+
+# 데이터 서버에 연결하는 함수
+def connect_to_data_server():
+    data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    data_socket.connect(('localhost', 10000))  # 데이터 서버에 연결
+    print("Connected to Data Server")
+    return data_socket
+
+# 캐시 서버를 실행하는 함수
+def cache_server(port):
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('localhost', port))  # 캐시 서버 포트 설정
+    server_socket.listen(4)  # 최대 5개의 클라이언트 연결 대기
+
+    print(f"Cache Server {port} started, waiting for connections...")
+
+    # 데이터 서버와 연결 설정
+    data_socket = connect_to_data_server()
+
+    # 스레드 풀 생성: 하나는 클라이언트 요청 처리, 다른 하나는 데이터 전송
+    with ThreadPoolExecutor(max_workers=5) as client_executor, ThreadPoolExecutor(max_workers=2) as send_executor:
+        # 데이터를 전송하는 스레드 풀에서 작업 처리
+        send_executor.submit(send_data_worker, data_socket)  # 전송 작업 처리 스레드
+
+        client_id = 0
+        while True:
+            client_socket, addr = server_socket.accept()  # 클라이언트 연결 대기
+            client_id += 1
+            print(f"Connected to Client {addr}")
+            # 클라이언트 요청을 처리하는 스레드 풀에서 요청 처리
+            client_executor.submit(handle_client, client_socket, client_id, data_socket)
 
 if __name__ == "__main__":
-    port = int(input("Enter cache server port (20000 or 30000): "))  # 포트를 입력받아 캐시 서버 실행
+    port = int(input("Enter cache server port (20000 or 30000): "))  # 포트 입력 받기
     cache_server(port)

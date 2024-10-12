@@ -1,11 +1,16 @@
 import socket
 import pickle
 import struct
+import random
+import threading
 from concurrent.futures import ThreadPoolExecutor
 
 # 캐시 메모리와 데이터 서버 연결 정보
-cache_memory = {}  # 캐시에 저장된 파일 정보를 담는 딕셔너리
+cache_memory = []  # 캐시에 저장된 파일 정보를 담는 딕셔너리
 cache_size = 200 * 1024  # 캐시 서버의 최대 용량을 200MB로 설정
+current_size = 0 # 캐시 서버의 현재 용량
+
+cache_memory_lock = threading.Lock()
 
 # 클라이언트 또는 데이터 서버로 데이터를 전송하는 함수
 def send_data(sock, data):
@@ -26,6 +31,7 @@ def request_file_from_data_server(data_socket, file_number):
 
 # 클라이언트의 요청을 처리하는 함수
 def handle_client(client_socket, data_socket, client_id):
+    global current_size, cache_size
     try:
         while True:
             # 클라이언트로부터 파일 번호 요청을 수신
@@ -45,17 +51,32 @@ def handle_client(client_socket, data_socket, client_id):
             # 캐시 메모리에서 파일을 찾음 (캐시 히트 또는 미스)
             if file_number in cache_memory:
                 # 캐시에 파일이 있으면 클라이언트에 파일 전송
-                send_data(client_socket, cache_memory[file_number])
+                send_data(client_socket, file_number)
                 print(f"Cache hit: Sent file {file_number} to client")
             else:
+                # 캐시 비우기
+                while current_size + file_number > cache_size and cache_memory:
+                    remove_index = random.randint(0, len(cache_memory) - 1)
+                    with cache_memory_lock:
+                        remove_file = cache_memory.pop(remove_index)
+                        current_size -= remove_file
+                        print(f"Remove file form cache to make space : {remove_file}")
+
                 # 캐시에 파일이 없으면 데이터 서버에 요청
                 request_file_from_data_server(data_socket, file_number)
+
+                
                 # 데이터 서버로부터 파일을 수신한 후 캐시에 저장하고 클라이언트에 전송
                 packed_size = data_socket.recv(8)
                 data_size = struct.unpack('Q', packed_size)[0]
-                file_data = data_socket.recv(data_size)
-                cache_memory[file_number] = pickle.loads(file_data)
-                send_data(client_socket, cache_memory[file_number])
+                file_data = pickle.loads(data_socket.recv(data_size))
+
+                with cache_memory_lock:
+                    cache_memory.append(file_data)
+                    current_size += file_data
+                    print(f"Added file {file_data} to cache")
+                
+                send_data(client_socket, file_data)
                 print(f"Cache miss: Retrieved and sent file {file_number}")
     except Exception as e:
         print(f"Error handling client {client_id}: {e}")

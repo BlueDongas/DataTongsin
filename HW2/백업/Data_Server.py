@@ -1,207 +1,95 @@
-import struct
 import socket
-import threading
 import pickle
+import struct
+from concurrent.futures import ThreadPoolExecutor
+import threading
 import queue
 
-# 가상 파일 목록 및 크기 (1 ~ 10000번 파일, 크기는 파일 번호에 비례)
+# 가상의 파일 목록 (1~10000번 파일 생성)
 virtual_files = {i: i for i in range(1, 10001)}
 
-client_queue = {}  # 클라이언트별 요청 큐를 관리하기 위한 딕셔너리
-cache_queue = {}  # 캐시 별 요청 큐를 관리하기 위한 딕셔너리
-client_queue_lock = threading.Lock()
-cache_queue_lock = threading.Lock()
+# 요청 큐와 락
+client_queue = {}  # 클라이언트별 요청 큐
+cache_queue = {}  # 캐시별 요청 큐
+client_queue_lock = threading.Lock()  # 클라이언트 큐를 위한 락
+cache_queue_lock = threading.Lock()  # 캐시 큐를 위한 락
 
-client_lock = threading.Lock()
-file_number_queue = queue.Queue()
-file_number_queue_semaphore = threading.Semaphore(4)
-
-clock = 0
-
-# 데이터를 주고 받을 때 데이터 크기를 먼저 보내고 해당 크기만큼 데이터를 받는 방식
-def send_data(sock, data):
+# 클라이언트에게 데이터를 전송하는 스레드 풀에서 처리하는 함수
+def send_data(client_socket, file_number):
     try:
-        serialized_data = pickle.dumps(data)
-        data_size = len(serialized_data)
-        sock.sendall(struct.pack('Q', data_size))
-        sock.sendall(serialized_data)
+        if file_number in virtual_files:
+            data = virtual_files[file_number]
+            serialized_data = pickle.dumps(data)
+            data_size = len(serialized_data)
+            client_socket.sendall(struct.pack('Q', data_size))  # 데이터 크기 전송
+            client_socket.sendall(serialized_data)  # 실제 데이터 전송
+            print(f"Sent file {file_number} to client")
+        else:
+            print(f"File {file_number} not found in virtual files.")
     except Exception as e:
         print(f"Error while sending data: {e}")
 
-def receive_data(sock):
-    try:
-        packed_size = sock.recv(8)
-        if not packed_size:
-            print("No size information received. Closing connection.")
-            return None
-        data_size = struct.unpack('Q', packed_size)[0]
-        data = b""
-        while len(data) < data_size:
-            packet = sock.recv(4096)
-            if not packet:
-                print("Connection closed while receiving data.")
-                return None
-            data += packet
-        return pickle.loads(data)
-    except pickle.UnpicklingError as e:
-        print(f"Error while unpickling data: {e}")
-        return None
-    except Exception as e:
-        print(f"Error while receiving data: {e}")
-        return None
-
-# 캐시한테 요청받은 파일을 처리하는 함수
-def receive_cache_file(cache_socket, cache_id):
-    if cache_id not in cache_queue:
-        cache_queue[cache_id] = queue.Queue()
-    while True:
-        try:
-            received_data = receive_data(cache_socket)
-            if received_data is None:
-                break
-            if isinstance(received_data, tuple) and len(received_data) == 2:
-                received_cache_id, file_number = received_data
-            else:
-                print(f"Unexpected data format from cache {cache_id}: {received_data}")
-                continue
-            with cache_queue_lock:
-                if received_cache_id in cache_queue:
-                    cache_queue[received_cache_id].put(file_number)
-                    print(f"Cache {cache_id} requested file {file_number}.")
-        except Exception as e:
-            print(f"Error receiving file from cache {cache_id}: {e}")
-            break
-
-def send_cache_file(cache_socket, cache_id):
-    while True:
-        try:
-            if cache_id not in cache_queue:
-                continue
-            if cache_queue[cache_id].empty():
-                continue
-            with cache_queue_lock:
-                file_number = cache_queue[cache_id].get()
-            send_data(cache_socket, (cache_id, file_number))
-            print(f"Send file {file_number} to Cache {cache_id}")
-        except Exception as e:
-            print(f"Error sending file to cache {cache_id}: {e}")
-            break
-
-# 캐시 서버가 요청한 파일을 처리하는 함수
-def handle_cache(cache_socket, cache_id):
-    try:
-        cache_socket.sendall(pickle.dumps((cache_id)))  # 해당 클라이언트한테 고유 ID 전달 (튜플 형식 유지)
-        receive_cache_thread = threading.Thread(target=receive_cache_file, args=(cache_socket, cache_id))
-        send_cache_thread = threading.Thread(target=send_cache_file, args=(cache_socket, cache_id))
-
-        receive_cache_thread.start()
-        send_cache_thread.start()
-
-        receive_cache_thread.join()
-        send_cache_thread.join()
-    finally:
-        cache_socket.close()
-
-# 클라이언트가 요청한 파일을 처리하는 함수
-def receive_file(client_socket, client_id):
-    if client_id not in client_queue:
-        client_queue[client_id] = queue.Queue()
-    while True:
-        try:
-            received_data = receive_data(client_socket)
-            if received_data is None:
-                break
-            if isinstance(received_data, tuple) and len(received_data) == 2:
-                received_client_id, file_number = received_data
-            else:
-                print(f"Unexpected data format from client {client_id}: {received_data}")
-                continue
-            with client_queue_lock:
-                if received_client_id in client_queue:
-                    client_queue[received_client_id].put(file_number)
-                    print(f"Client {client_id} requested file {file_number}.")
-        except Exception as e:
-            print(f"Error receiving file from client {client_id}: {e}")
-            break
-
-def send_file(client_socket, client_id):
-    while True:
-        try:
-            if client_id not in client_queue:
-                continue
-            if client_queue[client_id].empty():
-                continue
-            with client_queue_lock:
-                file_number = client_queue[client_id].get()
-            send_data(client_socket, (client_id, file_number))
-            print(f"Send file {file_number} to client {client_id}")
-        except Exception as e:
-            print(f"Error sending file to client {client_id}: {e}")
-            break
-
-# 클라이언트가 요청한 파일을 처리하는 함수
+# 클라이언트의 요청을 처리하는 스레드 풀에서 처리하는 함수
 def handle_client(client_socket, client_id):
     try:
-        client_socket.sendall(pickle.dumps((client_id)))  # 해당 클라이언트한테 고유 ID 전달 (튜플 형식 유지)
-        receive_thread = threading.Thread(target=receive_file, args=(client_socket, client_id))
-        send_thread = threading.Thread(target=send_file, args=(client_socket, client_id))
+        while True:
+            # 클라이언트로부터 요청을 받음
+            packed_size = client_socket.recv(8)
+            if not packed_size:
+                break  # 연결이 종료되면 루프를 빠져나감
+            data_size = struct.unpack('Q', packed_size)[0]
+            received_data = b""
+            while len(received_data) < data_size:
+                packet = client_socket.recv(4096)
+                received_data += packet
 
-        receive_thread.start()
-        send_thread.start()
+            # 받은 데이터를 역직렬화하여 파일 번호 얻음
+            file_number = pickle.loads(received_data)
+            print(f"Client {client_id} requested file {file_number}")
 
-        receive_thread.join()
-        send_thread.join()
+            # 요청 큐에 클라이언트가 요청한 파일 번호를 추가 (여기서는 단일 파일)
+            with client_queue_lock:
+                if client_id not in client_queue:
+                    client_queue[client_id] = queue.Queue()
+                client_queue[client_id].put((client_socket, file_number))  # 요청을 큐에 넣음
+
+    except Exception as e:
+        print(f"Error handling client {client_id}: {e}")
     finally:
         client_socket.close()
 
-# 캐시 서버를 처리하는 함수
-def accept_cache(server_socket, num_cache):
-    cache_sockets = []
+# 데이터를 전송하는 스레드가 큐에서 요청을 처리
+def send_data_worker():
+    while True:
+        with client_queue_lock:
+            # 모든 클라이언트의 큐를 순차적으로 처리
+            for client_id, q in list(client_queue.items()):
+                if not q.empty():
+                    client_socket, file_number = q.get()
+                    send_data(client_socket, file_number)
 
-    for cache_id in range(1, num_cache + 1):
-        cache_socket, addr = server_socket.accept()
-        cache_sockets.append((cache_socket, addr))
-        cache_socket.settimeout(100)
-
-    threads = []
-    for cache_id, (cache_socket, addr) in enumerate(cache_sockets, 1):
-        thread = threading.Thread(target=handle_cache, args=(cache_socket, cache_id))
-        threads.append(thread)
-        thread.start()
-
-    return threads     
-
-# 클라이언트를 처리하는 함수
-def accept_clients(server_socket, num_clients):
-    client_sockets = []
-
-    for client_id in range(1, num_clients + 1):
-        client_socket, addr = server_socket.accept()
-        client_sockets.append((client_socket, addr))
-        client_socket.settimeout(100)
-
-    threads = []
-    for client_id, (client_socket, addr) in enumerate(client_sockets, 1):
-        thread = threading.Thread(target=handle_client, args=(client_socket, client_id))
-        threads.append(thread)
-        thread.start()
-
-    return threads
-
+# 메인 서버 함수
 def main():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', 10000))  
-    server_socket.listen(6)  # 캐시 서버 2개 + 클라이언트 4개 수용
-    cache_threads = accept_cache(server_socket, 2)
-    client_threads = accept_clients(server_socket, 4)
-    
-    for thread in cache_threads:
-        thread.join()
-        
-    for thread in client_threads:
-        thread.join()
-    
+    server_socket.bind(('localhost', 10000))
+    server_socket.listen(5)  # 최대 5개의 클라이언트 연결 허용
+
+    print("Data Server started, waiting for connections...")
+
+    # 두 개의 스레드 풀 생성: 하나는 클라이언트 요청 처리, 다른 하나는 데이터 전송
+    with ThreadPoolExecutor(max_workers=5) as client_executor, ThreadPoolExecutor(max_workers=2) as send_executor:
+        # 데이터 전송을 처리하는 스레드 풀에서 지속적으로 데이터를 전송
+        send_executor.submit(send_data_worker)  # 전송 작업 처리 스레드
+
+        client_id = 0
+        while True:
+            client_socket, addr = server_socket.accept()  # 클라이언트 연결 대기
+            client_id += 1
+            print(f"Connected to Client {addr}")
+            # 클라이언트 요청을 처리하는 스레드 풀에서 요청 처리
+            client_executor.submit(handle_client, client_socket, client_id)
+
     server_socket.close()
-    
+
 if __name__ == "__main__":
     main()
