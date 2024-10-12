@@ -6,16 +6,20 @@ import queue
 
 # 가상 파일 목록 및 크기 (1 ~ 10000번 파일, 크기는 파일 번호에 비례)
 virtual_files = {i: i for i in range(1, 10001)}
+<<<<<<< HEAD
 
 client_queue = {}  # 클라이언트별 요청 큐를 관리하기 위한 딕셔너리
 cache_queue = {}  # 캐시 별 요청 큐를 관리하기 위한 딕셔너리
 client_queue_lock = threading.Lock()
 cache_queue_lock = threading.Lock()
 
+=======
+>>>>>>> parent of b651c7c (update 주고받기)
 client_lock = threading.Lock()
 file_number_queue = queue.Queue()
 file_number_queue_semaphore = threading.Semaphore(4)
 
+<<<<<<< HEAD
 clock = 0
 
 # 데이터를 주고 받을 때 데이터 크기를 먼저 보내고 해당 크기만큼 데이터를 받는 방식
@@ -50,12 +54,13 @@ def receive_data(sock):
         print(f"Error while receiving data: {e}")
         return None
 
+=======
+>>>>>>> parent of b651c7c (update 주고받기)
 # 캐시한테 요청받은 파일을 처리하는 함수
 def receive_cache_file(cache_socket, cache_id):
-    if cache_id not in cache_queue:
-        cache_queue[cache_id] = queue.Queue()
     while True:
         try:
+<<<<<<< HEAD
             received_data = receive_data(cache_socket)
             if received_data is None:
                 break
@@ -68,6 +73,16 @@ def receive_cache_file(cache_socket, cache_id):
                 if received_cache_id in cache_queue:
                     cache_queue[received_cache_id].put(file_number)
                     print(f"Cache {cache_id} requested file {file_number}.")
+=======
+            # 파일 번호를 받아서 해당 파일을 전송하는 로직
+            receive_file = cache_socket.recv(1024)
+            file_number = pickle.loads(receive_file)
+            
+            file_number_queue.put(file_number)
+            print(f"Cache {cache_id} requested file {file_number}.")
+            # 클락 + 속도 구하는 로직 추가
+
+>>>>>>> parent of b651c7c (update 주고받기)
         except Exception as e:
             print(f"Error receiving file from cache {cache_id}: {e}")
             break
@@ -75,6 +90,7 @@ def receive_cache_file(cache_socket, cache_id):
 def send_cache_file(cache_socket, cache_id):
     while True:
         try:
+<<<<<<< HEAD
             if cache_id not in cache_queue:
                 continue
             if cache_queue[cache_id].empty():
@@ -83,6 +99,14 @@ def send_cache_file(cache_socket, cache_id):
                 file_number = cache_queue[cache_id].get()
             send_data(cache_socket, (cache_id, file_number))
             print(f"Send file {file_number} to Cache {cache_id}")
+=======
+            file_number = file_number_queue.get()
+            download_time = file_number # 2Mbps 다운로드 시간 계산
+            send_data = pickle.dumps(download_time)
+            cache_socket.sendall(send_data)
+            
+            print(f"Send file {file_number} to {cache_id}")
+>>>>>>> parent of b651c7c (update 주고받기)
         except Exception as e:
             print(f"Error sending file to cache {cache_id}: {e}")
             break

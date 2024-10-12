@@ -1,5 +1,5 @@
 import socket
-import threading 
+import threading
 import time
 import random
 import pickle
@@ -56,7 +56,12 @@ def receive_file(client_socket, server_name):
         print(f"Error receiving data: {e}")
 
 # 다운로드할 파일을 요청하는 함수
+<<<<<<< HEAD
 def request_file(client_socket, request_list, server_name):
+=======
+def request_file(client_socket,request_list,server_name):
+    flag_rq = "request"
+>>>>>>> parent of b651c7c (update 주고받기)
     try:
         while True:
             with file_list_lock:
@@ -69,17 +74,51 @@ def request_file(client_socket, request_list, server_name):
             try:
                 if file_number == request_list[0]:
                     with file_list_lock:
+<<<<<<< HEAD
                         file_list.pop(0)  # 보내야할 요소를 전체 리스트에서 뺌
                     print(f"Request file {file_number} to {server_name}")
                     send_result(client_socket, file_number)
                     request_list.pop(0)
                 else:
                     continue  # 서버로 보내야할 리스트의 요소가 전체 리스트의 첫 번째 요소와 같아질 때까지 continue
+=======
+                        file_list.pop(0)
+                    print(f"Request file{file_number} to {server_name}")
+                    send_result(client_socket,file_number)
+                    request_list.pop(0)
+                else:
+                    continue
+>>>>>>> parent of b651c7c (update 주고받기)
             except Exception as e:
                 print(f"Failed to send request file {file_number} to {server_name}: {e}")
     except Exception as e:
         print(f"Failed to send request to {server_name}: {e}")
 
+<<<<<<< HEAD
+=======
+
+# 서버들로부터 정보를 받는 함수
+def receive_file(client_socket,server_name):
+    while True: 
+        try:
+            receive_data = client_socket.recv(1024)
+            try:
+                receive_result = pickle.loads(receive_data)
+                print(f"Received data from {server_name}: {receive_result}")
+            except pickle.UnpicklingError as e:
+                print(f"Error unpickling data : {e}")
+                break
+            # 받은 데이터 정리할 코드 필요 
+
+        except socket.timeout:
+            print(f"Connection timed out ")
+            break
+        except Exception as e:
+            print("Error receiving data because {e}")
+            break
+    return 0
+
+>>>>>>> parent of b651c7c (update 주고받기)
 def connect_to_data_server(server_address, server_port, server_name, request_list):
     global client_id
     try:

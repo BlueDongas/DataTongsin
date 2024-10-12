@@ -1,14 +1,18 @@
 import struct
 import socket
-import threading 
+import threading
 import pickle
+<<<<<<< HEAD
 import random
 import queue
+=======
+>>>>>>> parent of b651c7c (update 주고받기)
 
 cache_id = None
 log_file = None
 
 cache_memory = [] # cache memory
+<<<<<<< HEAD
 
 client_queue = {} # 클라이언트 별 요청 큐를 관리하기 위한 딕셔너리
 client_queue_lock = threading.Lock()
@@ -57,10 +61,21 @@ def receive_data(sock):
 
 
 def request_to_data_server(data_socket, file_number, client_socket):
+=======
+# 데이터 서버에 연결하여 데이터를 요청하는 클라이언트 역할
+
+
+def send_data(socket,data):
+    send_data = pickle.dumps(data)
+    socket.sendall(send_data)
+
+def request_to_data_server(data_socket,file_number,client_socket):
+>>>>>>> parent of b651c7c (update 주고받기)
     print(f"request to data server {file_number}")
     send_data(data_socket, file_number)
     threading.Thread(target=receive_file_from_data_server, args=(data_socket, file_number, client_socket)).start()
 
+<<<<<<< HEAD
 def receive_file_from_data_server(data_socket, file_number, client_socket):
     global cache_memory, cache_size, current_size
     clock = receive_data(data_socket)
@@ -84,6 +99,16 @@ def receive_file_from_data_server(data_socket, file_number, client_socket):
     print(f"Added file {file_number} to cache")
 
 def receive_file_to_client(client_socket, data_socket):
+=======
+def receive_file_from_data_server(data_socket,file_number,client_socket):
+    received_clock = data_socket.recv(1024)
+    clock = pickle.loads(received_clock)
+    #clock 처리
+    print(f"recieve data : {clock}") # 클락받아서 받았다는 로그 출력으로 바꿔야댐
+    send_data(client_socket,clock) #clock
+
+def receive_file_to_client(client_socket,data_socket):
+>>>>>>> parent of b651c7c (update 주고받기)
     while True:
         try:
             received_data = receive_data(client_socket)
@@ -94,6 +119,7 @@ def receive_file_to_client(client_socket, data_socket):
             if receive_file == "complete":
                 print(f"All task complete")
                 break
+<<<<<<< HEAD
 
             if received_client_id not in client_queue:
                 client_queue[received_client_id] = queue.Queue()
@@ -109,6 +135,16 @@ def receive_file_to_client(client_socket, data_socket):
             else: # 캐시 미스
                 print(f"Cache miss.. request file to data server")
                 request_to_data_server(data_socket, receive_file, client_socket)
+=======
+            #캐시 메모리와 비교 후 추가 로직 필요
+            #캐시 히트 continue 추가해야댐
+            send_data(client_socket,receive_file)
+            print(f"Cache hit!! send file {receive_file} to client")
+
+            # 캐시 메모리에 없는 경우
+            print(f"Cache miss.. request file to data server")
+            request_to_data_server(data_socket,receive_file,client_socket)
+>>>>>>> parent of b651c7c (update 주고받기)
 
         except Exception as e:
             print(f"Error to receive file to client: {e}")
