@@ -21,7 +21,6 @@ End_count_lock = threading.Lock()
 clock = 0
 clock_list = [0,0,0]
 master_clock=0
-master_clock_lock = threading.Lock()
 clock_list_lock = threading.Lock()
 file_list_lock = threading.Lock()
 
@@ -44,10 +43,9 @@ def send_request(client_socket, server_id, file_number,server_type,last_clock):
         client_socket.sendall(struct.pack('Q', len(send_to_data)))  # 데이터 크기 전송
         client_socket.sendall(send_to_data)  # 파일 번호 전송
 
-        with log_queue_lock:
-            with clock_list_lock: 
-                log_massage = f"Clock [{clock_list[server_id]:.2f}]  Request file {file_number} from {server_type}"
-                heapq.heappush(log_queue, (clock_list[server_id], log_massage))
+        log_massage = f"Clock [{clock_list[server_id]:.2f}]  Request file {file_number} from {server_type}"
+        with log_queue_lock: 
+            heapq.heappush(log_queue, (clock_list[server_id], log_massage))
             
     except Exception as e:
         print(f"Error sending request for file {file_number} to {server_type}: {e}")
@@ -120,26 +118,24 @@ def client_task(server_address, port, rq_file_list, server_type,file_list):
                 with clock_list_lock:
                     clock_list[server_id] = receive_clock
                     master_clock = min(clock_list)
+                log_message = f"Clock [{clock_list[server_id]:.2f}]  receive file from {server_type} : {received_file}"
                 with log_queue_lock:
-                    with clock_list_lock: 
-                        log_message = f"Clock [{clock_list[server_id]:.2f}]  receive file from {server_type} : {received_file}"
-                        heapq.heappush(log_queue,(clock_list[server_id], log_message))
+                    heapq.heappush(log_queue,(clock_list[server_id], log_message))
         except Exception as e:
             print(f"Failed to send request file{file_number} to {server_type} because {e}")
 
 def print_log():
     global master_clock
     while True:
-        with End_count_lock:
-            if End_count == 3: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
-                time.sleep(10)
-                with log_queue_lock:
-                    while log_queue:
-                        _, log_message = heapq.heappop(log_queue)
-                        print(log_message)
-                print(f"Final clock [{master_clock}]")
-                # 최종로그 내용 추가 필요
-                return
+        if End_count == 3: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
+            time.sleep(2)
+            with log_queue_lock:
+                while log_queue:
+                    _, log_message = heapq.heappop(log_queue)
+                    print(log_message)
+            print(f"Final clock [{master_clock}]")
+            # 최종로그 내용 추가 필요
+            return
         if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
             with log_queue_lock:
                 if log_queue and log_queue[0][0] <= master_clock:

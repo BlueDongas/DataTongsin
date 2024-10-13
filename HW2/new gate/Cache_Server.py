@@ -26,6 +26,8 @@ cache_memory_lock = threading.Lock()
 log_queue = []
 log_queue_lock = threading.Lock()
 
+cache_hit_count = 0
+cache_miss_count = 0
 #log_file = open("Data Server.txt", "w")
 #def log_write(event):
 #    log_file.write(fs"{event}\n")
@@ -51,13 +53,13 @@ def request_file_from_data_server(data_socket, file_number):
     global master_clock
     send_data(data_socket, file_number, 0, 0)  # 데이터 서버에 파일 번호를 요청
     #print(f"Requested file {file_number} from Data Server")
-    with log_queue_lock and master_clock_lock:
-        log_message = f"Clock [{master_clock:.2f}]  Requested file {file_number} from Data Server."
+    log_message = f"Clock [{master_clock:.2f}]  Requested file {file_number} from Data Server."
+    with log_queue_lock:
         heapq.heappush(log_queue, (master_clock, log_message))
 
 # 클라이언트의 요청을 처리하는 함수
 def handle_client(client_socket, data_socket, client_id):
-    global current_size, cache_size, master_clock,End_count
+    global current_size, cache_size, master_clock,End_count,cache_miss_count,cache_hit_count
     try:
         while True:
             # 클라이언트로부터 파일 번호 요청을 수신
@@ -81,8 +83,8 @@ def handle_client(client_socket, data_socket, client_id):
                         input("Enter preess Any Key")
                     return
             # print(f"Client {client_id} requested file {file_number}")
-            with log_queue_lock and master_clock_lock:
-                log_message = f"Clock [{master_clock:.2f}]  Client {client_id} requested file {file_number}."
+            log_message = f"Clock [{master_clock:.2f}]  Client {client_id} requested file {file_number}."
+            with log_queue_lock:
                 heapq.heappush(log_queue, (master_clock, log_message))
 
             download_time = file_number / 3072
@@ -94,14 +96,16 @@ def handle_client(client_socket, data_socket, client_id):
                     send_clock = master_clock + download_time
                     send_data(client_socket, cache_memory[file_number], master_clock, send_clock)
                 # print(f"Cache hit: Sent file {file_number} to client")
-                with log_queue_lock and master_clock_lock:
-                    log_message = f"Clock [{master_clock:.2f}]  Cache hit: Sent file {file_number} to client."
+                log_message = f"Clock [{master_clock:.2f}]  Cache hit: Sent file {file_number} to client."
+                cache_hit_count+=1
+                with log_queue_lock:
                     heapq.heappush(log_queue, (master_clock, log_message))
             else:
                 # 캐시 비우기
                 # print(f"Cache miss: Retrieved and sent file {file_number}")
-                with log_queue_lock and master_clock_lock:
-                    log_message = f"Clock [{master_clock:.2f}]  Cache miss: Retrieved and sent file {file_number}."
+                log_message = f"Clock [{master_clock:.2f}]  Cache miss: Retrieved and sent file {file_number}."
+                cache_miss_count+=1
+                with log_queue_lock:
                     heapq.heappush(log_queue, (master_clock, log_message))
                 file_data_size = len(str(file_number))  # 파일 번호를 기준으로 크기 가정 (실제 파일 크기에 맞게 변경 필요)
                 while current_size + file_data_size > cache_size and cache_memory:
@@ -110,8 +114,8 @@ def handle_client(client_socket, data_socket, client_id):
                         del cache_memory[remove_file_number]
                         current_size -= len(str(remove_file_data))  # 실제 파일 크기만큼 용량 감소
                         # print(f"Removed file {remove_file_number} from cache to make space")
-                        with log_queue_lock and master_clock_lock:
-                            log_message = f"Clock [{master_clock:.2f}]  Removed file {remove_file_number} from cache to make space."
+                        log_message = f"Clock [{master_clock:.2f}]  Removed file {remove_file_number} from cache to make space."
+                        with log_queue_lock:
                             heapq.heappush(log_queue, (master_clock, log_message))
 
                 # 캐시에 파일이 없으면 데이터 서버에 요청
@@ -130,8 +134,8 @@ def handle_client(client_socket, data_socket, client_id):
                     cache_memory[file_number] = file_data
                     current_size += len(str(file_data))  # 실제 파일 크기 추가
                     # print(f"Added file {file_number} to cache")
-                    with log_queue_lock and master_clock_lock:
-                        log_message = f"Clock [{master_clock:.2f}]  Added file {file_number} to cache."
+                    log_message = f"Clock [{master_clock:.2f}]  Added file {file_number} to cache."
+                    with log_queue_lock:
                         heapq.heappush(log_queue, (master_clock, log_message))
                 
                 with master_clock_lock:
@@ -177,15 +181,16 @@ def cache_server(port):
 def print_log():
     global master_clock
     while True:
-        with End_count_Lock:
-            if End_count == 4: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
-                time.sleep(5)
-                while log_queue:
-                    _, log_message = heapq.heappop(log_queue)
-                    print(log_message)
-                print(f"Final clock [{master_clock}]")
-                # 최종로그 내용 추가 필요
-                return
+        if End_count == 4: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
+            time.sleep(2)
+            while log_queue:
+                _, log_message = heapq.heappop(log_queue)
+                print(log_message)
+            print(f"Final clock [{master_clock}]")
+            print(f"cache_hit : {cache_hit_count}")
+            print(f"cache_miss : {cache_miss_count}")
+            # 최종로그 내용 추가 필요
+            return
         if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
             with log_queue_lock:
                 if log_queue and log_queue[0][0] <= master_clock:

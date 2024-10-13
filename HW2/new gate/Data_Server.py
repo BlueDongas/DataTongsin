@@ -25,7 +25,6 @@ clock = 0
 clock_list = [0, 0, 0, 0, 0, 0]
 log_queue = []
 clock_list_lock = threading.Lock()
-master_clock_lock = threading.Lock()
 log_queue_lock = threading.Lock()
 
 log_file = ""
@@ -68,27 +67,26 @@ def handle_client(client_socket, client_id):
                 #모든 작업 종료
                 with End_client_count_lock:
                     End_client_count+=1
-                    print(f"Client {client_id} JongRyo End {End_client_count}")
-                    break
+                with clock_list_lock:
+                    clock_list[client_id + 1] = received_clock
+                print(f"Client {client_id} JongRyo End {End_client_count}")
+                break
             if file_number in virtual_files:
                 # print(f"Client {client_id} requested file {file_number}")
+                log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Client{client_id} requested file {file_number}."
                 with log_queue_lock:
-                    with clock_list_lock:
-                        log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Client{client_id} requested file {file_number}."
-                        heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
+                    heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
 
                 download_time = file_number / 1024
                 with clock_list_lock:
                     clock_list[client_id + 1] += download_time
-                    with master_clock_lock:
-                        master_clock = min(clock_list)
+                    master_clock = min(clock_list)
 
 
                 # print(f"Sent file {file_number} to client{client_id}")
                 with log_queue_lock:
-                    with clock_list_lock:
-                        log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Sent file {file_number} to Client{client_id}."
-                        heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
+                    log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Sent file {file_number} to Client{client_id}."
+                    heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
                 send_data(client_socket, file_number, client_id + 1)  # 요청된 파일 전송
     except Exception as e:
         print(f"Error handling client {client_id}: {e}")
@@ -116,22 +114,19 @@ def handle_cache(cache_socket, cache_id):
                 break
             if file_number in virtual_files:
                 # print(f"Cache Server {cache_id} requested file {file_number}")    
+                log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Cache Server {cache_id} requested file {file_number}."
                 with log_queue_lock:
-                    with clock_list_lock:
-                        log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Cache Server {cache_id} requested file {file_number}."
-                        heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
+                    heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
 
                 download_time = file_number / 2048
 
                 with clock_list_lock:
                     clock_list[cache_id - 1] += download_time
-                    with master_clock_lock:
-                        master_clock = min(clock_list)
+                    master_clock = min(clock_list)
                 #print(f"Send file {file_number} to Cache{cache_id}")
+                log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Send file {file_number} to Cache{cache_id}."
                 with log_queue_lock:
-                    with clock_list_lock:
-                        log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Send file {file_number} to Cache{cache_id}."
-                        heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
+                    heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
                 send_data(cache_socket, file_number,cache_id - 1)  # 요청된 파일 전송
     except Exception as e:
         print(f"Error handling cache server {cache_id}: {e}")
@@ -139,19 +134,18 @@ def handle_cache(cache_socket, cache_id):
 def print_log():
     global master_clock
     while True:
-        with End_cache_count_lock:
-            with End_client_count_lock:
-                if End_client_count == 4 and End_cache_count == 2: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
-                    time.sleep(5)
-                    while log_queue:
-                        _, log_message = heapq.heappop(log_queue)
-                        print(log_message)
-                    with clock_list_lock:
-                        final_clock = max(clock_list)
-                    print(f"Final clock [{final_clock}] ")
-                    # 최종로그 내용 추가 필요
+        if End_client_count == 4 and End_cache_count == 2: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
+            time.sleep(2)
+            with log_queue_lock:
+                while log_queue:
+                    _, log_message = heapq.heappop(log_queue)
+                    print(log_message)
+            with clock_list_lock:
+                final_clock = max(clock_list)
+            print(f"Final clock [{final_clock}] ")
+            # 최종로그 내용 추가 필요
 
-                    break
+            break
         if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
             with log_queue_lock:
                 if log_queue and log_queue[0][0] <= master_clock:
