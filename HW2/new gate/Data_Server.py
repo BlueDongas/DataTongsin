@@ -2,9 +2,14 @@ import socket
 import pickle
 import struct
 from concurrent.futures import ThreadPoolExecutor
-
+import threading
 # 가상의 파일 목록을 저장 (1~10000 파일 번호와 파일 내용)
 virtual_files = {i: i for i in range(1, 10001)}  # 파일 번호와 내용이 동일한 가상 파일
+
+#클라이언트 캐시 동시 동작을 위한 변수
+connect_count = 0
+total_connect = 6
+connect_condition = threading.Condition()
 
 # 클라이언트에게 파일 데이터를 전송하는 함수
 def send_data(client_socket, data):
