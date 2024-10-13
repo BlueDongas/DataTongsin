@@ -16,7 +16,8 @@ connect_condition = threading.Condition()
 # 클락 관리를 위한 변수 및 리스트
 master_clock = 0 
 clock = 0 
-
+End_client_count = 0
+End_cache_count = 0
 clock_list = [0, 0, 0, 0, 0, 0]
 log_queue = []
 clock_list_lock = threading.Lock()
@@ -46,7 +47,7 @@ def send_data(client_socket, data, id):
 
 # 클라이언트의 요청을 처리하는 함수
 def handle_client(client_socket, client_id):
-    global master_clock
+    global master_clock, End_client_count
     try:
         while True:
             packed_size = client_socket.recv(8)  # 데이터 크기 수신
@@ -61,7 +62,10 @@ def handle_client(client_socket, client_id):
             recieved_master_clock,received_clock,file_number = pickle.loads(received_data)  # 파일 번호를 역직렬화
             if received_clock != 0:
                 #모든 작업 종료
-                
+                End_client_count+=1
+                if End_client_count == 4:
+                    print("JongRyo")
+                    return
                 return 0
             if file_number in virtual_files:
                 # print(f"Client {client_id} requested file {file_number}")
@@ -86,7 +90,7 @@ def handle_client(client_socket, client_id):
 
 # 캐시 서버의 요청을 처리하는 함수
 def handle_cache(cache_socket, cache_id):
-    global master_clock
+    global master_clock, End_cache_count
     try:
         while True:
             packed_size = cache_socket.recv(8)  # 데이터 크기 수신
@@ -99,6 +103,13 @@ def handle_cache(cache_socket, cache_id):
                 received_data += packet
 
             recreceived_master_clock,received_clock,file_number = pickle.loads(received_data)  # 파일 번호를 역직렬화
+            if received_clock != 0:
+                cache_socket.close()
+                #모든 작업 종료
+                End_cache_count+=1
+                if End_cache_count == 2:
+                    return
+                return 0
             if file_number in virtual_files:
                 # print(f"Cache Server {cache_id} requested file {file_number}")    
                 with log_queue_lock and clock_list_lock:
@@ -124,12 +135,8 @@ def handle_cache(cache_socket, cache_id):
 
 def print_log():
     global master_clock
-    test = 0
     heapq.heappush(log_queue, (0.000001, "Clock [0]  All connections complete. Start operation."))
     while True:
-        if test % 5000000 == 0:
-            print(clock_list)
-        test += 1
         # if not log_queue: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
         #     with clock_list_lock:
         #       final_clock = max(clock_list)

@@ -10,6 +10,8 @@ import heapq
 master_clock = 0
 master_clock_lock = threading.Lock()
 
+End_count = 0
+
 # 캐시 메모리와 데이터 서버 연결 정보
 cache_memory = {}  # 캐시에 저장된 파일 정보를 딕셔너리로 관리
 cache_size = 200 * 1024  # 캐시 서버의 최대 용량을 200MB로 설정
@@ -50,7 +52,7 @@ def request_file_from_data_server(data_socket, file_number):
 
 # 클라이언트의 요청을 처리하는 함수
 def handle_client(client_socket, data_socket, client_id):
-    global current_size, cache_size, master_clock
+    global current_size, cache_size, master_clock,End_count
     try:
         while True:
             # 클라이언트로부터 파일 번호 요청을 수신
@@ -64,7 +66,13 @@ def handle_client(client_socket, data_socket, client_id):
                 received_data += packet
 
             # 받은 데이터를 역직렬화하여 파일 번호를 얻음
-            recieved_master_clock,recieved_clock, file_number = pickle.loads(received_data)
+            recieved_master_clock,recieved_client_clock, file_number = pickle.loads(received_data)
+            if recieved_client_clock !=0:
+                End_count+=1
+                if End_count ==4:
+                    send_data(data_socket,0,0,1)
+                    print("JongRyo")
+                    return
             # print(f"Client {client_id} requested file {file_number}")
             with log_queue_lock and master_clock_lock:
                 log_message = f"Clock [{master_clock:.2f}]  Client {client_id} requested file {file_number}."
@@ -109,7 +117,7 @@ def handle_client(client_socket, data_socket, client_id):
                 while len(received_data) < data_size:
                     packet = data_socket.recv(4096)
                     received_data += packet
-                recrecieved_master_clock,recieved_clock,file_data = pickle.loads(received_data)
+                recrecieved_master_clock,recieved_data_clock,file_data = pickle.loads(received_data)
 
                 with cache_memory_lock:
                     cache_memory[file_number] = file_data
@@ -120,7 +128,7 @@ def handle_client(client_socket, data_socket, client_id):
                         heapq.heappush(log_queue, (master_clock, log_message))
                 
                 with master_clock_lock:
-                    master_clock = recieved_clock
+                    master_clock = recieved_data_clock
                     send_clock = master_clock + download_time
                     send_data(client_socket, file_data, master_clock, send_clock)
     except Exception as e:

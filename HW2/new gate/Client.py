@@ -7,8 +7,8 @@ import time
 import heapq
 from concurrent.futures import ThreadPoolExecutor
 
-file_getsu = 100 # 총 다운 받을 파일 개수 설정
-sleep_time = 1
+file_counter = 10 # 총 다운 받을 파일 개수 설정
+sleep_time = 4
 
 receive_file_count = 0
 receive_file_count_lock = threading.Lock()
@@ -60,7 +60,7 @@ def receive_file(client_socket):
 
 # 클라이언트에서 서버로 파일 요청을 처리하는 함수
 def client_task(server_address, port, rq_file_list, server_type,file_list):
-    global receive_file_count, file_getsu, sleep_time, master_clock
+    global receive_file_count, file_counter, sleep_time, master_clock
 
     server_id = None
 
@@ -78,8 +78,8 @@ def client_task(server_address, port, rq_file_list, server_type,file_list):
 
     # 요청할 파일 번호 리스트에 대해 서버에 요청
     while True:
-        if receive_file_count == file_getsu:
-            print(f"All task complete. receive file getsu : {receive_file_count}.")
+        if receive_file_count == file_counter:
+            print(f"All task complete. receive file counter : {receive_file_count}.")
             with clock_list_lock:
                 master_clock = max(clock_list)
             send_request(client_socket, server_id, file_number, server_type, master_clock)
@@ -130,7 +130,7 @@ def print_log():
 
 # 클라이언트가 동시에 데이터 서버와 캐시 서버에 파일 요청을 보내는 함수
 def client():
-    global file_getsu
+    global file_counter
 
     data_server_address = ('localhost', 10000)  # 데이터 서버 주소
     cache_server1_address = ('localhost', 20000)  # 캐시 서버 1 주소
@@ -145,7 +145,7 @@ def client():
     even_cache_sum = 0
     data_sum = 0
 
-    for _ in range(file_getsu): #테스트용 나중에 1000개로 수정
+    for _ in range(file_counter): #테스트용 나중에 1000개로 수정
         file_number = random.randint(1,10000)
 
         if file_number % 2 == 0:
