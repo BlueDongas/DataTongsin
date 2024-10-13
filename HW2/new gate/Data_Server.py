@@ -75,7 +75,7 @@ def handle_client(client_socket, client_id):
                     with master_clock_lock:
                         master_clock = min(clock_list)
 
-                send_data(client_socket, file_number, client_id)  # 요청된 파일 전송
+                send_data(client_socket, file_number, client_id + 1)  # 요청된 파일 전송
 
                 # print(f"Sent file {file_number} to client{client_id}")
                 with log_queue_lock and clock_list_lock:
@@ -113,7 +113,7 @@ def handle_cache(cache_socket, cache_id):
                         master_clock = min(clock_list)
                         
 
-                send_data(cache_socket, file_number,cache_id)  # 요청된 파일 전송
+                send_data(cache_socket, file_number,cache_id - 1)  # 요청된 파일 전송
 
                 #print(f"Send file {file_number} to Cache{cache_id}")
                 with log_queue_lock and clock_list_lock:
@@ -124,8 +124,12 @@ def handle_cache(cache_socket, cache_id):
 
 def print_log():
     global master_clock
+    test = 0
     heapq.heappush(log_queue, (0.000001, "Clock [0]  All connections complete. Start operation."))
     while True:
+        if test % 5000000 == 0:
+            print(clock_list)
+        test += 1
         # if not log_queue: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
         #     with clock_list_lock:
         #       final_clock = max(clock_list)

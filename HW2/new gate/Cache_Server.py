@@ -76,7 +76,8 @@ def handle_client(client_socket, data_socket, client_id):
             if file_number in cache_memory:
                 # 캐시에 파일이 있으면 클라이언트에 파일 전송
                 with master_clock_lock:
-                    send_data(client_socket, cache_memory[file_number], master_clock, master_clock + download_time)
+                    send_clock = master_clock + download_time
+                    send_data(client_socket, cache_memory[file_number], master_clock, send_clock)
                 # print(f"Cache hit: Sent file {file_number} to client")
                 with log_queue_lock and master_clock_lock:
                     log_message = f"Clock [{master_clock:.2f}]  Cache hit: Sent file {file_number} to client."
@@ -120,7 +121,8 @@ def handle_client(client_socket, data_socket, client_id):
                 
                 with master_clock_lock:
                     master_clock = recieved_clock
-                    send_data(client_socket, file_data, master_clock, master_clock + download_time)
+                    send_clock = master_clock + download_time
+                    send_data(client_socket, file_data, master_clock, send_clock)
     except Exception as e:
         print(f"Error handling client {client_id}: {e}")
 
