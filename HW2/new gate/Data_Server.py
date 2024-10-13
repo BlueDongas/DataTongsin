@@ -69,7 +69,7 @@ def handle_client(client_socket, client_id):
                     End_client_count+=1
                 with clock_list_lock:
                     clock_list[client_id + 1] = received_clock
-                print(f"Client {client_id} JongRyo End {End_client_count}")
+                print(f"Client {client_id} JongRyo")
                 break
             if file_number in virtual_files:
                 # print(f"Client {client_id} requested file {file_number}")
@@ -179,7 +179,7 @@ def main():
                 try:
                     client_socket, addr = server_socket.accept()  # 클라이언트 또는 캐시 서버 연결 대기
                 except Exception as e:
-                    print(f"Error accepting connection: {e}")
+                    print("")
                     break  # 소켓 오류 시 루프 종료
 
                 if count < 2:  # 캐시 서버일 경우
@@ -192,16 +192,16 @@ def main():
                     client_executor.submit(handle_client, client_socket, client_id)  # 클라이언트 처리 스레드
                 count += 1
         except Exception as e:
-            print(f"Server socket error: {e}")
+            print("종료")
         finally:
             # 서버 소켓이 종료되면 모든 소켓 닫기
             try:
                 server_socket.shutdown(socket.SHUT_RDWR)
             except Exception as e:
-                print(f"Error shutting down server socket: {e}")
+                print("모든 프로세스가 종료되었습니다.")
         server_socket.close()
 
 
 if __name__ == "__main__":
     main()
-    input("안녕 난 오류의 원인이야")
+    input("Enter Press Any Key")

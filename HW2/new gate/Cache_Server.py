@@ -28,6 +28,7 @@ log_queue_lock = threading.Lock()
 
 cache_hit_count = 0
 cache_miss_count = 0
+cache_lock = threading.Lock()
 #log_file = open("Data Server.txt", "w")
 #def log_write(event):
 #    log_file.write(fs"{event}\n")
@@ -97,13 +98,15 @@ def handle_client(client_socket, data_socket, client_id):
                     send_data(client_socket, cache_memory[file_number], master_clock, send_clock)
                 # print(f"Cache hit: Sent file {file_number} to client")
                 log_message = f"Clock [{master_clock:.2f}]  Cache hit: Sent file {file_number} to client."
-                cache_hit_count+=1
+                with cache_lock:
+                    cache_hit_count+=1
                 with log_queue_lock:
                     heapq.heappush(log_queue, (master_clock, log_message))
             else:
                 # 캐시 비우기
                 # print(f"Cache miss: Retrieved and sent file {file_number}")
                 log_message = f"Clock [{master_clock:.2f}]  Cache miss: Retrieved and sent file {file_number}."
+
                 cache_miss_count+=1
                 with log_queue_lock:
                     heapq.heappush(log_queue, (master_clock, log_message))
