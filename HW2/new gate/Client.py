@@ -9,6 +9,11 @@ from concurrent.futures import ThreadPoolExecutor
 file_list = [] #다운받을 리스트
 file_list_lock = threading.Lock()
 
+file_getsu = 100 # 총 다운 받을 파일 개수 설정
+sleep_time = 0.8
+
+receive_file_count = 0
+receive_file_count_lock = threading.Lock()
 clock = 0
 master_clock=0
 
@@ -17,6 +22,7 @@ def log_write(event):
     log_file.write(f"{event}\n")
     print(event)
     log_file.flush()
+
 
 # 클라이언트에서 서버로 파일 요청을 보내는 함수
 def send_request(client_socket, file_number,server_type):
@@ -43,6 +49,8 @@ def receive_file(client_socket):
 
 # 클라이언트에서 서버로 파일 요청을 처리하는 함수
 def client_task(server_address, port, rq_file_list, server_type):
+    global receive_file_count, file_getsu, sleep_time
+
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((server_address, port))  # 서버에 연결
     print(f"Connected to {server_type} on port {port}")
@@ -50,6 +58,9 @@ def client_task(server_address, port, rq_file_list, server_type):
     # 요청할 파일 번호 리스트에 대해 서버에 요청
 
     while True:
+        if receive_file_count == file_getsu:
+            print("All task complete")
+            break
         if not rq_file_list:
             continue
         with file_list_lock:
@@ -60,16 +71,19 @@ def client_task(server_address, port, rq_file_list, server_type):
                 with file_list_lock:
                     file_list.pop(0)
             else:continue
-            time.sleep(2)
+            time.sleep(sleep_time)
             send_request(client_socket,file_number,server_type)
             received_file = receive_file(client_socket)
             if received_file:
-                print(f"Receive file from {server_type} : {received_file}")       
+                print(f"Receive file from {server_type} : {received_file}")
+                with receive_file_count_lock:
+                    receive_file_count+=1
         except Exception as e:
             print(f"Feiled to send request file{file_number} to {server_type}")
 
 # 클라이언트가 동시에 데이터 서버와 캐시 서버에 파일 요청을 보내는 함수
 def client():
+    global file_getsu
     data_server_address = ('localhost', 10000)  # 데이터 서버 주소
     cache_server1_address = ('localhost', 20000)  # 캐시 서버 1 주소
     cache_server2_address = ('localhost', 30000)  # 캐시 서버 2 주소
@@ -82,7 +96,7 @@ def client():
     even_cache_sum = 0
     data_sum = 0
 
-    for _ in range(100): #테스트용 나중에 1000개로 수정
+    for _ in range(file_getsu): #테스트용 나중에 1000개로 수정
         file_number = random.randint(1,10000)
 
         if file_number % 2 == 0:

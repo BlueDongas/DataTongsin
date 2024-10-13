@@ -17,7 +17,7 @@ connect_condition = threading.Condition()
 master_clock = 0 
 clock = 0 
 
-clock_list = dict(Cache1=0, Cache2=0, Client1=0, Client2=0, Client3=0, Client4=0)
+clock_list = [0, 0, 0, 0, 0, 0]
 log_queue = []
 clock_list_lock = threading.Lock()
 master_clock_lock = threading.Lock()
@@ -54,26 +54,25 @@ def handle_client(client_socket, client_id):
                 packet = client_socket.recv(4096)  # 데이터를 수신
                 received_data += packet
 
-            client_name = f"Client{client_id}"
             recieved_master_clock,recieved_clock,file_number = pickle.loads(received_data)  # 파일 번호를 역직렬화
             if file_number in virtual_files:
                 # print(f"Client {client_id} requested file {file_number}")
                 with log_queue_lock and clock_list_lock:
-                    log_message = f"Clock [{clock_list[client_name]:.2f}]  {client_name} requested file {file_number}."
-                    heapq.heappush(log_queue, (clock_list[client_name], log_message))
+                    log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Client{client_id} requested file {file_number}."
+                    heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
 
                 download_time = file_number / 1024
                 with clock_list_lock:
-                    clock_list[client_name] += download_time
+                    clock_list[client_id + 1] += download_time
                     with master_clock_lock:
-                        master_clock = min(clock_list.values())
+                        master_clock = min(clock_list)
 
-                send_data(client_socket, file_number, client_name)  # 요청된 파일 전송
+                send_data(client_socket, file_number, client_id)  # 요청된 파일 전송
 
                 # print(f"Sent file {file_number} to client{client_id}")
                 with log_queue_lock and clock_list_lock:
-                    log_message = f"Clock [{clock_list[client_name]:.2f}]  Sent file {file_number} to {client_name}."
-                    heapq.heappush(log_queue, (clock_list[client_name], log_message))
+                    log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Sent file {file_number} to Client{client_id}."
+                    heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
     except Exception as e:
         print(f"Error handling client {client_id}: {e}")
 
@@ -91,27 +90,27 @@ def handle_cache(cache_socket, cache_id):
                 packet = cache_socket.recv(4096)  # 데이터를 수신
                 received_data += packet
 
-            cache_name = f"Client{cache_id}"
             recreceived_master_clock,received_clock,file_number = pickle.loads(received_data)  # 파일 번호를 역직렬화
             if file_number in virtual_files:
                 # print(f"Cache Server {cache_id} requested file {file_number}")    
                 with log_queue_lock and clock_list_lock:
-                    log_message = f"Clock [{clock_list[cache_name]:.2f}]  Cache Server {cache_id} requested file {file_number}."
-                    heapq.heappush(log_queue, (clock_list[cache_name], log_message))
+                    log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Cache Server {cache_id} requested file {file_number}."
+                    heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
 
                 download_time = file_number / 2048
 
                 with clock_list_lock:
-                    clock_list[cache_name] += download_time
+                    clock_list[cache_id - 1] += download_time
                     with master_clock_lock:
-                        master_clock = min(clock_list.values())
+                        master_clock = min(clock_list)
+                        
 
-                send_data(cache_socket, file_number,cache_name)  # 요청된 파일 전송
+                send_data(cache_socket, file_number,cache_id)  # 요청된 파일 전송
 
                 #print(f"Send file {file_number} to Cache{cache_id}")
                 with log_queue_lock and clock_list_lock:
-                    log_message = f"Clock [{clock_list[cache_name]:.2f}]  Send file {file_number} to {cache_name}."
-                    heapq.heappush(log_queue, (clock_list[cache_name], log_message))
+                    log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Send file {file_number} to Cache{cache_id}."
+                    heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
     except Exception as e:
         print(f"Error handling cache server {cache_id}: {e}")
 
@@ -121,18 +120,17 @@ def print_log():
     while True:
         # if not log_queue: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
         #     with clock_list_lock:
-        #       final_clock = max(clock_list.value())
+        #       final_clock = max(clock_list)
         #     print(f"Clock [{final_clock}]  finish")
         #     # 최종로그 내용 추가 필요
         #     return
-        with master_clock_lock:
-            if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
-                with log_queue_lock:
-                    if log_queue and log_queue[0][0] <= master_clock:
-                        _, log_message = heapq.heappop(log_queue)  # 해당 값을 pop
-                        print(log_message)
-            else:
-                continue
+        if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
+            with log_queue_lock:
+                if log_queue and log_queue[0][0] <= master_clock:
+                    _, log_message = heapq.heappop(log_queue)  # 해당 값을 pop
+                    print(log_message)
+        else:
+            continue
                     # 파일에 출력하는 코드 필요
 
 # 데이터 서버를 실행하는 메인 함수

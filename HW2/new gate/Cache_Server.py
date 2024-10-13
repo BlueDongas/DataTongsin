@@ -5,10 +5,9 @@ import random
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-
+# 데이터 서버에서 받아온 클락 관리
 clock = 0
 master_clock = 0
-
 
 # 캐시 메모리와 데이터 서버 연결 정보
 cache_memory = {}  # 캐시에 저장된 파일 정보를 딕셔너리로 관리

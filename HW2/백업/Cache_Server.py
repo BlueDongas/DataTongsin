@@ -30,6 +30,16 @@ def send_data(sock, data):
     except Exception as e:
         print(f"Error while sending data: {e}")
 
+# 정확한 데이터 수신을 위한 함수
+def recv_data(sock, size):
+    received_data = b""
+    while len(received_data) < size:
+        packet = sock.recv(min(size - len(received_data), 4096))
+        if not packet:
+            raise ConnectionError("Connection closed unexpectedly")
+        received_data += packet
+    return received_data
+
 # 데이터 서버로 파일을 요청하는 함수
 def request_file_from_data_server(data_socket, file_number):
     send_data(data_socket, file_number)  # 데이터 서버에 파일 번호를 요청
@@ -41,14 +51,9 @@ def handle_client(client_socket, data_socket, client_id):
     try:
         while True:
             # 클라이언트로부터 파일 번호 요청을 수신
-            packed_size = client_socket.recv(8)
-            if not packed_size:
-                break  # 클라이언트 연결이 종료되면 루프를 빠져나감
+            packed_size = recv_data(client_socket, 8)
             data_size = struct.unpack('Q', packed_size)[0]
-            received_data = b""
-            while len(received_data) < data_size:
-                packet = client_socket.recv(4096)
-                received_data += packet
+            received_data = recv_data(client_socket, data_size)
 
             # 받은 데이터를 역직렬화하여 파일 번호를 얻음
             recieved_clock, file_number = pickle.loads(received_data)
@@ -74,12 +79,9 @@ def handle_client(client_socket, data_socket, client_id):
                 request_file_from_data_server(data_socket, file_number)
 
                 # 데이터 서버로부터 파일을 수신한 후 캐시에 저장하고 클라이언트에 전송
-                packed_size = data_socket.recv(8)
+                packed_size = recv_data(data_socket, 8)
                 data_size = struct.unpack('Q', packed_size)[0]
-                received_data = b""
-                while len(received_data) < data_size:
-                    packet = data_socket.recv(4096)
-                    received_data += packet
+                received_data = recv_data(data_socket, data_size)
                 recieved_clock,file_data = pickle.loads(received_data)
 
                 with cache_memory_lock:
