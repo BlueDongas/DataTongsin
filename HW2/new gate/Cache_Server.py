@@ -5,21 +5,34 @@ import random
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
+
+clock = 0
+master_clock = 0
+
+
 # 캐시 메모리와 데이터 서버 연결 정보
 cache_memory = {}  # 캐시에 저장된 파일 정보를 딕셔너리로 관리
 cache_size = 200 * 1024  # 캐시 서버의 최대 용량을 200MB로 설정
 current_size = 0  # 캐시 서버의 현재 용량
 cache_memory_lock = threading.Lock()
 
+#log_file = open("Data Server.txt", "w")
+#def log_write(event):
+#    log_file.write(fs"{event}\n")
+#    print(event)
+#    log_file.flush()
+
 # 클라이언트 또는 데이터 서버로 데이터를 전송하는 함수
 def send_data(sock, data):
     try:
         # 데이터를 직렬화한 후 크기를 먼저 전송하고 데이터를 전송
-        serialized_data = pickle.dumps(data)
-        data_size = len(serialized_data)
+        send_to_data = pickle.dumps((master_clock,clock,data))
+        data_size = len(send_to_data)
         sock.sendall(struct.pack('Q', data_size))  # 데이터 크기 전송
-        sock.sendall(serialized_data)  # 실제 데이터 전송
+        sock.sendall(send_to_data)  # 실제 데이터 전송
         print(f"Sent data: {data}")
+        #cache -> data : 0 / cache -> client : clock
+        # receive_id, master_clock
     except Exception as e:
         print(f"Error while sending data: {e}")
 
@@ -44,7 +57,7 @@ def handle_client(client_socket, data_socket, client_id):
                 received_data += packet
 
             # 받은 데이터를 역직렬화하여 파일 번호를 얻음
-            file_number = pickle.loads(received_data)
+            recieved_master_clock,recieved_clock, file_number = pickle.loads(received_data)
             print(f"Client {client_id} requested file {file_number}")
 
             # 캐시 메모리에서 파일을 찾음 (캐시 히트 또는 미스)
@@ -54,6 +67,7 @@ def handle_client(client_socket, data_socket, client_id):
                 print(f"Cache hit: Sent file {file_number} to client")
             else:
                 # 캐시 비우기
+                print(f"Cache miss: Retrieved and sent file {file_number}")
                 file_data_size = len(str(file_number))  # 파일 번호를 기준으로 크기 가정 (실제 파일 크기에 맞게 변경 필요)
                 while current_size + file_data_size > cache_size and cache_memory:
                     with cache_memory_lock:
@@ -72,7 +86,7 @@ def handle_client(client_socket, data_socket, client_id):
                 while len(received_data) < data_size:
                     packet = data_socket.recv(4096)
                     received_data += packet
-                file_data = pickle.loads(received_data)
+                recrecieved_master_clock,recieved_clock,file_data = pickle.loads(received_data)
 
                 with cache_memory_lock:
                     cache_memory[file_number] = file_data
@@ -80,7 +94,6 @@ def handle_client(client_socket, data_socket, client_id):
                     print(f"Added file {file_number} to cache")
                 
                 send_data(client_socket, file_data)
-                print(f"Cache miss: Retrieved and sent file {file_number}")
     except Exception as e:
         print(f"Error handling client {client_id}: {e}")
 

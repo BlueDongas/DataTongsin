@@ -9,12 +9,21 @@ from concurrent.futures import ThreadPoolExecutor
 file_list = [] #다운받을 리스트
 file_list_lock = threading.Lock()
 
+clock = 0
+master_clock=0
+
+log_file = None
+def log_write(event):
+    log_file.write(f"{event}\n")
+    print(event)
+    log_file.flush()
+
 # 클라이언트에서 서버로 파일 요청을 보내는 함수
 def send_request(client_socket, file_number,server_type):
     try:
-        data = pickle.dumps(file_number)  # 파일 번호를 직렬화
-        client_socket.sendall(struct.pack('Q', len(data)))  # 데이터 크기 전송
-        client_socket.sendall(data)  # 파일 번호 전송
+        send_to_data = pickle.dumps((master_clock,clock,file_number))  # 파일 번호를 직렬화
+        client_socket.sendall(struct.pack('Q', len(send_to_data)))  # 데이터 크기 전송
+        client_socket.sendall(send_to_data)  # 파일 번호 전송
         print(f"Requested file {file_number} to {server_type}")
     except Exception as e:
         print(f"Error sending request for file {file_number} to {server_type}: {e}")
@@ -28,7 +37,7 @@ def receive_file(client_socket):
         while len(file_data) < data_size:
             packet = client_socket.recv(4096)  # 데이터를 받음
             file_data += packet
-        file_number = pickle.loads(file_data)  # 파일 번호를 역직렬화
+        recrecieved_master_clock,recieved_clock,file_number = pickle.loads(file_data)  # 파일 번호를 역직렬화
         return file_number
     return None
 
@@ -51,25 +60,16 @@ def client_task(server_address, port, rq_file_list, server_type):
                 with file_list_lock:
                     file_list.pop(0)
             else:continue
+            time.sleep(2)
             send_request(client_socket,file_number,server_type)
             received_file = receive_file(client_socket)
             if received_file:
-                print(f"Receive filr from {server_type} : {received_file}")       
+                print(f"Receive file from {server_type} : {received_file}")       
         except Exception as e:
             print(f"Feiled to send request file{file_number} to {server_type}")
-                
-        
-    # for file_number in rq_file_list:
-    #     send_request(client_socket, file_number)
-
-    #     # 서버로부터 파일 수신
-    #     received_file = receive_file(client_socket)
-    #     if received_file:
-    #         print(f"Received file from {server_type}: {received_file}")
 
 # 클라이언트가 동시에 데이터 서버와 캐시 서버에 파일 요청을 보내는 함수
 def client():
-    file_numbers = random.randint(1,10000)  # 1~10000 범위의 파일 번호 중 10개 선택
     data_server_address = ('localhost', 10000)  # 데이터 서버 주소
     cache_server1_address = ('localhost', 20000)  # 캐시 서버 1 주소
     cache_server2_address = ('localhost', 30000)  # 캐시 서버 2 주소
@@ -82,7 +82,7 @@ def client():
     even_cache_sum = 0
     data_sum = 0
 
-    for _ in range(10): #테스트용 나중에 1000개로 수정
+    for _ in range(100): #테스트용 나중에 1000개로 수정
         file_number = random.randint(1,10000)
 
         if file_number % 2 == 0:
