@@ -80,8 +80,6 @@ def handle_client(client_socket, data_socket, client_id):
                 print(f"Cache miss: Retrieved and sent file {file_number}")
     except Exception as e:
         print(f"Error handling client {client_id}: {e}")
-    finally:
-        client_socket.close()
 
 # 데이터 서버에 연결하는 함수
 def connect_to_data_server():
@@ -94,7 +92,7 @@ def connect_to_data_server():
 def cache_server(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('localhost', port))  # 캐시 서버 포트 설정
-    server_socket.listen(5)  # 최대 5개의 클라이언트 연결 대기
+    server_socket.listen(4)  # 최대 4개의 클라이언트 연결 대기
 
     print(f"Cache Server {port} started, waiting for connections...")
 
@@ -102,7 +100,7 @@ def cache_server(port):
     data_socket = connect_to_data_server()
 
     # 스레드 풀을 사용하여 클라이언트 요청을 병렬로 처리
-    with ThreadPoolExecutor(max_workers=5) as executor:  # 최대 5개의 클라이언트 동시 처리
+    with ThreadPoolExecutor(max_workers=4) as executor:  # 최대 4개의 클라이언트 동시 처리
         client_id = 0
         while True:
             client_socket, addr = server_socket.accept()  # 클라이언트 연결 대기

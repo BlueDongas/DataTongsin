@@ -41,24 +41,22 @@ def client_task(server_address, port, rq_file_list, server_type):
     # 요청할 파일 번호 리스트에 대해 서버에 요청
 
     while True:
-        with file_list_lock:
-            file_number = file_list[0]
         if not rq_file_list:
             continue
+        with file_list_lock:
+            file_number = file_list[0]
         try:
             if file_number == rq_file_list[0]:
+                rq_file_list.pop(0)
                 with file_list_lock:
                     file_list.pop(0)
-                rq_file_list.pop(0)
-                time.sleep(1)
-                send_request(client_socket,file_number,server_type)        
+            else:continue
+            send_request(client_socket,file_number,server_type)
+            received_file = receive_file(client_socket)
+            if received_file:
+                print(f"Receive filr from {server_type} : {received_file}")       
         except Exception as e:
             print(f"Feiled to send request file{file_number} to {server_type}")
-        finally: # 종료 
-            with file_list_lock:
-                if not file_list:
-                    print(f"All task complete {server_type}")
-                    break
                 
         
     # for file_number in rq_file_list:
@@ -102,6 +100,10 @@ def client():
                 Odd_list.append(file_number)
                 odd_cache_sum += file_number
         file_list.append(file_number)
+
+    print(Even_list)
+    print(Odd_list)
+    print(Data_request_list)
 
     # 스레드 풀을 이용해 캐시 서버와 데이터 서버에 동시에 요청
     with ThreadPoolExecutor(max_workers=100) as executor:
