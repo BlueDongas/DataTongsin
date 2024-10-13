@@ -129,12 +129,11 @@ def print_log():
                 if log_queue and log_queue[0][0] <= master_clock:
                     _, log_message = heapq.heappop(log_queue)  # 해당 값을 pop
                     print(log_message)
-        else:
-            continue
                     # 파일에 출력하는 코드 필요
 
 # 데이터 서버를 실행하는 메인 함수
 def main():
+    global connect_count
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('localhost', 10000))  # 데이터 서버 포트 바인딩
     server_socket.listen(6)  # 최대 6개의 클라이언트 연결 대기
@@ -163,6 +162,7 @@ def main():
                 print(f"Connected to Client {client_id}")
                 client_executor.submit(handle_client, client_socket, client_id)  # 클라이언트 처리 스레드
             count+=1
+
 
     server_socket.close()
 

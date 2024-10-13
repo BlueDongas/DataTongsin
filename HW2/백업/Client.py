@@ -4,11 +4,19 @@ import struct
 import random
 import threading
 import time
+import heapq
 from concurrent.futures import ThreadPoolExecutor
 
 file_list = [] #다운받을 리스트
 file_list_lock = threading.Lock()
+
+# 클락을 관리하는 변수 및 리스트
 clock = 0
+clock_list = [0, 0, 0]
+clock_list_lock = threading.Lock()
+
+log_queue = []
+log_queue_lock 
 
 log_file = None
 def log_write(event):

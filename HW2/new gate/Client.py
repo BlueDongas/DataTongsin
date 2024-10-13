@@ -10,7 +10,7 @@ file_list = [] #다운받을 리스트
 file_list_lock = threading.Lock()
 
 file_getsu = 100 # 총 다운 받을 파일 개수 설정
-sleep_time = 0.8
+sleep_time = 2
 
 receive_file_count = 0
 receive_file_count_lock = threading.Lock()
@@ -56,10 +56,9 @@ def client_task(server_address, port, rq_file_list, server_type):
     print(f"Connected to {server_type} on port {port}")
 
     # 요청할 파일 번호 리스트에 대해 서버에 요청
-
     while True:
         if receive_file_count == file_getsu:
-            print("All task complete")
+            print(f"All task complete. receive file getsu : {receive_file_count}.")
             break
         if not rq_file_list:
             continue
@@ -71,7 +70,9 @@ def client_task(server_address, port, rq_file_list, server_type):
                 with file_list_lock:
                     file_list.pop(0)
             else:continue
+
             time.sleep(sleep_time)
+
             send_request(client_socket,file_number,server_type)
             received_file = receive_file(client_socket)
             if received_file:
