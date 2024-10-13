@@ -5,12 +5,17 @@ import random
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import heapq
+import time
 
+#파일 변수
+cache_file_id = 0
+log_file = None
 # 데이터 서버가 전송해준 클락 관리
 master_clock = 0
 master_clock_lock = threading.Lock()
 
 End_count = 0
+End_count_Lock = threading.Lock()
 
 # 캐시 메모리와 데이터 서버 연결 정보
 cache_memory = {}  # 캐시에 저장된 파일 정보를 딕셔너리로 관리
@@ -68,10 +73,12 @@ def handle_client(client_socket, data_socket, client_id):
             # 받은 데이터를 역직렬화하여 파일 번호를 얻음
             recieved_master_clock,recieved_client_clock, file_number = pickle.loads(received_data)
             if recieved_client_clock !=0:
-                End_count+=1
-                if End_count ==4:
-                    send_data(data_socket,0,0,1)
-                    print("JongRyo")
+                with End_count_Lock:
+                    End_count+=1
+                    if End_count ==4:
+                        send_data(data_socket,0,0,1)
+                        # print("JongRyo")
+                        input("Enter preess Any Key")
                     return
             # print(f"Client {client_id} requested file {file_number}")
             with log_queue_lock and master_clock_lock:
@@ -136,9 +143,13 @@ def handle_client(client_socket, data_socket, client_id):
 
 # 데이터 서버에 연결하는 함수
 def connect_to_data_server():
+    global cache_file_id,log_file
     data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     data_socket.connect(('localhost', 10000))  # 데이터 서버에 연결
-    print("Connected to Data Server")
+    
+    #cache_file_id = pickle.loads(data_socket.recv(1024))
+    #log_file = open(f"Cache Server{cache_file_id}.txt", "w")
+    print(f"Connected to Data Server")
     return data_socket
 
 # 캐시 서버를 실행하는 함수
@@ -165,14 +176,16 @@ def cache_server(port):
 
 def print_log():
     global master_clock
-    heapq.heappush(log_queue, (0.000001, "Clock [0]  All connections complete. Start operation."))
     while True:
-        # if not log_queue: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
-        #     with clock_list_lock:
-        #       final_clock = max(clock_list)
-        #     print(f"Clock [{final_clock}]  finish")
-        #     # 최종로그 내용 추가 필요
-        #     return
+        with End_count_Lock:
+            if End_count == 4: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
+                time.sleep(5)
+                while log_queue:
+                    _, log_message = heapq.heappop(log_queue)
+                    print(log_message)
+                print(f"Final clock [{master_clock}]")
+                # 최종로그 내용 추가 필요
+                return
         if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
             with log_queue_lock:
                 if log_queue and log_queue[0][0] <= master_clock:

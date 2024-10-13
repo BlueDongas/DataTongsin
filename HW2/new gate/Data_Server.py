@@ -4,6 +4,7 @@ import struct
 from concurrent.futures import ThreadPoolExecutor
 import threading
 import heapq
+import time
 
 # 가상의 파일 목록을 저장 (1~10000 파일 번호와 파일 내용)
 virtual_files = {i: i for i in range(1, 10001)}  # 파일 번호와 내용이 동일한 가상 파일
@@ -13,11 +14,14 @@ connect_count = 0
 total_connect = 6
 connect_condition = threading.Condition()
 
+End_client_count = 0
+End_cache_count = 0
+End_client_count_lock = threading.Lock()
+End_cache_count_lock = threading.Lock()
+
 # 클락 관리를 위한 변수 및 리스트
 master_clock = 0 
 clock = 0 
-End_client_count = 0
-End_cache_count = 0
 clock_list = [0, 0, 0, 0, 0, 0]
 log_queue = []
 clock_list_lock = threading.Lock()
@@ -62,16 +66,16 @@ def handle_client(client_socket, client_id):
             recieved_master_clock,received_clock,file_number = pickle.loads(received_data)  # 파일 번호를 역직렬화
             if received_clock != 0:
                 #모든 작업 종료
-                End_client_count+=1
-                if End_client_count == 4:
-                    print("JongRyo")
-                    return
-                return 0
+                with End_client_count_lock:
+                    End_client_count+=1
+                    print(f"Client {client_id} JongRyo End {End_client_count}")
+                    break
             if file_number in virtual_files:
                 # print(f"Client {client_id} requested file {file_number}")
-                with log_queue_lock and clock_list_lock:
-                    log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Client{client_id} requested file {file_number}."
-                    heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
+                with log_queue_lock:
+                    with clock_list_lock:
+                        log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Client{client_id} requested file {file_number}."
+                        heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
 
                 download_time = file_number / 1024
                 with clock_list_lock:
@@ -79,12 +83,13 @@ def handle_client(client_socket, client_id):
                     with master_clock_lock:
                         master_clock = min(clock_list)
 
-                send_data(client_socket, file_number, client_id + 1)  # 요청된 파일 전송
 
                 # print(f"Sent file {file_number} to client{client_id}")
-                with log_queue_lock and clock_list_lock:
-                    log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Sent file {file_number} to Client{client_id}."
-                    heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
+                with log_queue_lock:
+                    with clock_list_lock:
+                        log_message = f"Clock [{clock_list[client_id + 1]:.2f}]  Sent file {file_number} to Client{client_id}."
+                        heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
+                send_data(client_socket, file_number, client_id + 1)  # 요청된 파일 전송
     except Exception as e:
         print(f"Error handling client {client_id}: {e}")
 
@@ -104,17 +109,17 @@ def handle_cache(cache_socket, cache_id):
 
             recreceived_master_clock,received_clock,file_number = pickle.loads(received_data)  # 파일 번호를 역직렬화
             if received_clock != 0:
-                cache_socket.close()
                 #모든 작업 종료
-                End_cache_count+=1
-                if End_cache_count == 2:
-                    return
-                return 0
+                with End_cache_count_lock:
+                    End_cache_count+=1
+                    print(f"CAche {cache_id} JongRyo End{End_cache_count}")
+                break
             if file_number in virtual_files:
                 # print(f"Cache Server {cache_id} requested file {file_number}")    
-                with log_queue_lock and clock_list_lock:
-                    log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Cache Server {cache_id} requested file {file_number}."
-                    heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
+                with log_queue_lock:
+                    with clock_list_lock:
+                        log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Cache Server {cache_id} requested file {file_number}."
+                        heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
 
                 download_time = file_number / 2048
 
@@ -122,27 +127,31 @@ def handle_cache(cache_socket, cache_id):
                     clock_list[cache_id - 1] += download_time
                     with master_clock_lock:
                         master_clock = min(clock_list)
-                        
-
-                send_data(cache_socket, file_number,cache_id - 1)  # 요청된 파일 전송
-
                 #print(f"Send file {file_number} to Cache{cache_id}")
-                with log_queue_lock and clock_list_lock:
-                    log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Send file {file_number} to Cache{cache_id}."
-                    heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
+                with log_queue_lock:
+                    with clock_list_lock:
+                        log_message = f"Clock [{clock_list[cache_id - 1]:.2f}]  Send file {file_number} to Cache{cache_id}."
+                        heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
+                send_data(cache_socket, file_number,cache_id - 1)  # 요청된 파일 전송
     except Exception as e:
         print(f"Error handling cache server {cache_id}: {e}")
 
 def print_log():
     global master_clock
-    heapq.heappush(log_queue, (0.000001, "Clock [0]  All connections complete. Start operation."))
     while True:
-        # if not log_queue: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
-        #     with clock_list_lock:
-        #       final_clock = max(clock_list)
-        #     print(f"Clock [{final_clock}]  finish")
-        #     # 최종로그 내용 추가 필요
-        #     return
+        with End_cache_count_lock:
+            with End_client_count_lock:
+                if End_client_count == 4 and End_cache_count == 2: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
+                    time.sleep(5)
+                    while log_queue:
+                        _, log_message = heapq.heappop(log_queue)
+                        print(log_message)
+                    with clock_list_lock:
+                        final_clock = max(clock_list)
+                    print(f"Final clock [{final_clock}] ")
+                    # 최종로그 내용 추가 필요
+
+                    break
         if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
             with log_queue_lock:
                 if log_queue and log_queue[0][0] <= master_clock:
@@ -156,7 +165,7 @@ def main():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('localhost', 10000))  # 데이터 서버 포트 바인딩
     server_socket.listen(6)  # 최대 6개의 클라이언트 연결 대기
-    server_socket.settimeout(15)
+    server_socket.settimeout(50)
 
     print("Data Server started, waiting for connections...")
 
@@ -171,20 +180,34 @@ def main():
         client_id = 0
         cache_id = 0
         
-        while True:
-            client_socket, addr = server_socket.accept()  # 클라이언트 또는 캐시 서버 연결 대기
-            if count < 2:  # 캐시 서버일 경우
-                cache_id += 1
-                print(f"Connected to Cache Server {cache_id}")
-                cache_executor.submit(handle_cache, client_socket, cache_id)  # 캐시 서버 처리 스레드
-            else:  # 일반 클라이언트일 경우
-                client_id += 1
-                print(f"Connected to Client {client_id}")
-                client_executor.submit(handle_client, client_socket, client_id)  # 클라이언트 처리 스레드
-            count+=1
+        try:
+            while True:
+                try:
+                    client_socket, addr = server_socket.accept()  # 클라이언트 또는 캐시 서버 연결 대기
+                except Exception as e:
+                    print(f"Error accepting connection: {e}")
+                    break  # 소켓 오류 시 루프 종료
 
+                if count < 2:  # 캐시 서버일 경우
+                    cache_id += 1
+                    print(f"Connected to Cache Server {cache_id}")
+                    cache_executor.submit(handle_cache, client_socket, cache_id)  # 캐시 서버 처리 스레드
+                else:  # 일반 클라이언트일 경우
+                    client_id += 1
+                    print(f"Connected to Client {client_id}")
+                    client_executor.submit(handle_client, client_socket, client_id)  # 클라이언트 처리 스레드
+                count += 1
+        except Exception as e:
+            print(f"Server socket error: {e}")
+        finally:
+            # 서버 소켓이 종료되면 모든 소켓 닫기
+            try:
+                server_socket.shutdown(socket.SHUT_RDWR)
+            except Exception as e:
+                print(f"Error shutting down server socket: {e}")
+        server_socket.close()
 
-    server_socket.close()
 
 if __name__ == "__main__":
     main()
+    input("안녕 난 오류의 원인이야")
