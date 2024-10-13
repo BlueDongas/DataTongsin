@@ -7,8 +7,9 @@ import time
 import heapq
 from concurrent.futures import ThreadPoolExecutor
 
+total_file_size = 0 # 전체 파일 크기 변수
 file_counter = 10 # 총 다운 받을 파일 개수 설정
-sleep_time = 4
+sleep_time = 4 #요청 지연 시간 설정
 
 client_file_id = None
 
@@ -53,12 +54,14 @@ def send_request(client_socket, server_id, file_number,server_type,last_clock):
 # 서버로부터 파일을 수신하는 함수
 def receive_file(client_socket):
     packed_size = client_socket.recv(8)  # 데이터 크기를 먼저 받음
+
     if packed_size:
         data_size = struct.unpack('Q', packed_size)[0]
         file_data = b""
         while len(file_data) < data_size:
             packet = client_socket.recv(4096)  # 데이터를 받음
             file_data += packet
+            
         recrecieved_master_clock,recieved_clock,file_number = pickle.loads(file_data)  # 파일 번호를 역직렬화
         return file_number, recieved_clock
     return None
@@ -88,17 +91,22 @@ def client_task(server_address, port, rq_file_list, server_type,file_list):
         if receive_file_count == file_counter:
             # print(f"All task complete. receive file counter : {receive_file_count}.")
             time.sleep(5)
+
             with End_count_lock:
                 End_count += 1
+
             if server_id == 2:
                 while End_count < 3:
                     continue
                 with clock_list_lock:
                     master_clock = max(clock_list)
+
             send_request(client_socket, server_id, file_number, server_type, master_clock)
             break
+
         if not rq_file_list:
             continue
+        
         try:
             with file_list_lock:
                 file_number = file_list[0]
@@ -111,31 +119,42 @@ def client_task(server_address, port, rq_file_list, server_type,file_list):
             time.sleep(sleep_time)
 
             send_request(client_socket, server_id, file_number,server_type, 0)
+
             received_file, receive_clock = receive_file(client_socket)
+
             if received_file:
                 with receive_file_count_lock:
                     receive_file_count+=1
+
                 with clock_list_lock:
                     clock_list[server_id] = receive_clock
                     master_clock = min(clock_list)
+
                 log_message = f"Clock [{clock_list[server_id]:.2f}]  receive file from {server_type} : {received_file}"
+
                 with log_queue_lock:
                     heapq.heappush(log_queue,(clock_list[server_id], log_message))
+
         except Exception as e:
             print(f"Failed to send request file{file_number} to {server_type} because {e}")
 
 def print_log():
-    global master_clock
+    global master_clock, total_file_size
+
     while True:
         if End_count == 3: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
             time.sleep(2)
+
             with log_queue_lock:
                 while log_queue:
                     _, log_message = heapq.heappop(log_queue)
                     print(log_message)
+
             print(f"Final clock [{master_clock}]")
+            print(f"Average download speed : {total_file_size/master_clock/1024:.2f}Mbps")
             # 최종로그 내용 추가 필요
             return
+        
         if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
             with log_queue_lock:
                 if log_queue and log_queue[0][0] <= master_clock:
@@ -146,7 +165,7 @@ def print_log():
 
 # 클라이언트가 동시에 데이터 서버와 캐시 서버에 파일 요청을 보내는 함수
 def client():
-    global file_counter
+    global file_counter, total_file_size
 
     data_server_address = ('localhost', 10000)  # 데이터 서버 주소
     cache_server1_address = ('localhost', 20000)  # 캐시 서버 1 주소
@@ -179,6 +198,8 @@ def client():
                 Odd_list.append(file_number)
                 odd_cache_sum += file_number
         file_list.append(file_number)
+        total_file_size += file_number
+        
 
     print(Even_list)
     print(Odd_list)

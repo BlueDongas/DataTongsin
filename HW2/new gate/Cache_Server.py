@@ -29,6 +29,11 @@ log_queue_lock = threading.Lock()
 cache_hit_count = 0
 cache_miss_count = 0
 cache_lock = threading.Lock()
+
+total_data_file_size = 0 # 전체 파일 크기 변수
+total_data_size_lock = threading.Lock()
+total_client_file_size = 0 # 전체 파일 크기 변수
+total_client_size_lock = threading.Lock()
 #log_file = open("Data Server.txt", "w")
 #def log_write(event):
 #    log_file.write(fs"{event}\n")
@@ -60,8 +65,8 @@ def request_file_from_data_server(data_socket, file_number):
 
 # 클라이언트의 요청을 처리하는 함수
 def handle_client(client_socket, data_socket, client_id):
-    global current_size, cache_size, master_clock,End_count,cache_miss_count,cache_hit_count
-    try:
+    global current_size, cache_size, master_clock,End_count,cache_miss_count,cache_hit_count, total_client_file_size, total_data_file_size
+    try:    
         while True:
             # 클라이언트로부터 파일 번호 요청을 수신
             packed_size = client_socket.recv(8)
@@ -89,13 +94,15 @@ def handle_client(client_socket, data_socket, client_id):
                 heapq.heappush(log_queue, (master_clock, log_message))
 
             download_time = file_number / 3072
-
+            with total_client_size_lock:
+                total_client_file_size+=file_number
             # 캐시 메모리에서 파일을 찾음 (캐시 히트 또는 미스)
             if file_number in cache_memory:
                 # 캐시에 파일이 있으면 클라이언트에 파일 전송
                 with master_clock_lock:
                     send_clock = master_clock + download_time
                     send_data(client_socket, cache_memory[file_number], master_clock, send_clock)
+
                 # print(f"Cache hit: Sent file {file_number} to client")
                 log_message = f"Clock [{master_clock:.2f}]  Cache hit: Sent file {file_number} to client."
                 with cache_lock:
@@ -123,7 +130,8 @@ def handle_client(client_socket, data_socket, client_id):
 
                 # 캐시에 파일이 없으면 데이터 서버에 요청
                 request_file_from_data_server(data_socket, file_number)
-
+                with total_data_size_lock:
+                    total_data_file_size += file_number
                 # 데이터 서버로부터 파일을 수신한 후 캐시에 저장하고 클라이언트에 전송
                 packed_size = data_socket.recv(8)
                 data_size = struct.unpack('Q', packed_size)[0]
@@ -132,14 +140,12 @@ def handle_client(client_socket, data_socket, client_id):
                     packet = data_socket.recv(4096)
                     received_data += packet
                 recrecieved_master_clock,recieved_data_clock,file_data = pickle.loads(received_data)
-
                 with cache_memory_lock:
                     cache_memory[file_number] = file_data
-                    current_size += len(str(file_data))  # 실제 파일 크기 추가
-                    # print(f"Added file {file_number} to cache")
-                    log_message = f"Clock [{master_clock:.2f}]  Added file {file_number} to cache."
-                    with log_queue_lock:
-                        heapq.heappush(log_queue, (master_clock, log_message))
+                current_size += len(str(file_data))  # 실제 파일 크기 추가
+                log_message = f"Clock [{master_clock:.2f}]  Added file {file_number} to cache."
+                with log_queue_lock:
+                    heapq.heappush(log_queue, (master_clock, log_message))
                 
                 with master_clock_lock:
                     master_clock = recieved_data_clock
@@ -182,7 +188,7 @@ def cache_server(port):
             client_executor.submit(handle_client, client_socket, data_socket, client_id)
 
 def print_log():
-    global master_clock
+    global master_clock, total_data_file_size, total_client_file_size
     while True:
         if End_count == 4: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
             time.sleep(2)
@@ -192,6 +198,8 @@ def print_log():
             print(f"Final clock [{master_clock}]")
             print(f"cache_hit : {cache_hit_count}")
             print(f"cache_miss : {cache_miss_count}")
+            print(f"Average receive download speed : {total_data_file_size/master_clock/1024:.02f}Mbps")
+            print(f"Average send speed : {total_client_file_size/master_clock/1024:.02f}Mbps")
             # 최종로그 내용 추가 필요
             return
         if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면

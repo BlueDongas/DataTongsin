@@ -27,6 +27,8 @@ log_queue = []
 clock_list_lock = threading.Lock()
 log_queue_lock = threading.Lock()
 
+total_file_size = 0
+file_size_lock = threading.Lock()
 log_file = ""
 def log_write(event):
     log_file.write(f"{event}\n")
@@ -50,7 +52,7 @@ def send_data(client_socket, data, id):
 
 # 클라이언트의 요청을 처리하는 함수
 def handle_client(client_socket, client_id):
-    global master_clock, End_client_count
+    global master_clock, End_client_count, total_file_size
     try:
         while True:
             packed_size = client_socket.recv(8)  # 데이터 크기 수신
@@ -78,6 +80,8 @@ def handle_client(client_socket, client_id):
                     heapq.heappush(log_queue, (clock_list[client_id + 1], log_message))
 
                 download_time = file_number / 1024
+                with file_size_lock:
+                    total_file_size += file_number
                 with clock_list_lock:
                     clock_list[client_id + 1] += download_time
                     master_clock = min(clock_list)
@@ -93,7 +97,7 @@ def handle_client(client_socket, client_id):
 
 # 캐시 서버의 요청을 처리하는 함수
 def handle_cache(cache_socket, cache_id):
-    global master_clock, End_cache_count
+    global master_clock, End_cache_count, total_file_size
     try:
         while True:
             packed_size = cache_socket.recv(8)  # 데이터 크기 수신
@@ -119,7 +123,8 @@ def handle_cache(cache_socket, cache_id):
                     heapq.heappush(log_queue, (clock_list[cache_id - 1], log_message))
 
                 download_time = file_number / 2048
-
+                with file_size_lock:
+                    total_file_size += file_number
                 with clock_list_lock:
                     clock_list[cache_id - 1] += download_time
                     master_clock = min(clock_list)
@@ -132,7 +137,7 @@ def handle_cache(cache_socket, cache_id):
         print(f"Error handling cache server {cache_id}: {e}")
 
 def print_log():
-    global master_clock
+    global master_clock, total_file_size
     while True:
         if End_client_count == 4 and End_cache_count == 2: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
             time.sleep(2)
@@ -143,6 +148,7 @@ def print_log():
             with clock_list_lock:
                 final_clock = max(clock_list)
             print(f"Final clock [{final_clock}] ")
+            print(f"Average send speed : {total_file_size/final_clock/1024:.02f}Mbps")
             # 최종로그 내용 추가 필요
 
             break
