@@ -41,12 +41,12 @@ def handle_client(client_socket, client_id):
 def main():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('localhost', 10000))  # 데이터 서버 포트 바인딩
-    server_socket.listen(5)  # 최대 5개의 클라이언트 연결 대기
+    server_socket.listen(6)  # 최대 6개의 클라이언트 연결 대기
 
     print("Data Server started, waiting for connections...")
 
     # 스레드 풀을 사용하여 클라이언트 요청을 병렬로 처리
-    with ThreadPoolExecutor(max_workers=5) as executor:  # 최대 5개의 클라이언트 동시 처리
+    with ThreadPoolExecutor(max_workers=10) as executor:  # 최대 5개의 클라이언트 동시 처리
         client_id = 0
         while True:
             client_socket, addr = server_socket.accept()  # 클라이언트 연결 대기
