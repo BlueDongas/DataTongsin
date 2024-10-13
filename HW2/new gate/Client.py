@@ -7,11 +7,8 @@ import time
 import heapq
 from concurrent.futures import ThreadPoolExecutor
 
-file_list = [] #다운받을 리스트
-file_list_lock = threading.Lock()
-
 file_getsu = 100 # 총 다운 받을 파일 개수 설정
-sleep_time = 4
+sleep_time = 5
 
 receive_file_count = 0
 receive_file_count_lock = threading.Lock()
@@ -61,7 +58,7 @@ def receive_file(client_socket):
     return None
 
 # 클라이언트에서 서버로 파일 요청을 처리하는 함수
-def client_task(server_address, port, rq_file_list, server_type):
+def client_task(server_address, port, rq_file_list, server_type,file_list):
     global receive_file_count, file_getsu, sleep_time, master_clock
 
     server_id = None
@@ -88,13 +85,11 @@ def client_task(server_address, port, rq_file_list, server_type):
             break
         if not rq_file_list:
             continue
-        with file_list_lock:
-            file_number = file_list[0]
+        file_number = file_list[0]
         try:
             if file_number == rq_file_list[0]:
                 rq_file_list.pop(0)
-                with file_list_lock:
-                    file_list.pop(0)
+                file_list.pop(0)
             else:
                 continue
 
@@ -135,10 +130,12 @@ def print_log():
 # 클라이언트가 동시에 데이터 서버와 캐시 서버에 파일 요청을 보내는 함수
 def client():
     global file_getsu
+
     data_server_address = ('localhost', 10000)  # 데이터 서버 주소
     cache_server1_address = ('localhost', 20000)  # 캐시 서버 1 주소
     cache_server2_address = ('localhost', 30000)  # 캐시 서버 2 주소
 
+    file_list = []
     Odd_list = []
     Even_list = []
     Data_request_list = []
@@ -173,13 +170,13 @@ def client():
     # 스레드 풀을 이용해 캐시 서버와 데이터 서버에 동시에 요청
     with ThreadPoolExecutor(max_workers=100) as executor:
         # 캐시 서버 1에 요청
-        executor.submit(client_task, cache_server1_address[0], cache_server1_address[1], Even_list, 'Cache Server 1')
+        executor.submit(client_task, cache_server1_address[0], cache_server1_address[1], Even_list, 'Cache Server 1',file_list)
 
         # 캐시 서버 2에 요청
-        executor.submit(client_task, cache_server2_address[0], cache_server2_address[1], Odd_list, 'Cache Server 2')
+        executor.submit(client_task, cache_server2_address[0], cache_server2_address[1], Odd_list, 'Cache Server 2',file_list)
 
         # 데이터 서버에 요청
-        executor.submit(client_task, data_server_address[0], data_server_address[1], Data_request_list, 'Data Server')
+        executor.submit(client_task, data_server_address[0], data_server_address[1], Data_request_list, 'Data Server',file_list)
 
 if __name__ == "__main__":
 
