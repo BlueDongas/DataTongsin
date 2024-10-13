@@ -37,6 +37,10 @@ def send_data(client_socket, data, id):
         data_size = len(send_to_data)
         client_socket.sendall(struct.pack('Q', data_size))  # 데이터 크기 전송
         client_socket.sendall(send_to_data)  # 데이터 전송
+    except ConnectionResetError as e:
+        print(f"Connection reset: {e}")
+    except socket.timeout as e:
+        print(f"Socket timed out: {e}")
     except Exception as e:
         print(f"Error while sending data: {e}")
 
@@ -54,7 +58,11 @@ def handle_client(client_socket, client_id):
                 packet = client_socket.recv(4096)  # 데이터를 수신
                 received_data += packet
 
-            recieved_master_clock,recieved_clock,file_number = pickle.loads(received_data)  # 파일 번호를 역직렬화
+            recieved_master_clock,received_clock,file_number = pickle.loads(received_data)  # 파일 번호를 역직렬화
+            if received_clock != 0:
+                #모든 작업 종료
+                
+                return 0
             if file_number in virtual_files:
                 # print(f"Client {client_id} requested file {file_number}")
                 with log_queue_lock and clock_list_lock:
@@ -137,6 +145,7 @@ def main():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('localhost', 10000))  # 데이터 서버 포트 바인딩
     server_socket.listen(6)  # 최대 6개의 클라이언트 연결 대기
+    server_socket.settimeout(15)
 
     print("Data Server started, waiting for connections...")
 

@@ -4,18 +4,26 @@ import struct
 import random
 import threading
 import time
+import heapq
 from concurrent.futures import ThreadPoolExecutor
 
 file_list = [] #다운받을 리스트
 file_list_lock = threading.Lock()
 
 file_getsu = 100 # 총 다운 받을 파일 개수 설정
-sleep_time = 2
+sleep_time = 4
 
 receive_file_count = 0
 receive_file_count_lock = threading.Lock()
+
 clock = 0
+clock_list = [0,0,0]
 master_clock=0
+master_clock_lock = threading.Lock()
+clock_list_lock = threading.Lock()
+
+log_queue = []
+log_queue_lock = threading.Lock()
 
 log_file = None
 def log_write(event):
@@ -25,12 +33,17 @@ def log_write(event):
 
 
 # 클라이언트에서 서버로 파일 요청을 보내는 함수
-def send_request(client_socket, file_number,server_type):
+def send_request(client_socket, file_number,server_type,last_clock): 
+    global master_clock
     try:
-        send_to_data = pickle.dumps((master_clock,clock,file_number))  # 파일 번호를 직렬화
+        send_to_data = pickle.dumps((master_clock,last_clock,file_number))  # 파일 번호를 직렬화
         client_socket.sendall(struct.pack('Q', len(send_to_data)))  # 데이터 크기 전송
         client_socket.sendall(send_to_data)  # 파일 번호 전송
-        print(f"Requested file {file_number} to {server_type}")
+
+        with log_queue_lock and master_clock_lock: 
+            log_massage = f"Clock [{master_clock:.2f}] Request file {file_number} from {server_type}"
+            heapq.heappush(log_queue,(master_clock,log_massage))
+            
     except Exception as e:
         print(f"Error sending request for file {file_number} to {server_type}: {e}")
 
@@ -44,21 +57,34 @@ def receive_file(client_socket):
             packet = client_socket.recv(4096)  # 데이터를 받음
             file_data += packet
         recrecieved_master_clock,recieved_clock,file_number = pickle.loads(file_data)  # 파일 번호를 역직렬화
-        return file_number
+        return file_number, recieved_clock
     return None
 
 # 클라이언트에서 서버로 파일 요청을 처리하는 함수
 def client_task(server_address, port, rq_file_list, server_type):
-    global receive_file_count, file_getsu, sleep_time
+    global receive_file_count, file_getsu, sleep_time, master_clock
+
+    server_id = None
+
+    if server_type == 'Cache Server 1':
+        server_id = 0
+    elif server_type == 'Cache Server 2':
+        server_id = 1
+    elif server_type == 'Data Server':
+        server_id = 2
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((server_address, port))  # 서버에 연결
-    print(f"Connected to {server_type} on port {port}")
+
+    print(f"Clock [{master_clock}]Connected to {server_type} on port {port}")
 
     # 요청할 파일 번호 리스트에 대해 서버에 요청
     while True:
         if receive_file_count == file_getsu:
             print(f"All task complete. receive file getsu : {receive_file_count}.")
+            with clock_list_lock:
+                master_clock = max(clock_list)
+            send_request(client_socket,file_number,server_type, master_clock)
             break
         if not rq_file_list:
             continue
@@ -69,18 +95,42 @@ def client_task(server_address, port, rq_file_list, server_type):
                 rq_file_list.pop(0)
                 with file_list_lock:
                     file_list.pop(0)
-            else:continue
+            else:
+                continue
 
             time.sleep(sleep_time)
 
-            send_request(client_socket,file_number,server_type)
-            received_file = receive_file(client_socket)
+            send_request(client_socket,file_number,server_type, 0)
+            received_file, receive_clock = receive_file(client_socket)
             if received_file:
-                print(f"Receive file from {server_type} : {received_file}")
+                with log_queue_lock and master_clock_lock: 
+                    log_message = f"Clock [{master_clock:.2f}]Receive file from {server_type} : {received_file}"
+                    heapq.heappush(log_queue,(master_clock,log_message))
                 with receive_file_count_lock:
                     receive_file_count+=1
+                with clock_list_lock:
+                    clock_list[server_id] += receive_clock
+                    master_clock = min(clock_list)
         except Exception as e:
-            print(f"Feiled to send request file{file_number} to {server_type}")
+            print(f"Failed to send request file{file_number} to {server_type} because {e}")
+
+def print_log():
+    global master_clock
+    heapq.heappush(log_queue, (0.000001, "Clock [0]  All connections complete. Start operation."))
+    while True:
+        # if not log_queue: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
+        #     with clock_list_lock:
+        #       final_clock = max(clock_list)
+        #     print(f"Clock [{final_clock}]  finish")
+        #     # 최종로그 내용 추가 필요
+        #     return
+        if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면
+            with log_queue_lock:
+                if log_queue and log_queue[0][0] <= master_clock:
+                    _, log_message = heapq.heappop(log_queue)  # 해당 값을 pop
+                    print(log_message)
+                    # 파일에 출력하는 코드 필요
+
 
 # 클라이언트가 동시에 데이터 서버와 캐시 서버에 파일 요청을 보내는 함수
 def client():
@@ -132,5 +182,8 @@ def client():
         executor.submit(client_task, data_server_address[0], data_server_address[1], Data_request_list, 'Data Server')
 
 if __name__ == "__main__":
+
+    log_thread = threading.Thread(target=print_log)
+    log_thread.start()
     client()
     input()  # 프로그램이 종료되지 않도록 입력 대기
