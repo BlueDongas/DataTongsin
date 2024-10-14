@@ -35,10 +35,16 @@ total_data_size_lock = threading.Lock()
 total_client_file_size = 0 # 전체 파일 크기 변수
 total_client_size_lock = threading.Lock()
 
+log_file_lock = threading.Lock()  # 로그 파일 접근을 위한 락
+
 def log_write(event):
-    log_file.write(f"{event}\n")
-    print(event)
-    log_file.flush()
+    global log_file
+    with log_file_lock:  # 락을 사용하여 동기화
+        if log_file is not None:
+            log_file.write(f"{event}\n")
+            log_file.flush()
+        else:
+            print("log_file is not initialized")
 
 # 클라이언트 또는 데이터 서버로 데이터를 전송하는 함수
 def send_data(sock, data, clock, send_clock):
@@ -87,6 +93,7 @@ def handle_client(client_socket, data_socket, client_id):
                         send_data(data_socket,0,0,1)
                         # print("JongRyo")
                         input("Enter preess Any Key")
+                        return
                     return
             # print(f"Client {client_id} requested file {file_number}")
             log_message = f"Clock [{master_clock:.2f}]  Client {client_id} requested file {file_number}."
@@ -163,6 +170,7 @@ def connect_to_data_server():
     cache_file_id = pickle.loads(data_socket.recv(1024))
     log_file = open(f"Cache Server{cache_file_id}.txt", "w")
     print(f"Connected to Data Server")
+    log_write(f"Connected to Data Server")
     return data_socket
 
 # 캐시 서버를 실행하는 함수
@@ -195,11 +203,22 @@ def print_log():
             while log_queue:
                 _, log_message = heapq.heappop(log_queue)
                 print(log_message)
+                log_write(log_message)
             print(f"Final clock [{master_clock}]")
+            log_write(f"Final clock [{master_clock}]")
+
             print(f"cache_hit : {cache_hit_count}")
+            log_write(f"cache_hit : {cache_hit_count}")
+
             print(f"cache_miss : {cache_miss_count}")
+            log_write(f"cache_miss : {cache_miss_count}")
+
             print(f"Average receive download speed : {total_data_file_size/master_clock/1024:.02f}Mbps")
+            log_write(f"Average receive download speed : {total_data_file_size/master_clock/1024:.02f}Mbps")
+
             print(f"Average send speed : {total_client_file_size/master_clock/1024:.02f}Mbps")
+            log_write(f"Average send speed : {total_client_file_size/master_clock/1024:.02f}Mbps")
+
             input("Press Enter Any key")
             # 최종로그 내용 추가 필요
             return
@@ -208,6 +227,7 @@ def print_log():
                 if log_queue and log_queue[0][0] <= master_clock:
                     _, log_message = heapq.heappop(log_queue)  # 해당 값을 pop
                     print(log_message)
+                    log_write(log_message)
                     # 파일에 출력하는 코드 필요
 
 if __name__ == "__main__":

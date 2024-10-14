@@ -1,0 +1,42 @@
+Connected to Data Server
+Clock [0.00]  Cache miss: Retrieved and sent file 7311.
+Clock [0.00]  Client 1 requested file 7311.
+Clock [0.00]  Requested file 7311 from Data Server.
+Clock [0.00]  Added file 7311 to cache.
+Clock [3.57]  Cache miss: Retrieved and sent file 8351.
+Clock [3.57]  Client 2 requested file 8351.
+Clock [3.57]  Requested file 8351 from Data Server.
+Clock [3.57]  Added file 8351 to cache.
+Clock [7.65]  Cache miss: Retrieved and sent file 9519.
+Clock [7.65]  Client 3 requested file 9519.
+Clock [7.65]  Requested file 9519 from Data Server.
+Clock [7.65]  Added file 9519 to cache.
+Clock [12.30]  Cache miss: Retrieved and sent file 953.
+Clock [12.30]  Client 1 requested file 953.
+Clock [12.30]  Requested file 953 from Data Server.
+Clock [12.30]  Added file 953 to cache.
+Clock [12.76]  Cache miss: Retrieved and sent file 8123.
+Clock [12.76]  Client 1 requested file 8123.
+Clock [12.76]  Added file 8123 to cache.
+Clock [12.76]  Requested file 8123 from Data Server.
+Clock [16.73]  Cache miss: Retrieved and sent file 4349.
+Clock [16.73]  Client 4 requested file 4349.
+Clock [16.73]  Requested file 4349 from Data Server.
+Clock [16.73]  Added file 4349 to cache.
+Clock [18.85]  Cache miss: Retrieved and sent file 465.
+Clock [18.85]  Client 3 requested file 465.
+Clock [18.85]  Requested file 465 from Data Server.
+Clock [18.85]  Added file 465 to cache.
+Clock [19.08]  Cache miss: Retrieved and sent file 5215.
+Clock [19.08]  Client 3 requested file 5215.
+Clock [19.08]  Requested file 5215 from Data Server.
+Clock [19.08]  Added file 5215 to cache.
+Clock [21.62]  Cache miss: Retrieved and sent file 1993.
+Clock [21.62]  Client 4 requested file 1993.
+Clock [21.62]  Requested file 1993 from Data Server.
+Clock [21.62]  Added file 1993 to cache.
+Final clock [22.59716796875]
+cache_hit : 0
+cache_miss : 9
+Average receive download speed : 2.00Mbps
+Average send speed : 2.00Mbps

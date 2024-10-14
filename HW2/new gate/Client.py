@@ -29,10 +29,16 @@ log_queue_lock = threading.Lock()
 
 client_file_id = None
 log_file = None
+log_file_lock = threading.Lock()  # 로그 파일 접근을 위한 락
+
 def log_write(event):
-    log_file.write(f"{event}\n")
-    print(event)
-    log_file.flush()
+    global log_file
+    with log_file_lock:  # 락을 사용하여 동기화
+        if log_file is not None:
+            log_file.write(f"{event}\n")
+            log_file.flush()
+        else:
+            print("log_file is not initialized")
 
 
 # 클라이언트에서 서버로 파일 요청을 보내는 함수
@@ -85,6 +91,7 @@ def client_task(server_address, port, rq_file_list, server_type,file_list):
         client_file_id = pickle.loads(client_socket.recv(4096))
         log_file = open(f"Client{client_file_id}.txt","w")
     print(f"Clock [{clock_list[server_id]}]  Connected to {server_type} on port {port}")
+    log_write(f"Clock [{clock_list[server_id]}]  Connected to {server_type} on port {port}")
 
     # 요청할 파일 번호 리스트에 대해 서버에 요청
     while True:
@@ -149,9 +156,12 @@ def print_log():
                 while log_queue:
                     _, log_message = heapq.heappop(log_queue)
                     print(log_message)
+                    log_write(log_message)
 
             print(f"Final clock [{master_clock}]")
+            log_write(f"Final clock [{master_clock}]")
             print(f"Average download speed : {total_file_size/master_clock/1024:.2f}Mbps")
+            log_write(f"Average download speed : {total_file_size/master_clock/1024:.2f}Mbps")
             input("Press Enter Any key")  # 프로그램이 종료되지 않도록 입력 대기
             # 최종로그 내용 추가 필요
             return
@@ -161,6 +171,7 @@ def print_log():
                 if log_queue and log_queue[0][0] <= master_clock:
                     _, log_message = heapq.heappop(log_queue)  # 해당 값을 pop
                     print(log_message)
+                    log_write(log_message)
                     # 파일에 출력하는 코드 필요
 
 

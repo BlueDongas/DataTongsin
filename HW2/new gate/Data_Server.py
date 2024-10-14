@@ -31,10 +31,16 @@ total_file_size = 0
 file_size_lock = threading.Lock()
 
 log_file = open("Data_Server.txt","w")
+log_file_lock = threading.Lock()  # 로그 파일 접근을 위한 락
+
 def log_write(event):
-    log_file.write(f"{event}\n")
-    print(event)
-    log_file.flush()
+    global log_file
+    with log_file_lock:  # 락을 사용하여 동기화
+        if log_file is not None:
+            log_file.write(f"{event}\n")
+            log_file.flush()
+        else:
+            print("log_file is not initialized")
 
 # 클라이언트에게 파일 데이터를 전송하는 함수
 def send_data(client_socket, data, id):
@@ -73,6 +79,7 @@ def handle_client(client_socket, client_id):
                 with clock_list_lock:
                     clock_list[client_id + 1] = received_clock
                 print(f"Client {client_id} JongRyo")
+                log_write(f"Client {client_id} JongRyo")
                 break
             if file_number in virtual_files:
                 # print(f"Client {client_id} requested file {file_number}")
@@ -115,7 +122,7 @@ def handle_cache(cache_socket, cache_id):
                 #모든 작업 종료
                 with End_cache_count_lock:
                     End_cache_count+=1
-                    print(f"CAche {cache_id} JongRyo End{End_cache_count}")
+                    print(f"CAche {cache_id} JongRyo")
                 break
             if file_number in virtual_files:
                 # print(f"Cache Server {cache_id} requested file {file_number}")    
@@ -146,10 +153,15 @@ def print_log():
                 while log_queue:
                     _, log_message = heapq.heappop(log_queue)
                     print(log_message)
+                    log_write(log_message)
+
             with clock_list_lock:
                 final_clock = max(clock_list)
             print(f"Final clock [{final_clock}] ")
+            log_write(f"Final clock [{final_clock}] ")
+
             print(f"Average send speed : {total_file_size/final_clock/1024:.02f}Mbps")
+            log_write(f"Average send speed : {total_file_size/final_clock/1024:.02f}Mbps")
             # 최종로그 내용 추가 필요
 
             break
@@ -158,6 +170,7 @@ def print_log():
                 if log_queue and log_queue[0][0] <= master_clock:
                     _, log_message = heapq.heappop(log_queue)  # 해당 값을 pop
                     print(log_message)
+                    log_write(log_message)
                     # 파일에 출력하는 코드 필요
 
 # 데이터 서버를 실행하는 메인 함수

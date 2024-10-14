@@ -1,0 +1,26 @@
+Clock [0]  Connected to Data Server on port 10000
+Clock [0.00]  Request file 5918 from Cache Server 1
+Clock [0.00]  Request file 6414 from Data Server
+Clock [0.00]  Request file 4349 from Cache Server 2
+Clock [6.26]  Request file 154 from Data Server
+Clock [6.26]  receive file from Data Server : 6414
+Clock [6.41]  receive file from Data Server : 154
+Clock [6.41]  Request file 668 from Data Server
+Clock [7.07]  receive file from Data Server : 668
+Clock [7.07]  Request file 9740 from Data Server
+Clock [12.30]  Request file 292 from Cache Server 1
+Clock [12.30]  receive file from Cache Server 1 : 5918
+Clock [16.58]  receive file from Data Server : 9740
+Clock [16.58]  Request file 1210 from Data Server
+Clock [17.76]  receive file from Data Server : 1210
+Clock [19.32]  Request file 5068 from Cache Server 1
+Clock [17.76]  Request file 1210 from Data Server
+Clock [19.32]  receive file from Cache Server 1 : 292
+Clock [20.27]  Request file 1993 from Cache Server 2
+Clock [20.27]  receive file from Cache Server 2 : 4349
+Clock [23.25]  Request file 1993 from Cache Server 2
+Clock [23.25]  receive file from Cache Server 2 : 1993
+Clock [23.35]  Request file 5068 from Cache Server 1
+Clock [23.35]  receive file from Cache Server 1 : 5068
+Final clock [23.345052083333332]
+Average download speed : 1.50Mbps

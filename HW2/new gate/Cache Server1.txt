@@ -1,0 +1,50 @@
+Connected to Data Server
+Clock [0.00]  Cache miss: Retrieved and sent file 3896.
+Clock [0.00]  Client 1 requested file 3896.
+Clock [0.00]  Requested file 3896 from Data Server.
+Clock [0.00]  Added file 3896 to cache.
+Clock [1.90]  Cache miss: Retrieved and sent file 1742.
+Clock [1.90]  Client 2 requested file 1742.
+Clock [1.90]  Requested file 1742 from Data Server.
+Clock [1.90]  Added file 1742 to cache.
+Clock [2.75]  Cache miss: Retrieved and sent file 4586.
+Clock [2.75]  Client 3 requested file 4586.
+Clock [2.75]  Requested file 4586 from Data Server.
+Clock [2.75]  Added file 4586 to cache.
+Clock [4.99]  Cache miss: Retrieved and sent file 5102.
+Clock [4.99]  Client 1 requested file 5102.
+Clock [4.99]  Requested file 5102 from Data Server.
+Clock [4.99]  Added file 5102 to cache.
+Clock [7.48]  Cache miss: Retrieved and sent file 5918.
+Clock [7.48]  Client 4 requested file 5918.
+Clock [7.48]  Requested file 5918 from Data Server.
+Clock [7.48]  Added file 5918 to cache.
+Clock [10.37]  Cache miss: Retrieved and sent file 578.
+Clock [10.37]  Client 2 requested file 578.
+Clock [10.37]  Requested file 578 from Data Server.
+Clock [10.37]  Added file 578 to cache.
+Clock [10.66]  Cache miss: Retrieved and sent file 2428.
+Clock [10.66]  Client 3 requested file 2428.
+Clock [10.66]  Requested file 2428 from Data Server.
+Clock [10.66]  Added file 2428 to cache.
+Clock [11.84]  Cache miss: Retrieved and sent file 6980.
+Clock [11.84]  Client 1 requested file 6980.
+Clock [11.84]  Added file 6980 to cache.
+Clock [11.84]  Requested file 6980 from Data Server.
+Clock [15.25]  Cache miss: Retrieved and sent file 7842.
+Clock [15.25]  Client 2 requested file 7842.
+Clock [15.25]  Requested file 7842 from Data Server.
+Clock [15.25]  Added file 7842 to cache.
+Clock [19.08]  Cache miss: Retrieved and sent file 292.
+Clock [19.08]  Client 4 requested file 292.
+Clock [19.08]  Requested file 292 from Data Server.
+Clock [19.08]  Added file 292 to cache.
+Clock [19.22]  Cache miss: Retrieved and sent file 5068.
+Clock [19.22]  Client 4 requested file 5068.
+Clock [19.22]  Requested file 5068 from Data Server.
+Clock [19.22]  Added file 5068 to cache.
+Final clock [21.6953125]
+cache_hit : 0
+cache_miss : 11
+Average receive download speed : 2.00Mbps
+Average send speed : 2.00Mbps
