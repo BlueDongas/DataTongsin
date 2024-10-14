@@ -75,10 +75,15 @@ def handle_client(client_socket, data_socket, client_id):
     try:    
         while True:
             # 클라이언트로부터 파일 번호 요청을 수신
-            packed_size = client_socket.recv(8)
-            if not packed_size:
-                break  # 클라이언트 연결이 종료되면 루프를 빠져나감
+            packed_size = b""
+            while len(packed_size)<8:
+                packet = client_socket.recv(8-len(packed_size))
+                if not packet:
+                    break  # 클라이언트 연결이 종료되면 루프를 빠져나감
+                packed_size+=packet
+
             data_size = struct.unpack('Q', packed_size)[0]
+
             received_data = b""
             while len(received_data) < data_size:
                 packet = client_socket.recv(4096)
@@ -96,7 +101,7 @@ def handle_client(client_socket, data_socket, client_id):
                         return
                     return
             # print(f"Client {client_id} requested file {file_number}")
-            log_message = f"Clock [{master_clock:.2f}]  Client {client_id} requested file {file_number}."
+            log_message = f"Clock [{master_clock:.2f}]  CLient {client_id} requested file {file_number}."
             with log_queue_lock:
                 heapq.heappush(log_queue, (master_clock, log_message))
 
@@ -140,13 +145,23 @@ def handle_client(client_socket, data_socket, client_id):
                 with total_data_size_lock:
                     total_data_file_size += file_number
                 # 데이터 서버로부터 파일을 수신한 후 캐시에 저장하고 클라이언트에 전송
-                packed_size = data_socket.recv(8)
+
+                packed_size = b""
+                while len(packed_size)<8:
+                    packet = data_socket.recv(8-len(packed_size))
+                    if not packet:
+                        print("Connection closed")
+                        return None
+                    packed_size+=packet
+
                 data_size = struct.unpack('Q', packed_size)[0]
                 received_data = b""
                 while len(received_data) < data_size:
                     packet = data_socket.recv(4096)
                     received_data += packet
+
                 recrecieved_master_clock,recieved_data_clock,file_data = pickle.loads(received_data)
+
                 with cache_memory_lock:
                     cache_memory[file_number] = file_data
                 current_size += len(str(file_data))  # 실제 파일 크기 추가

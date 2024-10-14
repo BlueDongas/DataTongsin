@@ -62,10 +62,15 @@ def handle_client(client_socket, client_id):
     global master_clock, End_client_count, total_file_size
     try:
         while True:
-            packed_size = client_socket.recv(8)  # 데이터 크기 수신
-            if not packed_size:
-                break  # 클라이언트 연결이 종료되면 루프 탈출
+            packed_size = b""  # 데이터 크기 수신
+            while len(packed_size)<8:
+                packet = client_socket.recv(8-len(packed_size))
+                if not packet:
+                    break  # 클라이언트 연결이 종료되면 루프 탈출
+                packed_size+=packet
+
             data_size = struct.unpack('Q', packed_size)[0]
+
             received_data = b""
             while len(received_data) < data_size:
                 packet = client_socket.recv(4096)  # 데이터를 수신
@@ -108,10 +113,15 @@ def handle_cache(cache_socket, cache_id):
     global master_clock, End_cache_count, total_file_size
     try:
         while True:
-            packed_size = cache_socket.recv(8)  # 데이터 크기 수신
-            if not packed_size:
-                break  # 캐시 서버와 연결 종료되면 루프 탈출
+            packed_size = b""  # 데이터 크기 수신
+            while len(packed_size)<8:
+                packet = cache_socket.recv(8-len(packed_size))
+                if not packet:
+                    break  # 캐시 서버와 연결 종료되면 루프 탈출
+                packed_size += packet
+
             data_size = struct.unpack('Q', packed_size)[0]
+
             received_data = b""
             while len(received_data) < data_size:
                 packet = cache_socket.recv(4096)  # 데이터를 수신

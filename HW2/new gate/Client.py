@@ -8,7 +8,7 @@ import heapq
 from concurrent.futures import ThreadPoolExecutor
 
 total_file_size = 0 # 전체 파일 크기 변수
-file_counter = 10 # 총 다운 받을 파일 개수 설정
+file_counter = 1000 # 총 다운 받을 파일 개수 설정
 sleep_time = 4 #요청 지연 시간 설정
 
 
@@ -59,7 +59,14 @@ def send_request(client_socket, server_id, file_number,server_type,last_clock):
 
 # 서버로부터 파일을 수신하는 함수
 def receive_file(client_socket):
-    packed_size = client_socket.recv(8)  # 데이터 크기를 먼저 받음
+
+    packed_size = b""  # 데이터 크기를 먼저 받음
+    while len(packed_size)<8:
+        packet = client_socket.recv(8-len(packed_size))
+        if not packet:
+            print("Error to receive file.")
+            return None
+        packed_size+=packet
 
     if packed_size:
         data_size = struct.unpack('Q', packed_size)[0]
@@ -212,10 +219,6 @@ def client():
         file_list.append(file_number)
         total_file_size += file_number
         
-
-    print(Even_list)
-    print(Odd_list)
-    print(Data_request_list)
 
     # 스레드 풀을 이용해 캐시 서버와 데이터 서버에 동시에 요청
     with ThreadPoolExecutor(max_workers=100) as executor:

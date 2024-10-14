@@ -1,86 +1,179 @@
-Clock [0.00]  Cache Server 2 requested file 7311.
-Clock [0.00]  Cache Server 1 requested file 3896.
-Clock [0.00]  Client1 requested file 1321.
-Clock [0.00]  Client2 requested file 420.
-Clock [0.00]  Client3 requested file 4367.
-Clock [0.00]  Client4 requested file 6414.
-Clock [0.41]  Client2 requested file 7.
-Clock [0.41]  Sent file 420 to Client2.
-Clock [0.42]  Sent file 7 to Client2.
-Clock [0.42]  Client2 requested file 3967.
-Clock [1.29]  Client1 requested file 7622.
-Clock [1.29]  Sent file 1321 to Client1.
-Clock [1.90]  Cache Server 1 requested file 1742.
-Clock [1.90]  Send file 3896 to Cache1.
-Clock [2.75]  Cache Server 1 requested file 4586.
-Clock [2.75]  Send file 1742 to Cache1.
-Clock [3.57]  Cache Server 2 requested file 8351.
-Clock [3.57]  Send file 7311 to Cache2.
-Clock [4.26]  Client3 requested file 215.
-Clock [4.26]  Sent file 4367 to Client3.
-Clock [4.29]  Sent file 3967 to Client2.
-Clock [4.29]  Client2 requested file 1711.
-Clock [4.47]  Client3 requested file 7437.
-Clock [4.47]  Sent file 215 to Client3.
-Clock [4.99]  Cache Server 1 requested file 5102.
-Clock [4.99]  Send file 4586 to Cache1.
-Clock [5.96]  Sent file 1711 to Client2.
-Client 1 JongRyo
-Clock [5.96]  Client2 requested file 1354.
-Clock [6.26]  Client4 requested file 154.
-Clock [6.26]  Sent file 6414 to Client4.
-Clock [6.41]  Client4 requested file 668.
-Clock [6.41]  Sent file 154 to Client4.
-Clock [7.07]  Sent file 668 to Client4.
-Clock [7.07]  Client4 requested file 9740.
-Clock [7.28]  Sent file 1354 to Client2.
-Clock [7.28]  Client2 requested file 5480.
-Clock [7.48]  Cache Server 1 requested file 5918.
-Clock [7.48]  Send file 5102 to Cache1.
-Clock [7.65]  Cache Server 2 requested file 9519.
-Clock [7.65]  Send file 8351 to Cache2.
-Clock [8.73]  Client1 requested file 6109.
-Clock [8.73]  Sent file 7622 to Client1.
-Clock [10.37]  Cache Server 1 requested file 578.
-Clock [10.37]  Send file 5918 to Cache1.
-Clock [10.66]  Cache Server 1 requested file 2428.
-Clock [10.66]  Send file 578 to Cache1.
-Clock [11.74]  Client3 requested file 9665.
-Clock [11.74]  Sent file 7437 to Client3.
-Clock [11.84]  Cache Server 1 requested file 6980.
-Clock [11.84]  Send file 2428 to Cache1.
-Clock [12.30]  Cache Server 2 requested file 953.
-Clock [12.30]  Send file 9519 to Cache2.
-Clock [12.64]  Sent file 5480 to Client2.
-Client 3 JongRyo
-Client 2 JongRyo
-Client 4 JongRyo
-Clock [12.76]  Cache Server 2 requested file 8123.
-Clock [12.76]  Send file 953 to Cache2.
-Clock [14.70]  Client1 requested file 6912.
-Clock [14.70]  Sent file 6109 to Client1.
-Clock [15.25]  Cache Server 1 requested file 7842.
-Clock [15.25]  Send file 6980 to Cache1.
-Clock [16.58]  Client4 requested file 1210.
-Clock [16.58]  Sent file 9740 to Client4.
-Clock [16.73]  Cache Server 2 requested file 4349.
-Clock [16.73]  Send file 8123 to Cache2.
-Clock [17.76]  Sent file 1210 to Client4.
-Clock [18.85]  Cache Server 2 requested file 465.
-Clock [18.85]  Send file 4349 to Cache2.
-Clock [19.08]  Cache Server 2 requested file 5215.
-Clock [19.08]  Send file 465 to Cache2.
-Clock [19.08]  Cache Server 1 requested file 292.
-Clock [19.08]  Send file 7842 to Cache1.
-Clock [19.22]  Cache Server 1 requested file 5068.
-Clock [19.22]  Send file 292 to Cache1.
-Clock [21.18]  Client3 requested file 2051.
-Clock [21.18]  Sent file 9665 to Client3.
-Clock [21.45]  Sent file 6912 to Client1.
-Clock [21.62]  Cache Server 2 requested file 1993.
-Clock [21.62]  Send file 5215 to Cache2.
-Clock [21.70]  Send file 5068 to Cache1.
-Clock [22.60]  Send file 1993 to Cache2.
-Clock [23.18]  Sent file 2051 to Client3.
-Final clock [23.345052083333332] 
-Average send speed : 7.01Mbps
+Clock [0.00]  Cache Server 1 requested file 9048.
+Clock [0.00]  Client1 requested file 1242.
+Clock [0.00]  Client2 requested file 9220.
+Clock [0.00]  Cache Server 2 requested file 2467.
+Clock [0.00]  Client3 requested file 6621.
+Clock [0.00]  Client4 requested file 6559.
+Clock [1.20]  Send file 2467 to Cache2.
+Clock [1.20]  Cache Server 2 requested file 7263.
+Clock [1.21]  Sent file 1242 to Client1.
+Clock [1.21]  Client1 requested file 3834.
+Clock [4.42]  Cache Server 1 requested file 8836.
+Clock [4.42]  Send file 9048 to Cache1.
+Clock [4.75]  Send file 7263 to Cache2.
+Clock [4.75]  Cache Server 2 requested file 3513.
+Clock [4.96]  Sent file 3834 to Client1.
+Clock [4.96]  Client1 requested file 7224.
+Clock [6.41]  Client4 requested file 4746.
+Clock [6.41]  Sent file 6559 to Client4.
+Clock [6.47]  Client3 requested file 3504.
+Clock [6.47]  Sent file 6621 to Client3.
+Clock [6.47]  Cache Server 2 requested file 3547.
+Clock [6.47]  Send file 3513 to Cache2.
+Clock [8.20]  Send file 3547 to Cache2.
+Clock [8.20]  Cache Server 2 requested file 6527.
+Clock [8.73]  Cache Server 1 requested file 3786.
+Clock [8.73]  Send file 8836 to Cache1.
+Clock [9.00]  Client2 requested file 2552.
+Clock [9.00]  Sent file 9220 to Client2.
+Clock [9.89]  Client3 requested file 4107.
+Clock [9.89]  Sent file 3504 to Client3.
+Clock [10.58]  Cache Server 1 requested file 2722.
+Clock [10.58]  Send file 3786 to Cache1.
+Clock [11.04]  Sent file 4746 to Client4.
+Clock [11.04]  Client4 requested file 7450.
+Clock [11.39]  Send file 6527 to Cache2.
+Clock [11.39]  Cache Server 2 requested file 1241.
+Clock [11.50]  Client2 requested file 5186.
+Clock [11.50]  Sent file 2552 to Client2.
+Clock [11.91]  Cache Server 1 requested file 2092.
+Clock [11.91]  Send file 2722 to Cache1.
+Clock [11.99]  Send file 1241 to Cache2.
+Clock [11.99]  Cache Server 2 requested file 9599.
+Clock [12.01]  Client1 requested file 2298.
+Clock [12.01]  Sent file 7224 to Client1.
+Clock [12.93]  Cache Server 1 requested file 7904.
+Clock [12.93]  Send file 2092 to Cache1.
+Clock [13.90]  Client3 requested file 4361.
+Clock [13.90]  Sent file 4107 to Client3.
+Clock [14.26]  Sent file 2298 to Client1.
+Clock [14.26]  Client1 requested file 4632.
+Clock [16.56]  Client2 requested file 4298.
+Clock [16.56]  Sent file 5186 to Client2.
+Clock [16.68]  Cache Server 2 requested file 2105.
+Clock [16.68]  Send file 9599 to Cache2.
+Clock [16.79]  Cache Server 1 requested file 2650.
+Clock [16.79]  Send file 7904 to Cache1.
+Clock [17.71]  Send file 2105 to Cache2.
+Clock [17.71]  Cache Server 2 requested file 721.
+Clock [18.06]  Send file 721 to Cache2.
+Clock [18.06]  Cache Server 2 requested file 2075.
+Clock [18.08]  Cache Server 1 requested file 2594.
+Clock [18.08]  Send file 2650 to Cache1.
+Clock [18.16]  Client3 requested file 6399.
+Clock [18.16]  Sent file 4361 to Client3.
+Clock [18.32]  Client4 requested file 2381.
+Clock [18.32]  Sent file 7450 to Client4.
+Clock [18.78]  Client1 requested file 3710.
+Clock [18.78]  Sent file 4632 to Client1.
+Clock [19.07]  Send file 2075 to Cache2.
+Clock [19.07]  Cache Server 2 requested file 7983.
+Clock [19.35]  Cache Server 1 requested file 4002.
+Clock [19.35]  Send file 2594 to Cache1.
+Clock [20.64]  Client4 requested file 9681.
+Clock [20.64]  Sent file 2381 to Client4.
+Clock [20.76]  Client2 requested file 1658.
+Clock [20.76]  Sent file 4298 to Client2.
+Clock [21.31]  Cache Server 1 requested file 1954.
+Clock [21.31]  Send file 4002 to Cache1.
+Clock [22.26]  Cache Server 1 requested file 5092.
+Clock [22.26]  Send file 1954 to Cache1.
+Clock [22.38]  Client2 requested file 6048.
+Clock [22.38]  Sent file 1658 to Client2.
+Clock [22.40]  Sent file 3710 to Client1.
+Clock [22.40]  Client1 requested file 6016.
+Clock [22.97]  Cache Server 2 requested file 4427.
+Clock [22.97]  Send file 7983 to Cache2.
+Clock [24.41]  Client3 requested file 7680.
+Clock [24.41]  Sent file 6399 to Client3.
+Clock [24.75]  Cache Server 1 requested file 4102.
+Clock [24.75]  Send file 5092 to Cache1.
+Clock [25.13]  Cache Server 2 requested file 4409.
+Clock [25.13]  Send file 4427 to Cache2.
+Clock [26.75]  Cache Server 1 requested file 8910.
+Clock [26.75]  Send file 4102 to Cache1.
+Clock [27.28]  Cache Server 2 requested file 6479.
+Clock [27.28]  Send file 4409 to Cache2.
+Clock [28.28]  Sent file 6016 to Client1.
+Clock [28.28]  Client1 requested file 9743.
+Clock [28.28]  Client2 requested file 6462.
+Clock [28.28]  Sent file 6048 to Client2.
+Clock [30.09]  Client4 requested file 9897.
+Clock [30.09]  Sent file 9681 to Client4.
+Clock [30.45]  Cache Server 2 requested file 5023.
+Clock [30.45]  Send file 6479 to Cache2.
+Clock [31.10]  Cache Server 1 requested file 800.
+Clock [31.10]  Send file 8910 to Cache1.
+Clock [31.49]  Cache Server 1 requested file 6264.
+Clock [31.49]  Send file 800 to Cache1.
+Clock [31.91]  Client3 requested file 3354.
+Clock [31.91]  Sent file 7680 to Client3.
+Clock [32.90]  Cache Server 2 requested file 9701.
+Clock [32.90]  Send file 5023 to Cache2.
+Clock [34.55]  Cache Server 1 requested file 9904.
+Clock [34.55]  Send file 6264 to Cache1.
+Clock [34.59]  Client2 requested file 9461.
+Clock [34.59]  Sent file 6462 to Client2.
+Clock [35.18]  Client3 requested file 908.
+Clock [35.18]  Sent file 3354 to Client3.
+Clock [36.07]  Sent file 908 to Client3.
+Clock [36.07]  Client3 requested file 9462.
+Clock [37.64]  Cache Server 2 requested file 8683.
+Clock [37.64]  Send file 9701 to Cache2.
+Clock [37.79]  Sent file 9743 to Client1.
+Clock [37.79]  Client1 requested file 6945.
+Clock [39.38]  Cache Server 1 requested file 9952.
+Clock [39.38]  Send file 9904 to Cache1.
+Clock [39.76]  Client4 requested file 3674.
+Clock [39.76]  Sent file 9897 to Client4.
+Clock [41.88]  Cache Server 2 requested file 8525.
+Clock [41.88]  Send file 8683 to Cache2.
+Clock [43.35]  Client4 requested file 5522.
+Clock [43.35]  Sent file 3674 to Client4.
+Clock [43.83]  Client2 requested file 6468.
+Clock [43.83]  Sent file 9461 to Client2.
+Clock [44.24]  Cache Server 1 requested file 5938.
+Clock [44.24]  Send file 9952 to Cache1.
+Clock [44.57]  Sent file 6945 to Client1.
+Clock [44.57]  Client1 requested file 1320.
+Clock [45.31]  Client3 requested file 3249.
+Clock [45.31]  Sent file 9462 to Client3.
+Clock [45.86]  Sent file 1320 to Client1.
+Clock [45.86]  Client1 requested file 8888.
+Clock [46.04]  Cache Server 2 requested file 7641.
+Clock [46.04]  Send file 8525 to Cache2.
+Clock [47.14]  Cache Server 1 requested file 6474.
+Clock [47.14]  Send file 5938 to Cache1.
+Clock [48.48]  Client3 requested file 3839.
+Clock [48.48]  Sent file 3249 to Client3.
+Clock [48.74]  Client4 requested file 8702.
+Clock [48.74]  Sent file 5522 to Client4.
+Clock [49.77]  Cache Server 2 requested file 379.
+Clock [49.77]  Send file 7641 to Cache2.
+Clock [49.96]  Cache Server 2 requested file 2329.
+Clock [49.96]  Send file 379 to Cache2.
+Clock [50.15]  Client2 requested file 4722.
+Clock [50.15]  Sent file 6468 to Client2.
+Clock [50.30]  Cache Server 1 requested file 5512.
+Clock [50.30]  Send file 6474 to Cache1.
+Clock [51.09]  Cache Server 2 requested file 8881.
+Clock [51.09]  Send file 2329 to Cache2.
+Clock [52.23]  Sent file 3839 to Client3.
+Clock [52.23]  Client3 requested file 4350.
+Clock [53.00]  Cache Server 1 requested file 9652.
+Clock [53.00]  Send file 5512 to Cache1.
+Clock [54.54]  Sent file 8888 to Client1.
+Clock [54.54]  Client1 requested file 8151.
+Clock [54.76]  Client2 requested file 6100.
+Clock [54.76]  Sent file 4722 to Client2.
+Clock [55.43]  Cache Server 2 requested file 5383.
+Clock [55.43]  Send file 8881 to Cache2.
+Clock [56.48]  Sent file 4350 to Client3.
+Clock [56.48]  Client3 requested file 3174.
+Clock [57.24]  Client4 requested file 3610.
+Clock [57.24]  Sent file 8702 to Client4.
+Clock [57.71]  Cache Server 1 requested file 7618.
+Clock [57.71]  Send file 9652 to Cache1.
+Clock [58.06]  Cache Server 2 requested file 3857.
+Clock [58.06]  Send file 5383 to Cache2.
+Clock [59.58]  Sent file 3174 to Client3.
