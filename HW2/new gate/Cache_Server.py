@@ -34,11 +34,11 @@ total_data_file_size = 0 # 전체 파일 크기 변수
 total_data_size_lock = threading.Lock()
 total_client_file_size = 0 # 전체 파일 크기 변수
 total_client_size_lock = threading.Lock()
-#log_file = open("Data Server.txt", "w")
-#def log_write(event):
-#    log_file.write(fs"{event}\n")
-#    print(event)
-#    log_file.flush()
+
+def log_write(event):
+    log_file.write(f"{event}\n")
+    print(event)
+    log_file.flush()
 
 # 클라이언트 또는 데이터 서버로 데이터를 전송하는 함수
 def send_data(sock, data, clock, send_clock):
@@ -160,8 +160,8 @@ def connect_to_data_server():
     data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     data_socket.connect(('localhost', 10000))  # 데이터 서버에 연결
     
-    #cache_file_id = pickle.loads(data_socket.recv(1024))
-    #log_file = open(f"Cache Server{cache_file_id}.txt", "w")
+    cache_file_id = pickle.loads(data_socket.recv(1024))
+    log_file = open(f"Cache Server{cache_file_id}.txt", "w")
     print(f"Connected to Data Server")
     return data_socket
 

@@ -29,7 +29,8 @@ log_queue_lock = threading.Lock()
 
 total_file_size = 0
 file_size_lock = threading.Lock()
-log_file = ""
+
+log_file = open("Data_Server.txt","w")
 def log_write(event):
     log_file.write(f"{event}\n")
     print(event)
@@ -190,10 +191,12 @@ def main():
 
                 if count < 2:  # 캐시 서버일 경우
                     cache_id += 1
+                    client_socket.sendall(pickle.dumps(cache_id))
                     print(f"Connected to Cache Server {cache_id}")
                     cache_executor.submit(handle_cache, client_socket, cache_id)  # 캐시 서버 처리 스레드
                 else:  # 일반 클라이언트일 경우
                     client_id += 1
+                    client_socket.sendall(pickle.dumps(client_id))
                     print(f"Connected to Client {client_id}")
                     client_executor.submit(handle_client, client_socket, client_id)  # 클라이언트 처리 스레드
                 count += 1

@@ -11,7 +11,6 @@ total_file_size = 0 # 전체 파일 크기 변수
 file_counter = 10 # 총 다운 받을 파일 개수 설정
 sleep_time = 4 #요청 지연 시간 설정
 
-client_file_id = None
 
 receive_file_count = 0
 receive_file_count_lock = threading.Lock()
@@ -28,6 +27,7 @@ file_list_lock = threading.Lock()
 log_queue = []
 log_queue_lock = threading.Lock()
 
+client_file_id = None
 log_file = None
 def log_write(event):
     log_file.write(f"{event}\n")
@@ -81,9 +81,9 @@ def client_task(server_address, port, rq_file_list, server_type,file_list):
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((server_address, port))  # 서버에 연결
-    # if server_type == 'Data Server':
-    #        client_file_id = pickle.loads(client_socket.recv(1024))
-    #        log_file = open(f"Client{client_file_id}.txt","w")
+    if server_type == 'Data Server':
+        client_file_id = pickle.loads(client_socket.recv(4096))
+        log_file = open(f"Client{client_file_id}.txt","w")
     print(f"Clock [{clock_list[server_id]}]  Connected to {server_type} on port {port}")
 
     # 요청할 파일 번호 리스트에 대해 서버에 요청
@@ -221,4 +221,4 @@ if __name__ == "__main__":
     log_thread = threading.Thread(target=print_log)
     log_thread.start()
     client()
-    input()  # 프로그램이 종료되지 않도록 입력 대기
+    input("Press Any Enter")  # 프로그램이 종료되지 않도록 입력 대기
