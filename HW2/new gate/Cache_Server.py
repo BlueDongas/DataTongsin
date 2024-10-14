@@ -43,8 +43,6 @@ def log_write(event):
         if log_file is not None:
             log_file.write(f"{event}\n")
             log_file.flush()
-        else:
-            print("log_file is not initialized")
 
 # 클라이언트 또는 데이터 서버로 데이터를 전송하는 함수
 def send_data(sock, data, clock, send_clock):
@@ -161,6 +159,9 @@ def handle_client(client_socket, data_socket, client_id):
                     received_data += packet
 
                 recrecieved_master_clock,recieved_data_clock,file_data = pickle.loads(received_data)
+                log_message = f"Clock [{master_clock:.2f}] Recieved file {file_number} from Data Server."
+                with log_queue_lock:
+                    heapq.heappush(log_queue,(master_clock,log_message))
 
                 with cache_memory_lock:
                     cache_memory[file_number] = file_data

@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 total_file_size = 0 # 전체 파일 크기 변수
 file_counter = 1000 # 총 다운 받을 파일 개수 설정
-sleep_time = 4 #요청 지연 시간 설정
+sleep_time = 7 #요청 지연 시간 설정
 
 
 receive_file_count = 0
@@ -37,8 +37,6 @@ def log_write(event):
         if log_file is not None:
             log_file.write(f"{event}\n")
             log_file.flush()
-        else:
-            print("log_file is not initialized")
 
 
 # 클라이언트에서 서버로 파일 요청을 보내는 함수
@@ -222,14 +220,14 @@ def client():
 
     # 스레드 풀을 이용해 캐시 서버와 데이터 서버에 동시에 요청
     with ThreadPoolExecutor(max_workers=100) as executor:
+        # 데이터 서버에 요청
+        executor.submit(client_task, data_server_address[0], data_server_address[1], Data_request_list, 'Data Server',file_list)
         # 캐시 서버 1에 요청
         executor.submit(client_task, cache_server1_address[0], cache_server1_address[1], Even_list, 'Cache Server 1',file_list)
 
         # 캐시 서버 2에 요청
         executor.submit(client_task, cache_server2_address[0], cache_server2_address[1], Odd_list, 'Cache Server 2',file_list)
 
-        # 데이터 서버에 요청
-        executor.submit(client_task, data_server_address[0], data_server_address[1], Data_request_list, 'Data Server',file_list)
     
 
 if __name__ == "__main__":

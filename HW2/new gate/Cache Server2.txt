@@ -1,123 +1,876 @@
 Connected to Data Server
-Clock [0.00]  CLient 3 requested file 2467.
-Clock [0.00]  Cache miss: Retrieved and sent file 2467.
-Clock [0.00]  Requested file 2467 from Data Server.
-Clock [0.00]  Added file 2467 to cache.
-Clock [1.20]  CLient 4 requested file 7263.
-Clock [1.20]  Cache miss: Retrieved and sent file 7263.
-Clock [1.20]  Requested file 7263 from Data Server.
-Clock [1.20]  Added file 7263 to cache.
-Clock [4.75]  CLient 2 requested file 3513.
-Clock [4.75]  Cache miss: Retrieved and sent file 3513.
-Clock [4.75]  Requested file 3513 from Data Server.
-Clock [4.75]  Added file 3513 to cache.
-Clock [6.47]  CLient 3 requested file 3547.
-Clock [6.47]  Cache miss: Retrieved and sent file 3547.
-Clock [6.47]  Requested file 3547 from Data Server.
-Clock [6.47]  Added file 3547 to cache.
-Clock [8.20]  CLient 3 requested file 6527.
-Clock [8.20]  Cache miss: Retrieved and sent file 6527.
-Clock [8.20]  Requested file 6527 from Data Server.
-Clock [8.20]  Added file 6527 to cache.
-Clock [11.39]  CLient 4 requested file 1241.
-Clock [11.39]  Cache miss: Retrieved and sent file 1241.
-Clock [11.39]  Requested file 1241 from Data Server.
-Clock [11.39]  Added file 1241 to cache.
-Clock [11.99]  CLient 4 requested file 9599.
-Clock [11.99]  Cache miss: Retrieved and sent file 9599.
-Clock [11.99]  Requested file 9599 from Data Server.
-Clock [11.99]  Added file 9599 to cache.
-Clock [16.68]  CLient 1 requested file 2105.
-Clock [16.68]  Cache miss: Retrieved and sent file 2105.
-Clock [16.68]  Requested file 2105 from Data Server.
-Clock [16.68]  Added file 2105 to cache.
-Clock [17.71]  CLient 2 requested file 721.
-Clock [17.71]  Cache miss: Retrieved and sent file 721.
-Clock [17.71]  Requested file 721 from Data Server.
-Clock [17.71]  Added file 721 to cache.
-Clock [18.06]  CLient 4 requested file 2075.
-Clock [18.06]  Cache miss: Retrieved and sent file 2075.
-Clock [18.06]  Requested file 2075 from Data Server.
-Clock [18.06]  Added file 2075 to cache.
-Clock [19.07]  CLient 2 requested file 7983.
-Clock [19.07]  Cache miss: Retrieved and sent file 7983.
-Clock [19.07]  Requested file 7983 from Data Server.
-Clock [19.07]  Added file 7983 to cache.
-Clock [22.97]  CLient 3 requested file 4427.
-Clock [22.97]  Cache miss: Retrieved and sent file 4427.
-Clock [22.97]  Requested file 4427 from Data Server.
-Clock [22.97]  Added file 4427 to cache.
-Clock [25.13]  CLient 4 requested file 4409.
-Clock [25.13]  Cache miss: Retrieved and sent file 4409.
-Clock [25.13]  Requested file 4409 from Data Server.
-Clock [25.13]  Added file 4409 to cache.
-Clock [27.28]  CLient 1 requested file 6479.
-Clock [27.28]  Cache miss: Retrieved and sent file 6479.
-Clock [27.28]  Requested file 6479 from Data Server.
-Clock [27.28]  Added file 6479 to cache.
-Clock [30.45]  CLient 2 requested file 5023.
-Clock [30.45]  Cache miss: Retrieved and sent file 5023.
-Clock [30.45]  Requested file 5023 from Data Server.
-Clock [30.45]  Added file 5023 to cache.
-Clock [32.90]  CLient 3 requested file 9701.
-Clock [32.90]  Cache miss: Retrieved and sent file 9701.
-Clock [32.90]  Requested file 9701 from Data Server.
-Clock [32.90]  Added file 9701 to cache.
-Clock [37.64]  CLient 1 requested file 8683.
-Clock [37.64]  Cache miss: Retrieved and sent file 8683.
-Clock [37.64]  Requested file 8683 from Data Server.
-Clock [37.64]  Added file 8683 to cache.
-Clock [41.88]  CLient 2 requested file 8525.
-Clock [41.88]  Cache miss: Retrieved and sent file 8525.
-Clock [41.88]  Requested file 8525 from Data Server.
-Clock [41.88]  Added file 8525 to cache.
-Clock [46.04]  CLient 1 requested file 7641.
-Clock [46.04]  Cache miss: Retrieved and sent file 7641.
-Clock [46.04]  Requested file 7641 from Data Server.
-Clock [46.04]  Added file 7641 to cache.
-Clock [49.77]  CLient 2 requested file 379.
-Clock [49.77]  Cache miss: Retrieved and sent file 379.
-Clock [49.77]  Requested file 379 from Data Server.
-Clock [49.77]  Added file 379 to cache.
-Clock [49.96]  CLient 3 requested file 2329.
-Clock [49.96]  Cache miss: Retrieved and sent file 2329.
-Clock [49.96]  Requested file 2329 from Data Server.
-Clock [49.96]  Added file 2329 to cache.
-Clock [51.09]  CLient 4 requested file 8881.
-Clock [51.09]  Cache miss: Retrieved and sent file 8881.
-Clock [51.09]  Requested file 8881 from Data Server.
-Clock [51.09]  Added file 8881 to cache.
-Clock [55.43]  CLient 1 requested file 5383.
-Clock [55.43]  Cache miss: Retrieved and sent file 5383.
-Clock [55.43]  Added file 5383 to cache.
-Clock [55.43]  Requested file 5383 from Data Server.
-Clock [58.06]  CLient 3 requested file 2329.
-Clock [58.06]  Cache hit: Sent file 2329 to client.
-Clock [58.06]  CLient 4 requested file 3857.
-Clock [58.06]  Cache miss: Retrieved and sent file 3857.
-Clock [58.06]  Requested file 3857 from Data Server.
-Clock [58.06]  Added file 3857 to cache.
-Clock [59.94]  CLient 2 requested file 8185.
-Clock [59.94]  Cache miss: Retrieved and sent file 8185.
-Clock [59.94]  Requested file 8185 from Data Server.
-Clock [59.94]  Added file 8185 to cache.
-Clock [63.94]  CLient 3 requested file 773.
-Clock [63.94]  Cache miss: Retrieved and sent file 773.
-Clock [63.94]  Requested file 773 from Data Server.
-Clock [63.94]  Added file 773 to cache.
-Clock [64.31]  CLient 1 requested file 5413.
-Clock [64.31]  Cache miss: Retrieved and sent file 5413.
-Clock [64.31]  Requested file 5413 from Data Server.
-Clock [64.31]  Added file 5413 to cache.
-Clock [66.96]  CLient 2 requested file 9413.
-Clock [66.96]  Cache miss: Retrieved and sent file 9413.
-Clock [66.96]  Requested file 9413 from Data Server.
-Clock [66.96]  Added file 9413 to cache.
-Clock [71.55]  CLient 4 requested file 5993.
-Clock [71.55]  Cache miss: Retrieved and sent file 5993.
-Clock [71.55]  Requested file 5993 from Data Server.
-Clock [71.55]  Added file 5993 to cache.
-Clock [74.48]  CLient 3 requested file 4769.
-Clock [74.48]  Cache miss: Retrieved and sent file 4769.
-Clock [74.48]  Requested file 4769 from Data Server.
-Clock [74.48]  Added file 4769 to cache.
+Clock [0.00]  CLient 1 requested file 975.
+Clock [0.00]  Cache miss: Retrieved and sent file 975.
+Clock [0.00]  Requested file 975 from Data Server.
+Clock [0.00]  Added file 975 to cache.
+Clock [0.00] Recieved file 975 from Data Server.
+Clock [0.48]  CLient 2 requested file 2093.
+Clock [0.48]  Cache miss: Retrieved and sent file 2093.
+Clock [0.48]  Requested file 2093 from Data Server.
+Clock [0.48]  Added file 2093 to cache.
+Clock [0.48] Recieved file 2093 from Data Server.
+Clock [1.50]  CLient 3 requested file 3409.
+Clock [1.50]  Cache miss: Retrieved and sent file 3409.
+Clock [1.50]  Requested file 3409 from Data Server.
+Clock [1.50]  Added file 3409 to cache.
+Clock [1.50] Recieved file 3409 from Data Server.
+Clock [3.16]  CLient 4 requested file 4567.
+Clock [3.16]  Cache miss: Retrieved and sent file 4567.
+Clock [3.16]  Requested file 4567 from Data Server.
+Clock [3.16]  Added file 4567 to cache.
+Clock [3.16] Recieved file 4567 from Data Server.
+Clock [5.39]  CLient 1 requested file 2399.
+Clock [5.39]  Cache miss: Retrieved and sent file 2399.
+Clock [5.39]  Requested file 2399 from Data Server.
+Clock [5.39]  Added file 2399 to cache.
+Clock [5.39] Recieved file 2399 from Data Server.
+Clock [6.56]  CLient 2 requested file 1465.
+Clock [6.56]  Cache miss: Retrieved and sent file 1465.
+Clock [6.56]  Requested file 1465 from Data Server.
+Clock [6.56]  Added file 1465 to cache.
+Clock [6.56] Recieved file 1465 from Data Server.
+Clock [7.28]  CLient 1 requested file 6381.
+Clock [7.28]  Cache miss: Retrieved and sent file 6381.
+Clock [7.28]  Requested file 6381 from Data Server.
+Clock [7.28]  Added file 6381 to cache.
+Clock [7.28] Recieved file 6381 from Data Server.
+Clock [10.40]  CLient 3 requested file 3265.
+Clock [10.40]  Cache miss: Retrieved and sent file 3265.
+Clock [10.40]  Requested file 3265 from Data Server.
+Clock [10.40]  Added file 3265 to cache.
+Clock [10.40] Recieved file 3265 from Data Server.
+Clock [11.99]  CLient 4 requested file 9927.
+Clock [11.99]  Cache miss: Retrieved and sent file 9927.
+Clock [11.99]  Requested file 9927 from Data Server.
+Clock [11.99]  Added file 9927 to cache.
+Clock [11.99] Recieved file 9927 from Data Server.
+Clock [16.84]  CLient 1 requested file 205.
+Clock [16.84]  Cache miss: Retrieved and sent file 205.
+Clock [16.84]  Requested file 205 from Data Server.
+Clock [16.84]  Added file 205 to cache.
+Clock [16.84] Recieved file 205 from Data Server.
+Clock [16.94]  CLient 3 requested file 7227.
+Clock [16.94]  Cache miss: Retrieved and sent file 7227.
+Clock [16.94]  Requested file 7227 from Data Server.
+Clock [16.94]  Added file 7227 to cache.
+Clock [16.94] Recieved file 7227 from Data Server.
+Clock [20.47]  CLient 1 requested file 8165.
+Clock [20.47]  Cache miss: Retrieved and sent file 8165.
+Clock [20.47]  Requested file 8165 from Data Server.
+Clock [20.47]  Added file 8165 to cache.
+Clock [20.47] Recieved file 8165 from Data Server.
+Clock [24.45]  CLient 2 requested file 7363.
+Clock [24.45]  Cache miss: Retrieved and sent file 7363.
+Clock [24.45]  Requested file 7363 from Data Server.
+Clock [24.45]  Added file 7363 to cache.
+Clock [24.45] Recieved file 7363 from Data Server.
+Clock [28.05]  CLient 1 requested file 35.
+Clock [28.05]  Cache miss: Retrieved and sent file 35.
+Clock [28.05]  Requested file 35 from Data Server.
+Clock [28.05]  Added file 35 to cache.
+Clock [28.05] Recieved file 35 from Data Server.
+Clock [28.06]  CLient 3 requested file 8809.
+Clock [28.06]  Cache miss: Retrieved and sent file 8809.
+Clock [28.06]  Requested file 8809 from Data Server.
+Clock [28.06]  Added file 8809 to cache.
+Clock [28.06] Recieved file 8809 from Data Server.
+Clock [32.37]  CLient 4 requested file 6113.
+Clock [32.37]  Cache miss: Retrieved and sent file 6113.
+Clock [32.37]  Requested file 6113 from Data Server.
+Clock [32.37]  Added file 6113 to cache.
+Clock [32.37] Recieved file 6113 from Data Server.
+Clock [35.35]  CLient 1 requested file 5793.
+Clock [35.35]  Cache miss: Retrieved and sent file 5793.
+Clock [35.35]  Requested file 5793 from Data Server.
+Clock [35.35]  Added file 5793 to cache.
+Clock [35.35] Recieved file 5793 from Data Server.
+Clock [38.18]  CLient 4 requested file 2125.
+Clock [38.18]  Cache miss: Retrieved and sent file 2125.
+Clock [38.18]  Requested file 2125 from Data Server.
+Clock [38.18]  Added file 2125 to cache.
+Clock [38.18] Recieved file 2125 from Data Server.
+Clock [39.22]  CLient 2 requested file 8177.
+Clock [39.22]  Cache miss: Retrieved and sent file 8177.
+Clock [39.22]  Requested file 8177 from Data Server.
+Clock [39.22]  Added file 8177 to cache.
+Clock [39.22] Recieved file 8177 from Data Server.
+Clock [43.21]  CLient 4 requested file 7123.
+Clock [43.21]  Cache miss: Retrieved and sent file 7123.
+Clock [43.21]  Requested file 7123 from Data Server.
+Clock [43.21]  Added file 7123 to cache.
+Clock [43.21] Recieved file 7123 from Data Server.
+Clock [46.69]  CLient 2 requested file 7921.
+Clock [46.69]  Cache miss: Retrieved and sent file 7921.
+Clock [46.69]  Requested file 7921 from Data Server.
+Clock [46.69]  Added file 7921 to cache.
+Clock [46.69] Recieved file 7921 from Data Server.
+Clock [50.56]  CLient 4 requested file 3839.
+Clock [50.56]  Cache miss: Retrieved and sent file 3839.
+Clock [50.56]  Requested file 3839 from Data Server.
+Clock [50.56]  Added file 3839 to cache.
+Clock [50.56] Recieved file 3839 from Data Server.
+Clock [52.43]  CLient 3 requested file 1613.
+Clock [52.43]  Cache miss: Retrieved and sent file 1613.
+Clock [52.43]  Requested file 1613 from Data Server.
+Clock [52.43]  Added file 1613 to cache.
+Clock [52.43] Recieved file 1613 from Data Server.
+Clock [53.22]  CLient 1 requested file 4501.
+Clock [53.22]  Cache miss: Retrieved and sent file 4501.
+Clock [53.22]  Requested file 4501 from Data Server.
+Clock [53.22]  Added file 4501 to cache.
+Clock [53.22] Recieved file 4501 from Data Server.
+Clock [55.42]  CLient 2 requested file 4945.
+Clock [55.42]  Cache miss: Retrieved and sent file 4945.
+Clock [55.42]  Requested file 4945 from Data Server.
+Clock [55.42]  Added file 4945 to cache.
+Clock [55.42] Recieved file 4945 from Data Server.
+Clock [57.83]  CLient 3 requested file 759.
+Clock [57.83]  Cache miss: Retrieved and sent file 759.
+Clock [57.83]  Requested file 759 from Data Server.
+Clock [57.83]  Added file 759 to cache.
+Clock [57.83] Recieved file 759 from Data Server.
+Clock [58.20]  CLient 1 requested file 4081.
+Clock [58.20]  Cache miss: Retrieved and sent file 4081.
+Clock [58.20]  Requested file 4081 from Data Server.
+Clock [58.20]  Added file 4081 to cache.
+Clock [58.20] Recieved file 4081 from Data Server.
+Clock [60.19]  CLient 3 requested file 8773.
+Clock [60.19]  Cache miss: Retrieved and sent file 8773.
+Clock [60.19]  Requested file 8773 from Data Server.
+Clock [60.19]  Added file 8773 to cache.
+Clock [60.19] Recieved file 8773 from Data Server.
+Clock [64.48]  CLient 4 requested file 9537.
+Clock [64.48]  Cache miss: Retrieved and sent file 9537.
+Clock [64.48]  Requested file 9537 from Data Server.
+Clock [64.48]  Added file 9537 to cache.
+Clock [64.48] Recieved file 9537 from Data Server.
+Clock [69.13]  CLient 1 requested file 5531.
+Clock [69.13]  Cache miss: Retrieved and sent file 5531.
+Clock [69.13]  Requested file 5531 from Data Server.
+Clock [69.13]  Added file 5531 to cache.
+Clock [69.13] Recieved file 5531 from Data Server.
+Clock [71.83]  CLient 2 requested file 5541.
+Clock [71.83]  Cache miss: Retrieved and sent file 5541.
+Clock [71.83]  Requested file 5541 from Data Server.
+Clock [71.83]  Added file 5541 to cache.
+Clock [71.83] Recieved file 5541 from Data Server.
+Clock [74.54]  CLient 1 requested file 7141.
+Clock [74.54]  Cache miss: Retrieved and sent file 7141.
+Clock [74.54]  Requested file 7141 from Data Server.
+Clock [74.54]  Added file 7141 to cache.
+Clock [74.54] Recieved file 7141 from Data Server.
+Clock [78.03]  CLient 2 requested file 1399.
+Clock [78.03]  Cache miss: Retrieved and sent file 1399.
+Clock [78.03]  Requested file 1399 from Data Server.
+Clock [78.03]  Added file 1399 to cache.
+Clock [78.03] Recieved file 1399 from Data Server.
+Clock [78.71]  CLient 3 requested file 7909.
+Clock [78.71]  Cache miss: Retrieved and sent file 7909.
+Clock [78.71]  Requested file 7909 from Data Server.
+Clock [78.71]  Added file 7909 to cache.
+Clock [78.71] Recieved file 7909 from Data Server.
+Clock [82.57]  CLient 4 requested file 1789.
+Clock [82.57]  Cache miss: Retrieved and sent file 1789.
+Clock [82.57]  Requested file 1789 from Data Server.
+Clock [82.57]  Added file 1789 to cache.
+Clock [82.57] Recieved file 1789 from Data Server.
+Clock [83.44]  CLient 1 requested file 7835.
+Clock [83.44]  Cache miss: Retrieved and sent file 7835.
+Clock [83.44]  Requested file 7835 from Data Server.
+Clock [83.44]  Added file 7835 to cache.
+Clock [83.44] Recieved file 7835 from Data Server.
+Clock [87.27]  CLient 2 requested file 71.
+Clock [87.27]  Cache miss: Retrieved and sent file 71.
+Clock [87.27]  Requested file 71 from Data Server.
+Clock [87.27]  Added file 71 to cache.
+Clock [87.27] Recieved file 71 from Data Server.
+Clock [87.31]  CLient 2 requested file 4957.
+Clock [87.31]  Cache miss: Retrieved and sent file 4957.
+Clock [87.31]  Requested file 4957 from Data Server.
+Clock [87.31]  Added file 4957 to cache.
+Clock [87.31] Recieved file 4957 from Data Server.
+Clock [89.73]  CLient 1 requested file 6731.
+Clock [89.73]  Cache miss: Retrieved and sent file 6731.
+Clock [89.73]  Requested file 6731 from Data Server.
+Clock [89.73]  Added file 6731 to cache.
+Clock [89.73] Recieved file 6731 from Data Server.
+Clock [93.01]  CLient 2 requested file 495.
+Clock [93.01]  Cache miss: Retrieved and sent file 495.
+Clock [93.01]  Requested file 495 from Data Server.
+Clock [93.01]  Added file 495 to cache.
+Clock [93.01] Recieved file 495 from Data Server.
+Clock [93.25]  CLient 4 requested file 5093.
+Clock [93.25]  Cache miss: Retrieved and sent file 5093.
+Clock [93.25]  Requested file 5093 from Data Server.
+Clock [93.25]  Added file 5093 to cache.
+Clock [93.25] Recieved file 5093 from Data Server.
+Clock [95.74]  CLient 1 requested file 9693.
+Clock [95.74]  Cache miss: Retrieved and sent file 9693.
+Clock [95.74]  Requested file 9693 from Data Server.
+Clock [95.74]  Added file 9693 to cache.
+Clock [95.74] Recieved file 9693 from Data Server.
+Clock [100.47]  CLient 2 requested file 393.
+Clock [100.47]  Cache miss: Retrieved and sent file 393.
+Clock [100.47]  Requested file 393 from Data Server.
+Clock [100.47]  Added file 393 to cache.
+Clock [100.47] Recieved file 393 from Data Server.
+Clock [100.67]  CLient 3 requested file 2029.
+Clock [100.67]  Cache miss: Retrieved and sent file 2029.
+Clock [100.67]  Requested file 2029 from Data Server.
+Clock [100.67]  Added file 2029 to cache.
+Clock [100.67] Recieved file 2029 from Data Server.
+Clock [101.66]  CLient 4 requested file 3807.
+Clock [101.66]  Cache miss: Retrieved and sent file 3807.
+Clock [101.66]  Requested file 3807 from Data Server.
+Clock [101.66]  Added file 3807 to cache.
+Clock [101.66] Recieved file 3807 from Data Server.
+Clock [103.52]  CLient 2 requested file 7901.
+Clock [103.52]  Cache miss: Retrieved and sent file 7901.
+Clock [103.52]  Requested file 7901 from Data Server.
+Clock [103.52]  Added file 7901 to cache.
+Clock [103.52] Recieved file 7901 from Data Server.
+Clock [107.37]  CLient 4 requested file 5453.
+Clock [107.37]  Cache miss: Retrieved and sent file 5453.
+Clock [107.37]  Requested file 5453 from Data Server.
+Clock [107.37]  Added file 5453 to cache.
+Clock [107.37] Recieved file 5453 from Data Server.
+Clock [110.04]  CLient 1 requested file 6923.
+Clock [110.04]  Cache miss: Retrieved and sent file 6923.
+Clock [110.04]  Requested file 6923 from Data Server.
+Clock [110.04]  Added file 6923 to cache.
+Clock [110.04] Recieved file 6923 from Data Server.
+Clock [113.42]  CLient 4 requested file 7883.
+Clock [113.42]  Cache miss: Retrieved and sent file 7883.
+Clock [113.42]  Requested file 7883 from Data Server.
+Clock [113.42]  Added file 7883 to cache.
+Clock [113.42] Recieved file 7883 from Data Server.
+Clock [117.27]  CLient 2 requested file 4437.
+Clock [117.27]  Cache miss: Retrieved and sent file 4437.
+Clock [117.27]  Requested file 4437 from Data Server.
+Clock [117.27]  Added file 4437 to cache.
+Clock [117.27] Recieved file 4437 from Data Server.
+Clock [119.43]  CLient 3 requested file 8435.
+Clock [119.43]  Cache miss: Retrieved and sent file 8435.
+Clock [119.43]  Requested file 8435 from Data Server.
+Clock [119.43]  Added file 8435 to cache.
+Clock [119.43] Recieved file 8435 from Data Server.
+Clock [123.55]  CLient 4 requested file 4695.
+Clock [123.55]  Cache miss: Retrieved and sent file 4695.
+Clock [123.55]  Requested file 4695 from Data Server.
+Clock [123.55]  Added file 4695 to cache.
+Clock [123.55] Recieved file 4695 from Data Server.
+Clock [125.84]  CLient 2 requested file 2699.
+Clock [125.84]  Cache miss: Retrieved and sent file 2699.
+Clock [125.84]  Requested file 2699 from Data Server.
+Clock [125.84]  Added file 2699 to cache.
+Clock [125.84] Recieved file 2699 from Data Server.
+Clock [127.16]  CLient 4 requested file 9829.
+Clock [127.16]  Cache miss: Retrieved and sent file 9829.
+Clock [127.16]  Requested file 9829 from Data Server.
+Clock [127.16]  Added file 9829 to cache.
+Clock [127.16] Recieved file 9829 from Data Server.
+Clock [131.96]  CLient 2 requested file 8743.
+Clock [131.96]  Cache miss: Retrieved and sent file 8743.
+Clock [131.96]  Requested file 8743 from Data Server.
+Clock [131.96]  Added file 8743 to cache.
+Clock [131.96] Recieved file 8743 from Data Server.
+Clock [136.23]  CLient 2 requested file 8531.
+Clock [136.23]  Cache miss: Retrieved and sent file 8531.
+Clock [136.23]  Requested file 8531 from Data Server.
+Clock [136.23]  Added file 8531 to cache.
+Clock [136.23] Recieved file 8531 from Data Server.
+Clock [140.39]  CLient 4 requested file 1873.
+Clock [140.39]  Cache miss: Retrieved and sent file 1873.
+Clock [140.39]  Added file 1873 to cache.
+Clock [140.39]  Requested file 1873 from Data Server.
+Clock [140.39] Recieved file 1873 from Data Server.
+Clock [141.31]  CLient 2 requested file 6977.
+Clock [141.31]  Cache miss: Retrieved and sent file 6977.
+Clock [141.31]  Requested file 6977 from Data Server.
+Clock [141.31]  Added file 6977 to cache.
+Clock [141.31] Recieved file 6977 from Data Server.
+Clock [144.72]  CLient 3 requested file 3413.
+Clock [144.72]  Cache miss: Retrieved and sent file 3413.
+Clock [144.72]  Requested file 3413 from Data Server.
+Clock [144.72]  Added file 3413 to cache.
+Clock [144.72] Recieved file 3413 from Data Server.
+Clock [146.38]  CLient 4 requested file 6575.
+Clock [146.38]  Cache miss: Retrieved and sent file 6575.
+Clock [146.38]  Added file 6575 to cache.
+Clock [146.38]  Requested file 6575 from Data Server.
+Clock [146.38] Recieved file 6575 from Data Server.
+Clock [149.59]  CLient 1 requested file 3831.
+Clock [149.59]  Cache miss: Retrieved and sent file 3831.
+Clock [149.59]  Requested file 3831 from Data Server.
+Clock [149.59]  Added file 3831 to cache.
+Clock [149.59] Recieved file 3831 from Data Server.
+Clock [151.46]  CLient 3 requested file 8765.
+Clock [151.46]  Cache miss: Retrieved and sent file 8765.
+Clock [151.46]  Requested file 8765 from Data Server.
+Clock [151.46]  Added file 8765 to cache.
+Clock [151.46] Recieved file 8765 from Data Server.
+Clock [155.74]  CLient 1 requested file 6727.
+Clock [155.74]  Cache miss: Retrieved and sent file 6727.
+Clock [155.74]  Requested file 6727 from Data Server.
+Clock [155.74]  Added file 6727 to cache.
+Clock [155.74] Recieved file 6727 from Data Server.
+Clock [159.03]  CLient 2 requested file 5709.
+Clock [159.03]  Cache miss: Retrieved and sent file 5709.
+Clock [159.03]  Requested file 5709 from Data Server.
+Clock [159.03]  Added file 5709 to cache.
+Clock [159.03] Recieved file 5709 from Data Server.
+Clock [161.82]  CLient 3 requested file 9367.
+Clock [161.82]  Cache miss: Retrieved and sent file 9367.
+Clock [161.82]  Requested file 9367 from Data Server.
+Clock [161.82]  Added file 9367 to cache.
+Clock [161.82] Recieved file 9367 from Data Server.
+Clock [166.39]  CLient 1 requested file 4695.
+Clock [166.39]  Cache hit: Sent file 4695 to client.
+Clock [166.39]  CLient 3 requested file 2843.
+Clock [166.39]  Cache miss: Retrieved and sent file 2843.
+Clock [166.39]  Requested file 2843 from Data Server.
+Clock [166.39]  Added file 2843 to cache.
+Clock [166.39] Recieved file 2843 from Data Server.
+Clock [167.78]  CLient 4 requested file 4689.
+Clock [167.78]  Cache miss: Retrieved and sent file 4689.
+Clock [167.78]  Requested file 4689 from Data Server.
+Clock [167.78]  Added file 4689 to cache.
+Clock [167.78] Recieved file 4689 from Data Server.
+Clock [170.07]  CLient 1 requested file 2621.
+Clock [170.07]  Cache miss: Retrieved and sent file 2621.
+Clock [170.07]  Requested file 2621 from Data Server.
+Clock [170.07]  Added file 2621 to cache.
+Clock [170.07] Recieved file 2621 from Data Server.
+Clock [171.35]  CLient 3 requested file 813.
+Clock [171.35]  Cache miss: Retrieved and sent file 813.
+Clock [171.35]  Requested file 813 from Data Server.
+Clock [171.35]  Added file 813 to cache.
+Clock [171.35] Recieved file 813 from Data Server.
+Clock [171.74]  CLient 4 requested file 5093.
+Clock [171.74]  Cache hit: Sent file 5093 to client.
+Clock [171.74]  CLient 2 requested file 1507.
+Clock [171.74]  Cache miss: Retrieved and sent file 1507.
+Clock [171.74]  Requested file 1507 from Data Server.
+Clock [171.74]  Added file 1507 to cache.
+Clock [171.74] Recieved file 1507 from Data Server.
+Clock [172.48]  CLient 1 requested file 6937.
+Clock [172.48]  Cache miss: Retrieved and sent file 6937.
+Clock [172.48]  Requested file 6937 from Data Server.
+Clock [172.48]  Added file 6937 to cache.
+Clock [172.48] Recieved file 6937 from Data Server.
+Clock [175.87]  CLient 4 requested file 7591.
+Clock [175.87]  Cache miss: Retrieved and sent file 7591.
+Clock [175.87]  Requested file 7591 from Data Server.
+Clock [175.87]  Added file 7591 to cache.
+Clock [175.87] Recieved file 7591 from Data Server.
+Clock [179.57]  CLient 1 requested file 7803.
+Clock [179.57]  Cache miss: Retrieved and sent file 7803.
+Clock [179.57]  Requested file 7803 from Data Server.
+Clock [179.57]  Added file 7803 to cache.
+Clock [179.57] Recieved file 7803 from Data Server.
+Clock [183.38]  CLient 4 requested file 5835.
+Clock [183.38]  Cache miss: Retrieved and sent file 5835.
+Clock [183.38]  Requested file 5835 from Data Server.
+Clock [183.38]  Added file 5835 to cache.
+Clock [183.38] Recieved file 5835 from Data Server.
+Clock [186.23]  CLient 2 requested file 5635.
+Clock [186.23]  Cache miss: Retrieved and sent file 5635.
+Clock [186.23]  Requested file 5635 from Data Server.
+Clock [186.23]  Added file 5635 to cache.
+Clock [186.23] Recieved file 5635 from Data Server.
+Clock [188.98]  CLient 3 requested file 5969.
+Clock [188.98]  Cache miss: Retrieved and sent file 5969.
+Clock [188.98]  Requested file 5969 from Data Server.
+Clock [188.98]  Added file 5969 to cache.
+Clock [188.98] Recieved file 5969 from Data Server.
+Clock [191.90]  CLient 1 requested file 4889.
+Clock [191.90]  Cache miss: Retrieved and sent file 4889.
+Clock [191.90]  Requested file 4889 from Data Server.
+Clock [191.90]  Added file 4889 to cache.
+Clock [191.90] Recieved file 4889 from Data Server.
+Clock [194.29]  CLient 2 requested file 2357.
+Clock [194.29]  Cache miss: Retrieved and sent file 2357.
+Clock [194.29]  Requested file 2357 from Data Server.
+Clock [194.29]  Added file 2357 to cache.
+Clock [194.29] Recieved file 2357 from Data Server.
+Clock [195.44]  CLient 2 requested file 5653.
+Clock [195.44]  Cache miss: Retrieved and sent file 5653.
+Clock [195.44]  Requested file 5653 from Data Server.
+Clock [195.44]  Added file 5653 to cache.
+Clock [195.44] Recieved file 5653 from Data Server.
+Clock [198.20]  CLient 3 requested file 9927.
+Clock [198.20]  Cache hit: Sent file 9927 to client.
+Clock [198.20]  CLient 2 requested file 3551.
+Clock [198.20]  Cache miss: Retrieved and sent file 3551.
+Clock [198.20]  Requested file 3551 from Data Server.
+Clock [198.20]  Added file 3551 to cache.
+Clock [198.20] Recieved file 3551 from Data Server.
+Clock [199.93]  CLient 4 requested file 347.
+Clock [199.93]  Cache miss: Retrieved and sent file 347.
+Clock [199.93]  Requested file 347 from Data Server.
+Clock [199.93]  Added file 347 to cache.
+Clock [199.93] Recieved file 347 from Data Server.
+Clock [200.10]  CLient 1 requested file 215.
+Clock [200.10]  Cache miss: Retrieved and sent file 215.
+Clock [200.10]  Requested file 215 from Data Server.
+Clock [200.10]  Added file 215 to cache.
+Clock [200.10] Recieved file 215 from Data Server.
+Clock [200.21]  CLient 3 requested file 9971.
+Clock [200.21]  Cache miss: Retrieved and sent file 9971.
+Clock [200.21]  Requested file 9971 from Data Server.
+Clock [200.21]  Added file 9971 to cache.
+Clock [200.21] Recieved file 9971 from Data Server.
+Clock [205.07]  CLient 4 requested file 5393.
+Clock [205.07]  Cache miss: Retrieved and sent file 5393.
+Clock [205.07]  Requested file 5393 from Data Server.
+Clock [205.07]  Added file 5393 to cache.
+Clock [205.07] Recieved file 5393 from Data Server.
+Clock [207.71]  CLient 4 requested file 2351.
+Clock [207.71]  Cache miss: Retrieved and sent file 2351.
+Clock [207.71]  Requested file 2351 from Data Server.
+Clock [207.71]  Added file 2351 to cache.
+Clock [207.71] Recieved file 2351 from Data Server.
+Clock [208.85]  CLient 1 requested file 6863.
+Clock [208.85]  Cache miss: Retrieved and sent file 6863.
+Clock [208.85]  Requested file 6863 from Data Server.
+Clock [208.85]  Added file 6863 to cache.
+Clock [208.85] Recieved file 6863 from Data Server.
+Clock [212.21]  CLient 3 requested file 5183.
+Clock [212.21]  Cache miss: Retrieved and sent file 5183.
+Clock [212.21]  Requested file 5183 from Data Server.
+Clock [212.21]  Added file 5183 to cache.
+Clock [212.21] Recieved file 5183 from Data Server.
+Clock [214.74]  CLient 4 requested file 3133.
+Clock [214.74]  Cache miss: Retrieved and sent file 3133.
+Clock [214.74]  Requested file 3133 from Data Server.
+Clock [214.74]  Added file 3133 to cache.
+Clock [214.74] Recieved file 3133 from Data Server.
+Clock [216.27]  CLient 1 requested file 7307.
+Clock [216.27]  Cache miss: Retrieved and sent file 7307.
+Clock [216.27]  Requested file 7307 from Data Server.
+Clock [216.27]  Added file 7307 to cache.
+Clock [216.27] Recieved file 7307 from Data Server.
+Clock [219.83]  CLient 4 requested file 6319.
+Clock [219.83]  Cache miss: Retrieved and sent file 6319.
+Clock [219.83]  Added file 6319 to cache.
+Clock [219.83]  Requested file 6319 from Data Server.
+Clock [219.83] Recieved file 6319 from Data Server.
+Clock [222.92]  CLient 2 requested file 6779.
+Clock [222.92]  Cache miss: Retrieved and sent file 6779.
+Clock [222.92]  Requested file 6779 from Data Server.
+Clock [222.92]  Added file 6779 to cache.
+Clock [222.92] Recieved file 6779 from Data Server.
+Clock [226.23]  CLient 1 requested file 9003.
+Clock [226.23]  Cache miss: Retrieved and sent file 9003.
+Clock [226.23]  Requested file 9003 from Data Server.
+Clock [226.23]  Added file 9003 to cache.
+Clock [226.23] Recieved file 9003 from Data Server.
+Clock [230.63]  CLient 4 requested file 3331.
+Clock [230.63]  Cache miss: Retrieved and sent file 3331.
+Clock [230.63]  Added file 3331 to cache.
+Clock [230.63]  Requested file 3331 from Data Server.
+Clock [230.63] Recieved file 3331 from Data Server.
+Clock [232.25]  CLient 2 requested file 2877.
+Clock [232.25]  Cache miss: Retrieved and sent file 2877.
+Clock [232.25]  Requested file 2877 from Data Server.
+Clock [232.25]  Added file 2877 to cache.
+Clock [232.25] Recieved file 2877 from Data Server.
+Clock [233.66]  CLient 3 requested file 37.
+Clock [233.66]  Cache miss: Retrieved and sent file 37.
+Clock [233.66]  Requested file 37 from Data Server.
+Clock [233.66]  Added file 37 to cache.
+Clock [233.66] Recieved file 37 from Data Server.
+Clock [233.68]  CLient 2 requested file 7495.
+Clock [233.68]  Cache miss: Retrieved and sent file 7495.
+Clock [233.68]  Requested file 7495 from Data Server.
+Clock [233.68]  Added file 7495 to cache.
+Clock [233.68] Recieved file 7495 from Data Server.
+Clock [237.33]  CLient 3 requested file 4353.
+Clock [237.33]  Cache miss: Retrieved and sent file 4353.
+Clock [237.33]  Requested file 4353 from Data Server.
+Clock [237.33]  Added file 4353 to cache.
+Clock [237.33] Recieved file 4353 from Data Server.
+Clock [239.46]  CLient 4 requested file 9499.
+Clock [239.46]  Cache miss: Retrieved and sent file 9499.
+Clock [239.46]  Requested file 9499 from Data Server.
+Clock [239.46]  Added file 9499 to cache.
+Clock [239.46] Recieved file 9499 from Data Server.
+Clock [244.10]  CLient 2 requested file 323.
+Clock [244.10]  Cache miss: Retrieved and sent file 323.
+Clock [244.10]  Requested file 323 from Data Server.
+Clock [244.10]  Added file 323 to cache.
+Clock [244.10] Recieved file 323 from Data Server.
+Clock [244.26]  CLient 3 requested file 8009.
+Clock [244.26]  Cache miss: Retrieved and sent file 8009.
+Clock [244.26]  Requested file 8009 from Data Server.
+Clock [244.26]  Added file 8009 to cache.
+Clock [244.26] Recieved file 8009 from Data Server.
+Clock [248.17]  CLient 2 requested file 2223.
+Clock [248.17]  Cache miss: Retrieved and sent file 2223.
+Clock [248.17]  Requested file 2223 from Data Server.
+Clock [248.17]  Added file 2223 to cache.
+Clock [248.17] Recieved file 2223 from Data Server.
+Clock [249.25]  CLient 4 requested file 7979.
+Clock [249.25]  Cache miss: Retrieved and sent file 7979.
+Clock [249.25]  Requested file 7979 from Data Server.
+Clock [249.25]  Added file 7979 to cache.
+Clock [249.25] Recieved file 7979 from Data Server.
+Clock [253.15]  CLient 2 requested file 1317.
+Clock [253.15]  Cache miss: Retrieved and sent file 1317.
+Clock [253.15]  Requested file 1317 from Data Server.
+Clock [253.15]  Added file 1317 to cache.
+Clock [253.15] Recieved file 1317 from Data Server.
+Clock [253.79]  CLient 3 requested file 3047.
+Clock [253.79]  Cache miss: Retrieved and sent file 3047.
+Clock [253.79]  Requested file 3047 from Data Server.
+Clock [253.79]  Added file 3047 to cache.
+Clock [253.79] Recieved file 3047 from Data Server.
+Clock [255.28]  CLient 1 requested file 1439.
+Clock [255.28]  Cache miss: Retrieved and sent file 1439.
+Clock [255.28]  Requested file 1439 from Data Server.
+Clock [255.28]  Added file 1439 to cache.
+Clock [255.28] Recieved file 1439 from Data Server.
+Clock [255.98]  CLient 2 requested file 3239.
+Clock [255.98]  Cache miss: Retrieved and sent file 3239.
+Clock [255.98]  Requested file 3239 from Data Server.
+Clock [255.98]  Added file 3239 to cache.
+Clock [255.98] Recieved file 3239 from Data Server.
+Clock [257.56]  CLient 1 requested file 9433.
+Clock [257.56]  Cache miss: Retrieved and sent file 9433.
+Clock [257.56]  Requested file 9433 from Data Server.
+Clock [257.56]  Added file 9433 to cache.
+Clock [257.56] Recieved file 9433 from Data Server.
+Clock [262.17]  CLient 2 requested file 981.
+Clock [262.17]  Cache miss: Retrieved and sent file 981.
+Clock [262.17]  Requested file 981 from Data Server.
+Clock [262.17]  Added file 981 to cache.
+Clock [262.17] Recieved file 981 from Data Server.
+Clock [262.65]  CLient 3 requested file 1289.
+Clock [262.65]  Cache miss: Retrieved and sent file 1289.
+Clock [262.65]  Requested file 1289 from Data Server.
+Clock [262.65]  Added file 1289 to cache.
+Clock [262.65] Recieved file 1289 from Data Server.
+Clock [263.28]  CLient 1 requested file 5229.
+Clock [263.28]  Cache miss: Retrieved and sent file 5229.
+Clock [263.28]  Requested file 5229 from Data Server.
+Clock [263.28]  Added file 5229 to cache.
+Clock [263.28] Recieved file 5229 from Data Server.
+Clock [265.83]  CLient 2 requested file 1969.
+Clock [265.83]  Cache miss: Retrieved and sent file 1969.
+Clock [265.83]  Requested file 1969 from Data Server.
+Clock [265.83]  Added file 1969 to cache.
+Clock [265.83] Recieved file 1969 from Data Server.
+Clock [266.79]  CLient 3 requested file 2619.
+Clock [266.79]  Cache miss: Retrieved and sent file 2619.
+Clock [266.79]  Requested file 2619 from Data Server.
+Clock [266.79]  Added file 2619 to cache.
+Clock [266.79] Recieved file 2619 from Data Server.
+Clock [268.07]  CLient 1 requested file 9163.
+Clock [268.07]  Cache miss: Retrieved and sent file 9163.
+Clock [268.07]  Requested file 9163 from Data Server.
+Clock [268.07]  Added file 9163 to cache.
+Clock [268.07] Recieved file 9163 from Data Server.
+Clock [272.55]  CLient 2 requested file 8147.
+Clock [272.55]  Cache miss: Retrieved and sent file 8147.
+Clock [272.55]  Requested file 8147 from Data Server.
+Clock [272.55]  Added file 8147 to cache.
+Clock [272.55] Recieved file 8147 from Data Server.
+Clock [276.52]  CLient 3 requested file 6233.
+Clock [276.52]  Cache miss: Retrieved and sent file 6233.
+Clock [276.52]  Requested file 6233 from Data Server.
+Clock [276.52]  Added file 6233 to cache.
+Clock [276.52] Recieved file 6233 from Data Server.
+Clock [279.57]  CLient 4 requested file 937.
+Clock [279.57]  Cache miss: Retrieved and sent file 937.
+Clock [279.57]  Requested file 937 from Data Server.
+Clock [279.57]  Added file 937 to cache.
+Clock [279.57] Recieved file 937 from Data Server.
+Clock [280.02]  CLient 2 requested file 4577.
+Clock [280.02]  Cache miss: Retrieved and sent file 4577.
+Clock [280.02]  Requested file 4577 from Data Server.
+Clock [280.02]  Added file 4577 to cache.
+Clock [280.02] Recieved file 4577 from Data Server.
+Clock [282.26]  CLient 3 requested file 251.
+Clock [282.26]  Cache miss: Retrieved and sent file 251.
+Clock [282.26]  Requested file 251 from Data Server.
+Clock [282.26]  Added file 251 to cache.
+Clock [282.26] Recieved file 251 from Data Server.
+Clock [282.38]  CLient 4 requested file 3865.
+Clock [282.38]  Cache miss: Retrieved and sent file 3865.
+Clock [282.38]  Requested file 3865 from Data Server.
+Clock [282.38]  Added file 3865 to cache.
+Clock [282.38] Recieved file 3865 from Data Server.
+Clock [284.27]  CLient 2 requested file 1921.
+Clock [284.27]  Cache miss: Retrieved and sent file 1921.
+Clock [284.27]  Requested file 1921 from Data Server.
+Clock [284.27]  Added file 1921 to cache.
+Clock [284.27] Recieved file 1921 from Data Server.
+Clock [285.21]  CLient 3 requested file 2353.
+Clock [285.21]  Cache miss: Retrieved and sent file 2353.
+Clock [285.21]  Requested file 2353 from Data Server.
+Clock [285.21]  Added file 2353 to cache.
+Clock [285.21] Recieved file 2353 from Data Server.
+Clock [286.36]  CLient 1 requested file 73.
+Clock [286.36]  Cache miss: Retrieved and sent file 73.
+Clock [286.36]  Requested file 73 from Data Server.
+Clock [286.36]  Added file 73 to cache.
+Clock [286.36] Recieved file 73 from Data Server.
+Clock [286.39]  CLient 3 requested file 7535.
+Clock [286.39]  Cache miss: Retrieved and sent file 7535.
+Clock [286.39]  Requested file 7535 from Data Server.
+Clock [286.39]  Added file 7535 to cache.
+Clock [286.39] Recieved file 7535 from Data Server.
+Clock [290.07]  CLient 4 requested file 9455.
+Clock [290.07]  Cache miss: Retrieved and sent file 9455.
+Clock [290.07]  Requested file 9455 from Data Server.
+Clock [290.07]  Added file 9455 to cache.
+Clock [290.07] Recieved file 9455 from Data Server.
+Clock [294.69]  CLient 1 requested file 7485.
+Clock [294.69]  Cache miss: Retrieved and sent file 7485.
+Clock [294.69]  Requested file 7485 from Data Server.
+Clock [294.69]  Added file 7485 to cache.
+Clock [294.69] Recieved file 7485 from Data Server.
+Clock [298.34]  CLient 1 requested file 4113.
+Clock [298.34]  Cache miss: Retrieved and sent file 4113.
+Clock [298.34]  Requested file 4113 from Data Server.
+Clock [298.34]  Added file 4113 to cache.
+Clock [298.34] Recieved file 4113 from Data Server.
+Clock [300.35]  CLient 2 requested file 927.
+Clock [300.35]  Cache miss: Retrieved and sent file 927.
+Clock [300.35]  Requested file 927 from Data Server.
+Clock [300.35]  Added file 927 to cache.
+Clock [300.35] Recieved file 927 from Data Server.
+Clock [300.80]  CLient 1 requested file 3617.
+Clock [300.80]  Cache miss: Retrieved and sent file 3617.
+Clock [300.80]  Requested file 3617 from Data Server.
+Clock [300.80]  Added file 3617 to cache.
+Clock [300.80] Recieved file 3617 from Data Server.
+Clock [302.57]  CLient 3 requested file 485.
+Clock [302.57]  Cache miss: Retrieved and sent file 485.
+Clock [302.57]  Requested file 485 from Data Server.
+Clock [302.57]  Added file 485 to cache.
+Clock [302.57] Recieved file 485 from Data Server.
+Clock [302.81]  CLient 2 requested file 8095.
+Clock [302.81]  Cache miss: Retrieved and sent file 8095.
+Clock [302.81]  Requested file 8095 from Data Server.
+Clock [302.81]  Added file 8095 to cache.
+Clock [302.81] Recieved file 8095 from Data Server.
+Clock [306.76]  CLient 4 requested file 3777.
+Clock [306.76]  Cache miss: Retrieved and sent file 3777.
+Clock [306.76]  Requested file 3777 from Data Server.
+Clock [306.76]  Added file 3777 to cache.
+Clock [306.76] Recieved file 3777 from Data Server.
+Clock [308.60]  CLient 1 requested file 5241.
+Clock [308.60]  Cache miss: Retrieved and sent file 5241.
+Clock [308.60]  Requested file 5241 from Data Server.
+Clock [308.60]  Added file 5241 to cache.
+Clock [308.60] Recieved file 5241 from Data Server.
+Clock [311.16]  CLient 3 requested file 783.
+Clock [311.16]  Cache miss: Retrieved and sent file 783.
+Clock [311.16]  Requested file 783 from Data Server.
+Clock [311.16]  Added file 783 to cache.
+Clock [311.16] Recieved file 783 from Data Server.
+Clock [311.54]  CLient 2 requested file 9255.
+Clock [311.54]  Cache miss: Retrieved and sent file 9255.
+Clock [311.54]  Requested file 9255 from Data Server.
+Clock [311.54]  Added file 9255 to cache.
+Clock [311.54] Recieved file 9255 from Data Server.
+Clock [316.06]  CLient 4 requested file 3555.
+Clock [316.06]  Cache miss: Retrieved and sent file 3555.
+Clock [316.06]  Requested file 3555 from Data Server.
+Clock [316.06]  Added file 3555 to cache.
+Clock [316.06] Recieved file 3555 from Data Server.
+Clock [317.80]  CLient 3 requested file 137.
+Clock [317.80]  Cache miss: Retrieved and sent file 137.
+Clock [317.80]  Requested file 137 from Data Server.
+Clock [317.80]  Added file 137 to cache.
+Clock [317.80] Recieved file 137 from Data Server.
+Clock [317.87]  CLient 2 requested file 1067.
+Clock [317.87]  Cache miss: Retrieved and sent file 1067.
+Clock [317.87]  Requested file 1067 from Data Server.
+Clock [317.87]  Added file 1067 to cache.
+Clock [317.87] Recieved file 1067 from Data Server.
+Clock [318.39]  CLient 4 requested file 5671.
+Clock [318.39]  Cache miss: Retrieved and sent file 5671.
+Clock [318.39]  Requested file 5671 from Data Server.
+Clock [318.39]  Added file 5671 to cache.
+Clock [318.39] Recieved file 5671 from Data Server.
+Clock [321.16]  CLient 1 requested file 5107.
+Clock [321.16]  Cache miss: Retrieved and sent file 5107.
+Clock [321.16]  Requested file 5107 from Data Server.
+Clock [321.16]  Added file 5107 to cache.
+Clock [321.16] Recieved file 5107 from Data Server.
+Clock [323.65]  CLient 3 requested file 2203.
+Clock [323.65]  Cache miss: Retrieved and sent file 2203.
+Clock [323.65]  Requested file 2203 from Data Server.
+Clock [323.65]  Added file 2203 to cache.
+Clock [323.65] Recieved file 2203 from Data Server.
+Clock [324.73]  CLient 2 requested file 9417.
+Clock [324.73]  Cache miss: Retrieved and sent file 9417.
+Clock [324.73]  Requested file 9417 from Data Server.
+Clock [324.73]  Added file 9417 to cache.
+Clock [324.73] Recieved file 9417 from Data Server.
+Clock [329.32]  CLient 1 requested file 737.
+Clock [329.32]  Cache miss: Retrieved and sent file 737.
+Clock [329.32]  Requested file 737 from Data Server.
+Clock [329.32]  Added file 737 to cache.
+Clock [329.32] Recieved file 737 from Data Server.
+Clock [329.68]  CLient 3 requested file 3151.
+Clock [329.68]  Cache miss: Retrieved and sent file 3151.
+Clock [329.68]  Requested file 3151 from Data Server.
+Clock [329.68]  Added file 3151 to cache.
+Clock [329.68] Recieved file 3151 from Data Server.
+Clock [331.22]  CLient 2 requested file 6637.
+Clock [331.22]  Cache miss: Retrieved and sent file 6637.
+Clock [331.22]  Requested file 6637 from Data Server.
+Clock [331.22]  Added file 6637 to cache.
+Clock [331.22] Recieved file 6637 from Data Server.
+Clock [334.46]  CLient 4 requested file 7843.
+Clock [334.46]  Cache miss: Retrieved and sent file 7843.
+Clock [334.46]  Requested file 7843 from Data Server.
+Clock [334.46]  Added file 7843 to cache.
+Clock [334.46] Recieved file 7843 from Data Server.
+Clock [338.29]  CLient 1 requested file 1129.
+Clock [338.29]  Cache miss: Retrieved and sent file 1129.
+Clock [338.29]  Requested file 1129 from Data Server.
+Clock [338.29]  Added file 1129 to cache.
+Clock [338.29] Recieved file 1129 from Data Server.
+Clock [338.84]  CLient 3 requested file 301.
+Clock [338.84]  Cache miss: Retrieved and sent file 301.
+Clock [338.84]  Requested file 301 from Data Server.
+Clock [338.84]  Added file 301 to cache.
+Clock [338.84] Recieved file 301 from Data Server.
+Clock [338.99]  CLient 1 requested file 9157.
+Clock [338.99]  Cache miss: Retrieved and sent file 9157.
+Clock [338.99]  Requested file 9157 from Data Server.
+Clock [338.99]  Added file 9157 to cache.
+Clock [338.99] Recieved file 9157 from Data Server.
+Clock [343.46]  CLient 2 requested file 1985.
+Clock [343.46]  Cache miss: Retrieved and sent file 1985.
+Clock [343.46]  Requested file 1985 from Data Server.
+Clock [343.46]  Added file 1985 to cache.
+Clock [343.46] Recieved file 1985 from Data Server.
+Clock [344.43]  CLient 3 requested file 3493.
+Clock [344.43]  Cache miss: Retrieved and sent file 3493.
+Clock [344.43]  Requested file 3493 from Data Server.
+Clock [344.43]  Added file 3493 to cache.
+Clock [344.43] Recieved file 3493 from Data Server.
+Clock [346.14]  CLient 2 requested file 3425.
+Clock [346.14]  Cache miss: Retrieved and sent file 3425.
+Clock [346.14]  Requested file 3425 from Data Server.
+Clock [346.14]  Added file 3425 to cache.
+Clock [346.14] Recieved file 3425 from Data Server.
+Clock [347.81]  CLient 3 requested file 2425.
+Clock [347.81]  Cache miss: Retrieved and sent file 2425.
+Clock [347.81]  Requested file 2425 from Data Server.
+Clock [347.81]  Added file 2425 to cache.
+Clock [347.81] Recieved file 2425 from Data Server.
+Clock [348.99]  CLient 4 requested file 7113.
+Clock [348.99]  Cache miss: Retrieved and sent file 7113.
+Clock [348.99]  Requested file 7113 from Data Server.
+Clock [348.99]  Added file 7113 to cache.
+Clock [348.99] Recieved file 7113 from Data Server.
+Clock [352.47]  CLient 3 requested file 3549.
+Clock [352.47]  Cache miss: Retrieved and sent file 3549.
+Clock [352.47]  Requested file 3549 from Data Server.
+Clock [352.47]  Added file 3549 to cache.
+Clock [352.47] Recieved file 3549 from Data Server.
+Clock [354.20]  CLient 2 requested file 27.
+Clock [354.20]  Cache miss: Retrieved and sent file 27.
+Clock [354.20]  Requested file 27 from Data Server.
+Clock [354.20]  Added file 27 to cache.
+Clock [354.20] Recieved file 27 from Data Server.
+Clock [354.21]  CLient 3 requested file 2711.
+Clock [354.21]  Cache miss: Retrieved and sent file 2711.
+Clock [354.21]  Requested file 2711 from Data Server.
+Clock [354.21]  Added file 2711 to cache.
+Clock [354.21] Recieved file 2711 from Data Server.
+Clock [355.54]  CLient 4 requested file 5855.
+Clock [355.54]  Cache miss: Retrieved and sent file 5855.
+Clock [355.54]  Requested file 5855 from Data Server.
+Clock [355.54]  Added file 5855 to cache.
+Clock [355.54] Recieved file 5855 from Data Server.
+Clock [358.40]  CLient 2 requested file 7957.
+Clock [358.40]  Cache miss: Retrieved and sent file 7957.
+Clock [358.40]  Requested file 7957 from Data Server.
+Clock [358.40]  Added file 7957 to cache.
+Clock [358.40] Recieved file 7957 from Data Server.
+Clock [362.28]  CLient 3 requested file 7389.
+Clock [362.28]  Cache miss: Retrieved and sent file 7389.
+Clock [362.28]  Requested file 7389 from Data Server.
+Clock [362.28]  Added file 7389 to cache.
+Clock [362.28] Recieved file 7389 from Data Server.
+Clock [365.89]  CLient 1 requested file 5973.
+Clock [365.89]  Cache miss: Retrieved and sent file 5973.
+Clock [365.89]  Requested file 5973 from Data Server.
+Clock [365.89]  Added file 5973 to cache.
+Clock [365.89] Recieved file 5973 from Data Server.
+Clock [368.80]  CLient 2 requested file 931.
+Clock [368.80]  Cache miss: Retrieved and sent file 931.
+Clock [368.80]  Requested file 931 from Data Server.
+Clock [368.80]  Added file 931 to cache.
+Clock [368.80] Recieved file 931 from Data Server.
+Clock [369.26]  CLient 2 requested file 8355.
+Clock [369.26]  Cache miss: Retrieved and sent file 8355.
+Clock [369.26]  Requested file 8355 from Data Server.
+Clock [369.26]  Added file 8355 to cache.
+Clock [369.26] Recieved file 8355 from Data Server.
+Clock [373.34]  CLient 3 requested file 3433.
+Clock [373.34]  Cache miss: Retrieved and sent file 3433.
+Clock [373.34]  Requested file 3433 from Data Server.
+Clock [373.34]  Added file 3433 to cache.
+Clock [373.34] Recieved file 3433 from Data Server.
+Clock [375.02]  CLient 3 requested file 8329.
+Clock [375.02]  Cache miss: Retrieved and sent file 8329.
+Clock [375.02]  Requested file 8329 from Data Server.
+Clock [375.02]  Added file 8329 to cache.
+Clock [375.02] Recieved file 8329 from Data Server.
+Clock [379.08]  CLient 1 requested file 9401.
+Clock [379.08]  Cache miss: Retrieved and sent file 9401.
+Clock [379.08]  Requested file 9401 from Data Server.
+Clock [379.08]  Added file 9401 to cache.
+Clock [379.08] Recieved file 9401 from Data Server.
+Clock [383.67]  CLient 4 requested file 1793.
+Clock [383.67]  Cache miss: Retrieved and sent file 1793.
+Clock [383.67]  Requested file 1793 from Data Server.
+Clock [383.67]  Added file 1793 to cache.
+Clock [383.67] Recieved file 1793 from Data Server.
+Clock [384.55]  CLient 1 requested file 4231.
+Clock [384.55]  Cache miss: Retrieved and sent file 4231.
+Clock [384.55]  Requested file 4231 from Data Server.
+Clock [384.55]  Added file 4231 to cache.
+Clock [384.55] Recieved file 4231 from Data Server.
+Clock [386.61]  CLient 4 requested file 6357.
+Clock [386.61]  Cache miss: Retrieved and sent file 6357.
+Clock [386.61]  Requested file 6357 from Data Server.
+Clock [386.61]  Added file 6357 to cache.
+Clock [386.61] Recieved file 6357 from Data Server.
+Clock [389.72]  CLient 2 requested file 2711.
+Clock [389.72]  Cache hit: Sent file 2711 to client.
+Clock [389.72]  CLient 4 requested file 8741.
+Clock [389.72]  Cache miss: Retrieved and sent file 8741.
+Clock [389.72]  Requested file 8741 from Data Server.
+Clock [389.72]  Added file 8741 to cache.
+Clock [389.72] Recieved file 8741 from Data Server.
+Clock [393.99]  CLient 2 requested file 3477.
+Clock [393.99]  Cache miss: Retrieved and sent file 3477.
+Clock [393.99]  Requested file 3477 from Data Server.
+Clock [393.99]  Added file 3477 to cache.
+Clock [393.99] Recieved file 3477 from Data Server.
+Clock [395.68]  CLient 3 requested file 6103.
+Clock [395.68]  Cache miss: Retrieved and sent file 6103.
+Clock [395.68]  Requested file 6103 from Data Server.
+Clock [395.68]  Added file 6103 to cache.
+Clock [395.68] Recieved file 6103 from Data Server.
+Clock [398.66]  CLient 1 requested file 4767.
+Clock [398.66]  Cache miss: Retrieved and sent file 4767.
+Clock [398.66]  Requested file 4767 from Data Server.
+Clock [398.66]  Added file 4767 to cache.
+Clock [398.66] Recieved file 4767 from Data Server.
+Clock [400.99]  CLient 2 requested file 6709.
+Clock [400.99]  Cache miss: Retrieved and sent file 6709.
+Clock [400.99]  Requested file 6709 from Data Server.
+Clock [400.99]  Added file 6709 to cache.
+Clock [400.99] Recieved file 6709 from Data Server.
+Clock [404.27]  CLient 3 requested file 5709.
+Clock [404.27]  Cache hit: Sent file 5709 to client.

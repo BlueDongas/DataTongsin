@@ -1,54 +1,295 @@
-Clock [0]  Connected to Cache Server 2 on port 30000
+Clock [0]  Connected to Cache Server 1 on port 20000
 Clock [0]  Connected to Data Server on port 10000
-Clock [0.00]  Request file 2722 from Cache Server 1
-Clock [0.00]  Request file 7263 from Cache Server 2
-Clock [0.00]  Request file 6559 from Data Server
-Clock [6.41]  receive file from Data Server : 6559
-Clock [6.41]  Request file 4746 from Data Server
-Clock [7.12]  receive file from Cache Server 2 : 7263
-Clock [7.12]  Request file 1241 from Cache Server 2
-Clock [11.04]  Request file 7450 from Data Server
-Clock [11.04]  receive file from Data Server : 4746
-Clock [12.40]  receive file from Cache Server 2 : 1241
-Clock [12.40]  Request file 9599 from Cache Server 2
-Clock [12.80]  Request file 7904 from Cache Server 1
-Clock [12.80]  receive file from Cache Server 1 : 2722
-Clock [18.32]  Request file 2381 from Data Server
-Clock [18.32]  receive file from Data Server : 7450
-Clock [19.36]  Request file 1954 from Cache Server 1
-Clock [19.36]  receive file from Cache Server 1 : 7904
-Clock [19.80]  receive file from Cache Server 2 : 9599
-Clock [19.80]  Request file 2075 from Cache Server 2
-Clock [19.75]  receive file from Cache Server 2 : 2075
-Clock [19.75]  Request file 4409 from Cache Server 2
-Clock [20.64]  Request file 9681 from Data Server
-Clock [20.64]  receive file from Data Server : 2381
-Clock [22.90]  Request file 8910 from Cache Server 1
-Clock [22.90]  receive file from Cache Server 1 : 1954
-Clock [28.72]  receive file from Cache Server 2 : 4409
-Clock [28.72]  Request file 8881 from Cache Server 2
-Clock [30.09]  Request file 9897 from Data Server
-Clock [30.09]  receive file from Data Server : 9681
-Clock [34.00]  Request file 9904 from Cache Server 1
-Clock [34.00]  receive file from Cache Server 1 : 8910
-Clock [39.76]  Request file 3674 from Data Server
-Clock [39.76]  receive file from Data Server : 9897
-Clock [42.61]  Request file 9806 from Cache Server 1
-Clock [42.61]  receive file from Cache Server 1 : 9904
-Clock [43.35]  Request file 5522 from Data Server
-Clock [43.35]  receive file from Data Server : 3674
-Clock [48.74]  Request file 8702 from Data Server
-Clock [48.74]  receive file from Data Server : 5522
-Clock [57.24]  receive file from Data Server : 8702
-Clock [57.24]  Request file 3610 from Data Server
-Clock [58.32]  receive file from Cache Server 2 : 8881
-Clock [58.32]  Request file 3857 from Cache Server 2
-Clock [60.76]  receive file from Data Server : 3610
-Clock [60.76]  Request file 2312 from Data Server
-Clock [61.20]  receive file from Cache Server 2 : 3857
-Clock [61.20]  Request file 5993 from Cache Server 2
-Clock [63.02]  Request file 9364 from Data Server
-Clock [63.02]  receive file from Data Server : 2312
-Clock [69.77]  Request file 2130 from Cache Server 1
-Clock [69.77]  receive file from Cache Server 1 : 9806
-Clock [72.17]  receive file from Data Server : 9364
+Clock [0]  Connected to Cache Server 2 on port 30000
+Clock [0.00]  Request file 4567 from Cache Server 2
+Clock [0.00]  Request file 349 from Data Server
+Clock [0.00]  Request file 9886 from Cache Server 1
+Clock [0.34]  Request file 8641 from Data Server
+Clock [0.34]  receive file from Data Server : 349
+Clock [6.88]  receive file from Cache Server 2 : 4567
+Clock [6.88]  Request file 9927 from Cache Server 2
+Clock [8.78]  Request file 2838 from Data Server
+Clock [8.78]  receive file from Data Server : 8641
+Clock [11.55]  receive file from Data Server : 2838
+Clock [11.55]  Request file 2388 from Data Server
+Clock [13.88]  receive file from Data Server : 2388
+Clock [13.88]  Request file 9189 from Data Server
+Clock [16.87]  Request file 6554 from Cache Server 1
+Clock [16.87]  receive file from Cache Server 1 : 9886
+Clock [20.07]  receive file from Cache Server 2 : 9927
+Clock [20.07]  Request file 6113 from Cache Server 2
+Clock [22.86]  Request file 8598 from Data Server
+Clock [22.86]  receive file from Data Server : 9189
+Clock [27.94]  receive file from Cache Server 1 : 6554
+Clock [27.94]  Request file 7994 from Cache Server 1
+Clock [31.25]  Request file 9133 from Data Server
+Clock [31.25]  receive file from Data Server : 8598
+Clock [37.34]  Request file 2125 from Cache Server 2
+Clock [37.34]  receive file from Cache Server 2 : 6113
+Clock [39.91]  Request file 7123 from Cache Server 2
+Clock [39.91]  receive file from Cache Server 2 : 2125
+Clock [40.17]  Request file 7547 from Data Server
+Clock [40.17]  receive file from Data Server : 9133
+Clock [46.44]  receive file from Cache Server 1 : 7994
+Clock [46.44]  Request file 4968 from Cache Server 1
+Clock [47.54]  Request file 3145 from Data Server
+Clock [47.54]  receive file from Data Server : 7547
+Clock [49.01]  Request file 3839 from Cache Server 2
+Clock [49.01]  receive file from Cache Server 2 : 7123
+Clock [49.42]  receive file from Cache Server 1 : 4968
+Clock [49.42]  Request file 9042 from Cache Server 1
+Clock [50.61]  Request file 2209 from Data Server
+Clock [50.61]  receive file from Data Server : 3145
+Clock [52.77]  receive file from Data Server : 2209
+Clock [52.77]  Request file 1172 from Data Server
+Clock [53.68]  receive file from Cache Server 2 : 3839
+Clock [53.68]  Request file 9537 from Cache Server 2
+Clock [53.92]  Request file 9869 from Data Server
+Clock [53.92]  receive file from Data Server : 1172
+Clock [62.70]  receive file from Cache Server 1 : 9042
+Clock [62.70]  Request file 7634 from Cache Server 1
+Clock [63.55]  Request file 9859 from Data Server
+Clock [63.55]  receive file from Data Server : 9869
+Clock [72.24]  receive file from Cache Server 2 : 9537
+Clock [72.24]  Request file 1789 from Cache Server 2
+Clock [73.18]  Request file 5642 from Data Server
+Clock [73.18]  receive file from Data Server : 9859
+Clock [77.03]  Request file 6102 from Cache Server 1
+Clock [77.03]  receive file from Cache Server 1 : 1108
+Clock [77.05]  Request file 1108 from Cache Server 1
+Clock [77.05]  receive file from Cache Server 1 : 7634
+Clock [78.69]  Request file 1840 from Data Server
+Clock [78.69]  receive file from Data Server : 5642
+Clock [80.49]  receive file from Data Server : 1840
+Clock [80.49]  Request file 5750 from Data Server
+Clock [82.85]  receive file from Cache Server 1 : 6102
+Clock [82.85]  Request file 4122 from Cache Server 1
+Clock [84.03]  receive file from Cache Server 2 : 1789
+Clock [84.03]  Request file 5093 from Cache Server 2
+Clock [86.10]  Request file 3908 from Data Server
+Clock [86.10]  receive file from Data Server : 5750
+Clock [89.92]  Request file 6520 from Data Server
+Clock [89.92]  receive file from Data Server : 3908
+Clock [93.18]  Request file 8500 from Cache Server 1
+Clock [93.18]  receive file from Cache Server 1 : 4122
+Clock [96.29]  receive file from Data Server : 6520
+Clock [96.29]  Request file 2678 from Data Server
+Clock [97.40]  Request file 3807 from Cache Server 2
+Clock [97.40]  receive file from Cache Server 2 : 5093
+Clock [98.90]  receive file from Data Server : 2678
+Clock [98.90]  Request file 6584 from Data Server
+Clock [103.12]  receive file from Cache Server 1 : 8500
+Clock [103.12]  Request file 4064 from Cache Server 1
+Clock [104.75]  Request file 5453 from Cache Server 2
+Clock [104.75]  receive file from Cache Server 2 : 3807
+Clock [105.33]  Request file 7296 from Data Server
+Clock [105.33]  receive file from Data Server : 6584
+Clock [111.34]  receive file from Cache Server 1 : 4064
+Clock [111.34]  Request file 454 from Cache Server 1
+Clock [111.81]  receive file from Cache Server 2 : 5453
+Clock [111.81]  Request file 7883 from Cache Server 2
+Clock [112.46]  Request file 9598 from Data Server
+Clock [112.46]  receive file from Data Server : 7296
+Clock [117.57]  Request file 8948 from Cache Server 1
+Clock [117.57]  receive file from Cache Server 1 : 454
+Clock [119.83]  receive file from Cache Server 2 : 7883
+Clock [119.83]  Request file 4695 from Cache Server 2
+Clock [121.83]  Request file 4772 from Data Server
+Clock [121.83]  receive file from Data Server : 9598
+Clock [126.49]  receive file from Data Server : 4772
+Clock [126.49]  Request file 937 from Data Server
+Clock [127.37]  receive file from Cache Server 2 : 4695
+Clock [127.37]  Request file 9829 from Cache Server 2
+Clock [127.40]  receive file from Data Server : 937
+Clock [127.40]  Request file 5672 from Data Server
+Clock [130.20]  Request file 9496 from Cache Server 1
+Clock [130.20]  receive file from Cache Server 1 : 8948
+Clock [132.94]  receive file from Data Server : 5672
+Clock [132.94]  Request file 3070 from Data Server
+Clock [135.16]  receive file from Cache Server 2 : 9829
+Clock [135.16]  Request file 1873 from Cache Server 2
+Clock [135.94]  receive file from Data Server : 3070
+Clock [135.94]  Request file 2354 from Data Server
+Clock [138.24]  receive file from Data Server : 2354
+Clock [138.24]  Request file 2106 from Data Server
+Clock [140.30]  receive file from Data Server : 2106
+Clock [140.30]  Request file 4414 from Data Server
+Clock [141.16]  receive file from Cache Server 1 : 9496
+Clock [141.16]  Request file 2656 from Cache Server 1
+Clock [141.92]  Request file 6575 from Cache Server 2
+Clock [141.92]  receive file from Cache Server 2 : 1873
+Clock [144.61]  Request file 3567 from Data Server
+Clock [144.61]  receive file from Data Server : 4414
+Clock [148.09]  receive file from Data Server : 3567
+Clock [148.09]  Request file 9699 from Data Server
+Clock [151.73]  Request file 4689 from Cache Server 2
+Clock [151.73]  receive file from Cache Server 2 : 6575
+Clock [157.56]  receive file from Data Server : 9699
+Clock [157.56]  Request file 7613 from Data Server
+Clock [160.48]  Request file 4330 from Cache Server 1
+Clock [160.48]  receive file from Cache Server 1 : 2656
+Clock [165.00]  receive file from Data Server : 7613
+Clock [165.00]  Request file 9900 from Data Server
+Clock [169.43]  Request file 1588 from Cache Server 1
+Clock [169.43]  receive file from Cache Server 1 : 4330
+Clock [171.59]  Request file 5093 from Cache Server 2
+Clock [171.59]  receive file from Cache Server 2 : 4689
+Clock [173.40]  Request file 7591 from Cache Server 2
+Clock [173.40]  receive file from Cache Server 2 : 5093
+Clock [174.67]  receive file from Data Server : 9900
+Clock [174.67]  Request file 21 from Data Server
+Clock [174.69]  receive file from Data Server : 21
+Clock [174.69]  Request file 7358 from Data Server
+Clock [175.06]  Request file 6272 from Cache Server 1
+Clock [175.06]  receive file from Cache Server 1 : 1588
+Clock [181.87]  receive file from Data Server : 7358
+Clock [181.87]  Request file 963 from Data Server
+Clock [182.04]  Request file 5835 from Cache Server 2
+Clock [182.04]  receive file from Cache Server 2 : 7591
+Clock [182.81]  receive file from Data Server : 963
+Clock [182.81]  Request file 8339 from Data Server
+Clock [186.73]  Request file 7574 from Cache Server 1
+Clock [186.73]  receive file from Cache Server 1 : 6272
+Clock [188.13]  receive file from Cache Server 2 : 5835
+Clock [188.13]  Request file 347 from Cache Server 2
+Clock [190.96]  Request file 5640 from Data Server
+Clock [190.96]  receive file from Data Server : 8339
+Clock [193.78]  Request file 1710 from Cache Server 1
+Clock [193.78]  receive file from Cache Server 1 : 7574
+Clock [196.46]  receive file from Data Server : 5640
+Clock [196.46]  Request file 6025 from Data Server
+Clock [196.73]  Request file 1584 from Cache Server 1
+Clock [196.73]  receive file from Cache Server 1 : 1710
+Clock [199.95]  Request file 348 from Cache Server 1
+Clock [199.95]  receive file from Cache Server 1 : 1584
+Clock [200.21]  Request file 5393 from Cache Server 2
+Clock [200.21]  receive file from Cache Server 2 : 347
+Clock [202.35]  receive file from Data Server : 6025
+Clock [202.35]  Request file 2750 from Data Server
+Clock [204.43]  Request file 6484 from Cache Server 1
+Clock [204.43]  receive file from Cache Server 1 : 348
+Clock [205.03]  receive file from Data Server : 2750
+Clock [205.03]  Request file 7207 from Data Server
+Clock [209.46]  Request file 2351 from Cache Server 2
+Clock [209.46]  receive file from Cache Server 2 : 5393
+Clock [209.62]  Request file 3133 from Cache Server 2
+Clock [209.62]  receive file from Cache Server 2 : 2351
+Clock [210.83]  Request file 2302 from Cache Server 1
+Clock [210.83]  receive file from Cache Server 1 : 6484
+Clock [212.07]  receive file from Data Server : 7207
+Clock [212.07]  Request file 9263 from Data Server
+Clock [217.29]  Request file 6319 from Cache Server 2
+Clock [217.29]  receive file from Cache Server 2 : 3133
+Clock [221.12]  receive file from Data Server : 9263
+Clock [221.12]  Request file 3130 from Data Server
+Clock [224.17]  receive file from Data Server : 3130
+Clock [224.17]  Request file 1484 from Data Server
+Clock [224.98]  Request file 3331 from Cache Server 2
+Clock [224.98]  receive file from Cache Server 2 : 6319
+Clock [225.62]  receive file from Data Server : 1484
+Clock [225.62]  Request file 8239 from Data Server
+Clock [227.67]  Request file 2764 from Cache Server 1
+Clock [227.67]  receive file from Cache Server 1 : 2302
+Clock [231.62]  Request file 4832 from Cache Server 1
+Clock [231.62]  receive file from Cache Server 1 : 2764
+Clock [233.34]  Request file 9499 from Cache Server 2
+Clock [233.34]  receive file from Cache Server 2 : 3331
+Clock [233.67]  receive file from Data Server : 8239
+Clock [233.67]  Request file 1261 from Data Server
+Clock [234.90]  receive file from Data Server : 1261
+Clock [234.90]  Request file 173 from Data Server
+Clock [235.07]  receive file from Data Server : 173
+Clock [235.07]  Request file 6781 from Data Server
+Clock [240.06]  Request file 2416 from Cache Server 1
+Clock [240.06]  receive file from Cache Server 1 : 4832
+Clock [240.97]  Request file 7040 from Cache Server 1
+Clock [240.97]  receive file from Cache Server 1 : 2416
+Clock [241.69]  receive file from Data Server : 6781
+Clock [241.69]  Request file 2137 from Data Server
+Clock [243.78]  receive file from Data Server : 2137
+Clock [243.78]  Request file 8669 from Data Server
+Clock [246.17]  Request file 5750 from Cache Server 1
+Clock [246.17]  receive file from Cache Server 1 : 7040
+Clock [247.19]  Request file 7979 from Cache Server 2
+Clock [247.19]  receive file from Cache Server 2 : 9499
+Clock [252.24]  receive file from Data Server : 8669
+Clock [252.24]  Request file 5713 from Data Server
+Clock [255.75]  Request file 937 from Cache Server 2
+Clock [255.75]  receive file from Cache Server 2 : 7979
+Clock [257.82]  receive file from Data Server : 5713
+Clock [257.82]  Request file 7607 from Data Server
+Clock [265.25]  receive file from Data Server : 7607
+Clock [265.25]  Request file 8810 from Data Server
+Clock [273.85]  receive file from Data Server : 8810
+Clock [273.85]  Request file 7376 from Data Server
+Clock [274.09]  Request file 3620 from Cache Server 1
+Clock [274.09]  receive file from Cache Server 1 : 5750
+Clock [279.55]  Request file 2130 from Cache Server 1
+Clock [279.55]  receive file from Cache Server 1 : 80
+Clock [280.33]  Request file 3865 from Cache Server 2
+Clock [280.33]  receive file from Cache Server 2 : 937
+Clock [280.67]  Request file 80 from Cache Server 1
+Clock [280.67]  receive file from Cache Server 1 : 3620
+Clock [281.06]  receive file from Data Server : 7376
+Clock [281.06]  Request file 1878 from Data Server
+Clock [282.89]  receive file from Data Server : 1878
+Clock [282.89]  Request file 3026 from Data Server
+Clock [285.53]  Request file 9455 from Cache Server 2
+Clock [285.53]  receive file from Cache Server 2 : 3865
+Clock [285.85]  receive file from Data Server : 3026
+Clock [285.85]  Request file 5470 from Data Server
+Clock [287.88]  Request file 7648 from Cache Server 1
+Clock [287.88]  receive file from Cache Server 1 : 2130
+Clock [291.19]  receive file from Data Server : 5470
+Clock [291.19]  Request file 8882 from Data Server
+Clock [297.72]  Request file 5488 from Cache Server 1
+Clock [297.72]  receive file from Cache Server 1 : 7648
+Clock [297.77]  Request file 3777 from Cache Server 2
+Clock [297.77]  receive file from Cache Server 2 : 9455
+Clock [299.86]  receive file from Data Server : 8882
+Clock [299.86]  Request file 1869 from Data Server
+Clock [301.69]  receive file from Data Server : 1869
+Clock [301.69]  Request file 5213 from Data Server
+Clock [306.72]  Request file 5554 from Cache Server 1
+Clock [306.72]  receive file from Cache Server 1 : 5488
+Clock [306.78]  receive file from Data Server : 5213
+Clock [306.78]  Request file 1067 from Data Server
+Clock [307.82]  receive file from Data Server : 1067
+Clock [307.82]  Request file 6243 from Data Server
+Clock [309.83]  Request file 3555 from Cache Server 2
+Clock [309.83]  receive file from Cache Server 2 : 3777
+Clock [313.92]  receive file from Data Server : 6243
+Clock [313.92]  Request file 1531 from Data Server
+Clock [314.98]  Request file 2284 from Cache Server 1
+Clock [314.98]  receive file from Cache Server 1 : 5554
+Clock [315.41]  receive file from Data Server : 1531
+Clock [315.41]  Request file 2531 from Data Server
+Clock [317.88]  receive file from Data Server : 2531
+Clock [317.88]  Request file 2564 from Data Server
+Clock [318.54]  Request file 9102 from Cache Server 1
+Clock [318.54]  receive file from Cache Server 1 : 2284
+Clock [318.96]  Request file 5671 from Cache Server 2
+Clock [318.96]  receive file from Cache Server 2 : 3555
+Clock [320.39]  receive file from Data Server : 2564
+Clock [320.39]  Request file 5712 from Data Server
+Clock [323.00]  Request file 7843 from Cache Server 2
+Clock [323.00]  receive file from Cache Server 2 : 5671
+Clock [325.97]  receive file from Data Server : 5712
+Clock [325.97]  Request file 5052 from Data Server
+Clock [330.90]  receive file from Data Server : 5052
+Clock [330.90]  Request file 7742 from Data Server
+Clock [333.65]  Request file 1894 from Cache Server 1
+Clock [333.65]  receive file from Cache Server 1 : 9102
+Clock [338.46]  receive file from Data Server : 7742
+Clock [338.46]  Request file 4376 from Data Server
+Clock [340.85]  Request file 7113 from Cache Server 2
+Clock [340.85]  receive file from Cache Server 2 : 7843
+Clock [342.06]  Request file 2354 from Cache Server 1
+Clock [342.06]  receive file from Cache Server 1 : 1894
+Clock [342.73]  receive file from Data Server : 4376
+Clock [342.73]  Request file 3843 from Data Server
+Clock [344.99]  Request file 6650 from Cache Server 1
+Clock [344.99]  receive file from Cache Server 1 : 2354
+Clock [346.49]  receive file from Data Server : 3843
+Clock [346.49]  Request file 2484 from Data Server
+Clock [348.91]  receive file from Data Server : 2484
