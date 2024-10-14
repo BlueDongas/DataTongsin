@@ -200,6 +200,7 @@ def print_log():
             print(f"cache_miss : {cache_miss_count}")
             print(f"Average receive download speed : {total_data_file_size/master_clock/1024:.02f}Mbps")
             print(f"Average send speed : {total_client_file_size/master_clock/1024:.02f}Mbps")
+            input("Press Enter Any key")
             # 최종로그 내용 추가 필요
             return
         if log_queue and log_queue[0][0] <= master_clock:  # master_clock보다 작거나 같다면

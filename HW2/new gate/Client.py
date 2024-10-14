@@ -152,6 +152,7 @@ def print_log():
 
             print(f"Final clock [{master_clock}]")
             print(f"Average download speed : {total_file_size/master_clock/1024:.2f}Mbps")
+            input("Press Enter Any key")  # 프로그램이 종료되지 않도록 입력 대기
             # 최종로그 내용 추가 필요
             return
         
@@ -215,10 +216,10 @@ def client():
 
         # 데이터 서버에 요청
         executor.submit(client_task, data_server_address[0], data_server_address[1], Data_request_list, 'Data Server',file_list)
+    
 
 if __name__ == "__main__":
 
     log_thread = threading.Thread(target=print_log)
     log_thread.start()
     client()
-    input("Press Any Enter")  # 프로그램이 종료되지 않도록 입력 대기
