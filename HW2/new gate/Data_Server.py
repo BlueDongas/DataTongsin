@@ -6,6 +6,7 @@ import threading
 import heapq
 import time
 
+server_address = "0.0.0.0"
 # 가상의 파일 목록을 저장 (1~10000 파일 번호와 파일 내용)
 virtual_files = {i: i for i in range(1, 10001)}  # 파일 번호와 내용이 동일한 가상 파일
 
@@ -185,9 +186,9 @@ def print_log():
 
 # 데이터 서버를 실행하는 메인 함수
 def main():
-    global connect_count
+    global connect_count,server_address
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', 10000))  # 데이터 서버 포트 바인딩
+    server_socket.bind((server_address, 6000))  # 데이터 서버 포트 바인딩
     server_socket.listen(6)  # 최대 6개의 클라이언트 연결 대기
     server_socket.settimeout(50)
 
@@ -237,3 +238,4 @@ def main():
 if __name__ == "__main__":
     main()
     input("Press Enter Any key")
+    log_file.close()

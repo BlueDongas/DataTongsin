@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 import heapq
 import time
 
+server_address = "54.175.143.40"
 #파일 변수
 cache_file_id = 0
 log_file = None
@@ -179,9 +180,9 @@ def handle_client(client_socket, data_socket, client_id):
 
 # 데이터 서버에 연결하는 함수
 def connect_to_data_server():
-    global cache_file_id,log_file
+    global cache_file_id,log_file, server_address
     data_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    data_socket.connect(('localhost', 10000))  # 데이터 서버에 연결
+    data_socket.connect((server_address, 6000))  # 데이터 서버에 연결
     
     cache_file_id = pickle.loads(data_socket.recv(1024))
     log_file = open(f"Cache Server{cache_file_id}.txt", "w")
@@ -192,7 +193,7 @@ def connect_to_data_server():
 # 캐시 서버를 실행하는 함수
 def cache_server(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', port))  # 캐시 서버 포트 설정
+    server_socket.bind(('0.0.0.0', port))  # 캐시 서버 포트 설정
     server_socket.listen(4)  # 최대 4개의 클라이언트 연결 대기
 
     print(f"Cache Server {port} started, waiting for connections...")

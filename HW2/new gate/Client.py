@@ -7,9 +7,11 @@ import time
 import heapq
 from concurrent.futures import ThreadPoolExecutor
 
+server_address = '54.175.143.40'
+
 total_file_size = 0 # 전체 파일 크기 변수
 file_counter = 1000 # 총 다운 받을 파일 개수 설정
-sleep_time = 7 #요청 지연 시간 설정
+sleep_time = 15 #요청 지연 시간 설정
 
 
 receive_file_count = 0
@@ -182,9 +184,9 @@ def print_log():
 
 # 클라이언트가 동시에 데이터 서버와 캐시 서버에 파일 요청을 보내는 함수
 def client():
-    global file_counter, total_file_size
+    global file_counter, total_file_size,server_address
 
-    data_server_address = ('localhost', 10000)  # 데이터 서버 주소
+    data_server_address = (server_address, 6000)  # 데이터 서버 주소
     cache_server1_address = ('localhost', 20000)  # 캐시 서버 1 주소
     cache_server2_address = ('localhost', 30000)  # 캐시 서버 2 주소
 
