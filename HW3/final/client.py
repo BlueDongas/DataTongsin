@@ -32,7 +32,7 @@ class Client:
             # 파일 열기
             with open(filename, 'r') as file:
                 # 첫 10줄만 읽어서 서버에 전송
-                for i in range(10): # for line in file로 바꾸기
+                for i in range(100): # for line in file로 바꾸기
                     task = file.readline().strip()
                     if not task:  # 파일에 더 이상 내용이 없으면 종료
                         self.client_socket.sendall("Complete".encode())
@@ -45,28 +45,32 @@ class Client:
                             time.sleep(0.1)  # 각 줄 전송 후 약간의 지연을 줌
                         #현재 작업 전송
                         self.client_socket.sendall(task.encode()) 
+                        print(f'{task} 전송')
                         time.sleep(0.1)
         except FileNotFoundError:
             print(f"파일을 찾을 수 없습니다: {filename}")
 
     def receive_result(self):
-        while True:
-            data = self.client_socket.recv(4096).decode()
-            json_data =json.loads(data)
+        try:
+            while True:
+                data = self.client_socket.recv(4096).decode()
+                json_data =json.loads(data)
 
-            clock = json_data.get('clock')
-            response = json_data.get('response')
-            task = json_data.get('task')
-            result = json_data.get('result')
+                clock = json_data.get('clock')
+                response = json_data.get('response')
+                task = json_data.get('task')
+                result = json_data.get('result')
 
-            if response=="작업 거절":
-                print(f"작업 거절됨 : {task}")
-                self.rejected_tasks.append(task)
-            elif response == "전체 종료":
-                print("모든 작업이 종료되었습니다.")
-                break
-            else:
-                print(f"작업 완료 : {task} = {result}")
+                if response=="작업 거절":
+                    print(f"작업 거절됨 : {task}")
+                    self.rejected_tasks.append(task)
+                elif response == "전체 종료":
+                    print("모든 작업이 종료되었습니다.")
+                    break
+                else:
+                    print(f"작업 완료 : {task} = {result}")
+        except Exception as e:
+            print(f"Error {e}")
 
 
     def disconnect(self):
