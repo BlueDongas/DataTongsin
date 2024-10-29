@@ -8,9 +8,7 @@ from threading import Event
 import time
 import heapq
 
-# class Clock:
-#     def __init__(self):
-#         self.master_clock = 0
+# 잘 실행됐음!
 
 class Node:
     """노드를 생성하여 트리를 구성합니다."""
