@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 from threading import Event
 import time
+import heapq
 
 # class Clock:
 #     def __init__(self):
@@ -36,6 +37,7 @@ class Server:
         self.clock_list = [0, 0, 0, 0, 0] # 0은 마스터 클락
         self.clock_events = [Event() for _ in range(self.clock_size)]  # 클락 관리 이벤트 리스트
         self.clock_list_lock = [threading.Lock() for _ in range(5)]
+        self.check_max_clock = []
 
         self.event = Event()
         # self.events_lock = threading.Lock()
@@ -123,50 +125,49 @@ class Server:
         result = self.evaluate_postorder(tree)
 
         finish_time = start_clock + leaf_count
+        if self.check_max_clock:
+            if self.check_max_clock[0] < finish_time:
+                heapq.heappush(self.check_max_clock, finish_time)
+                heapq.heappop(self.check_max_clock)
+        else:
+            heapq.heappush(self.check_max_clock, finish_time)
         self.clock_events[finish_time].wait()
 
-        print(f"Clock  [{finish_time}]  {postfix_result} 연산 결과 : [{result}], 연산 시간 : {leaf_count}")
-
         self.result_queue.put([client_id,result,task,leaf_count, finish_time])
+        print(f"Clock  [{finish_time}]  {postfix_result} 연산 결과 : [{result}], 연산 시간 : {leaf_count}")
         
         return 0
     
 
     def handle_manage_thread(self):
-        is_not_finish = True
+        is_rec_finish = False
+        is_send_finish = False
         final_clock = 0
         while True:
-            if is_not_finish and (self.all_receive==4) and self.task_queue.empty():
+            if not is_rec_finish and (self.all_receive==4) and self.task_queue.empty():
                 print("모든 작업이 도착했습니다.")
-                for i in range(self.clock_list[0], self.clock_size):
-                    if not self.clock_events[i].is_set():
-                        self.clock_events[i].set()
-                        time.sleep(0.0001)
-                is_not_finish = False
-            else:
-                count = 0
-                while count < 4:
-                    if not self.task_queue.empty() :
-                        locate_task, client_id, start_clock = self.task_queue.get()
-                        print(f"Clock  [{start_clock}]  Processing task from client {client_id}: {locate_task}")
-                        self.executor.submit(self.calcuate_task,locate_task,client_id,start_clock) # 스레드 풀에 작업 할당
-                    else:
-                        break
-                    count +=1
+                is_rec_finish = True
+            
+            count = 0
+            while count < 4:
+                if not self.task_queue.empty() :
+                    locate_task, client_id, start_clock = self.task_queue.get()
+                    # print(f"Clock  [{start_clock}]  Processing task from client {client_id}: {locate_task}")
+                    self.executor.submit(self.calcuate_task,locate_task,client_id,start_clock) # 스레드 풀에 작업 할당
+                else:
+                    break
+                count +=1
 
-                if self.clock_list[0] < min(self.clock_list[1:]):
-                    self.clock_list[0] += 1
-                    if not self.clock_events[self.clock_list[0]].is_set():
-                        self.clock_events[self.clock_list[0]].set()
-                        print(f"Debug message : {self.clock_list[0]} set!")
-                    # if not self.clock_list[0] - 1 == 0:
-                    #     self.events[self.clock_list[0] - 1] = None
+            if self.clock_list[0] < min(self.clock_list[1:]) or (is_rec_finish and self.clock_list[0] < self.check_max_clock[0]):
+                self.clock_list[0] += 1
+                if not self.clock_events[self.clock_list[0]].is_set():
+                    self.clock_events[self.clock_list[0]].set()
+                if is_rec_finish:
+                    time.sleep(0.5)
 
             #결과 전송  
             if self.result_queue.empty():
-                if is_not_finish:
-                    continue
-                else:
+                if is_send_finish:
                     print("모든 작업이 종료되었습니다.")
                     send_json_data = json.dumps({"clock":0,"response":"전체 종료","task":"None","result":"None"})+"\n"
                     for i in range(1,5):
@@ -174,6 +175,20 @@ class Server:
                     # 최종 로그 출력
                     self.clock_list[0] = final_clock
                     return
+            elif is_rec_finish:
+                if self.clock_list[0] == self.check_max_clock[0]:
+                    is_send_finish = True
+
+                while not self.result_queue.empty():
+                    try:
+                        task_client_id, send_result_data, requested_task, operate_time, clock= self.result_queue.get()
+                        send_json_data = json.dumps({"clock":clock,"response":"None","task":requested_task,"result":send_result_data})+"\n"
+                        self.connected_clients[task_client_id].sendall(send_json_data.encode())
+                        print(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
+                        if final_clock < clock:
+                            final_clock = clock
+                    except Exception as e:
+                        print(f"Error : {e}") 
             else:
                 try:
                     task_client_id, send_result_data, requested_task, operate_time, clock= self.result_queue.get()
@@ -183,7 +198,9 @@ class Server:
                     if final_clock < clock:
                         final_clock = clock
                 except Exception as e:
-                    print(f"Error : {e}")
+                    print(f"Error : {e}")   
+                    
+
 
     def handle_waiting_thread(self):
         # 모든 클라이언트와 무작위 순서로 통신을 시작
