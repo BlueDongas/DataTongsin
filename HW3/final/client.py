@@ -4,6 +4,8 @@ import threading
 import json
 import heapq
 
+# 잘 실행됐음!
+
 class Client:
     def __init__(self, host='127.0.0.1', port=8888):
         self.host = host
