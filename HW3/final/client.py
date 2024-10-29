@@ -11,7 +11,8 @@ class Client:
         self.client_id = None  # 서버로부터 받은 클라이언트 ID
         self.rejected_tasks = []
 
-        self.is_end = False
+        self.is_rec_end = False
+        self.is_send_end = False
         self.master_clock = 0
         self.log_queue = []
 
@@ -65,6 +66,7 @@ class Client:
                 print("모든 작업 전송 완료")
                 send_json_data = json.dumps({"clock": 0, "task": "None", "flag": "Complete"})
                 self.client_socket.sendall(send_json_data.encode())
+                self.is_send_end = True
 
         except FileNotFoundError:
             print(f"파일을 찾을 수 없습니다: {filename}")
@@ -102,16 +104,12 @@ class Client:
 
     def print_log(self):
         while True:
-            if self.is_end: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
-                time.sleep(2)
-                while self.log_queue:
-                    _, log_message = heapq.heappop(self.log_queue)
-                    print(log_message)
+            if self.is_rec_end: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
                 input("Press Enter Any key")  # 프로그램이 종료되지 않도록 입력 대기
                 # 최종로그 내용 추가 필요
                 return
             
-            if self.log_queue and self.log_queue[0][0] <= self.master_clock:  # master_clock - 10 보다 작거나 같다면
+            if self.log_queue and (self.log_queue[0][0] <= self.master_clock or self.is_send_end):  # master_clock - 10 보다 작거나 같다면
                 _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                 print(log_message)
 
