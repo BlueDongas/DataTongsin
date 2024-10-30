@@ -4,7 +4,18 @@ import threading
 import json
 import heapq
 
-# 잘 실행됐음!
+class Log:
+    def __init__(self):
+        self.log_file = None
+        self.file_lock = threading.Lock()
+    def log_write(self,event):
+        self.log_file
+        with self.file_lock:  # 락을 사용하여 동기화
+            if self.log_file is not None:
+                self.log_file.write(f"{event}\n")
+                self.log_file.flush()
+            else:
+                print("log_file is not initialized") 
 
 class Client:
     def __init__(self, host='127.0.0.1', port=8888):
@@ -18,20 +29,26 @@ class Client:
         self.master_clock = 0
         self.log_queue = []
 
+        self.log = Log()
+
     def connect_to_server(self):
         # 서버와의 연결 생성
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((self.host, self.port))
-        print("서버에 연결되었습니다.")
 
         # 서버로부터 클라이언트 ID 수신
         self.client_id = int(self.client_socket.recv(1024).decode())
-        print(f"서버로부터 할당된 클라이언트 ID: {self.client_id}")
+        self.log.log_file = open(f"client{self.client_id}_Log.txt","w")
+        print("Connect to Server")
+        print(f"Receive ID to Server: {self.client_id}")
+        self.log.log_write("Connect to Server")
+        self.log.log_write(f"Receive ID to Server: {self.client_id}")
 
         # 서버로부터 "READY" 신호 대기
         ready_signal = self.client_socket.recv(1024).decode()
         if ready_signal == "READY":
-            print("서버 준비 완료. 데이터 전송 시작.")
+            print("Start Send task to Server")
+            self.log.log_write("Start Send task to Server")
 
     def send_file_contents(self):
         filename = f"Expression{self.client_id}.txt"
@@ -51,7 +68,7 @@ class Client:
                         send_json_data = json.dumps({"clock": self.master_clock, "task": rejected_task, "flag": "None"}) + "\n"
                         self.client_socket.sendall(send_json_data.encode())
 
-                        log_message = f"Clock  [{self.master_clock}]  {filename}의 거절되었던 내용 재전송: {rejected_task}"
+                        log_message = f"Clock  [{self.master_clock}]  Rejected {filename} is Process Resending: {rejected_task}"
                         heapq.heappush(self.log_queue, (self.master_clock, log_message))
                         self.master_clock += 1
                         time.sleep(0.1)
@@ -65,7 +82,7 @@ class Client:
                     time.sleep(0.3)
 
                 # EOF에 도달한 경우 'Complete' 메시지 전송
-                print("모든 작업 전송 완료")
+                print("All Sending task to Server is Complete.")
                 time.sleep(0.1)
                 send_json_data = json.dumps({"clock": 0, "task": "None", "flag": "Complete"})
                 self.client_socket.sendall(send_json_data.encode())
@@ -88,15 +105,15 @@ class Client:
                     result = json_data.get('result')
 
                     if response=="작업 거절":
-                        log_message = f"Clock  [{clock}]  작업 거절됨 : {task}"
+                        log_message = f"Clock  [{clock}]  Task Rejected : {task}"
                         heapq.heappush(self.log_queue, (clock, log_message))
                         self.rejected_tasks.append(task)
                     elif response == "전체 종료":
-                        print("모든 작업이 종료되었습니다.")
+                        print("All task is Complete")
                         self.is_end = True
                         return
                     else:
-                        log_message = f"Clock  [{clock}]  작업 완료 : {task} = {result}"
+                        log_message = f"Clock  [{clock}]  Task Complete : {task} = {result}"
                         heapq.heappush(self.log_queue, (clock, log_message))
         except Exception as e:
             print(f"Error {e}")
@@ -116,6 +133,7 @@ class Client:
             if self.log_queue and (self.log_queue[0][0] <= self.master_clock or self.is_send_end):  # master_clock - 10 보다 작거나 같다면
                 _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                 print(log_message)
+                self.log.log_write(log_message)
 
 if __name__ == "__main__":
     client = Client()

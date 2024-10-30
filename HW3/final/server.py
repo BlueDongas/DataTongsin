@@ -9,7 +9,18 @@ import time
 import heapq
 
 # 잘 실행됐음!
-
+class Log:
+    def __init__(self):
+        self.log_file = open("Server_Log.txt","w")
+        self.file_lock = threading.Lock()
+    def log_write(self,event):
+        self.log_file
+        with self.file_lock:  # 락을 사용하여 동기화
+            if self.log_file is not None:
+                self.log_file.write(f"{event}\n")
+                self.log_file.flush()
+            else:
+                print("log_file is not initialized")    
 class Node:
     """노드를 생성하여 트리를 구성합니다."""
     def __init__(self, value):
@@ -39,6 +50,8 @@ class Server:
 
         self.event = Event()
         # self.events_lock = threading.Lock()
+
+        self.log = Log()
 
         self.all_receive=0
 
@@ -115,7 +128,7 @@ class Server:
 
     def calcuate_task(self,task,client_id, start_clock):
         postfix_expression = self.infix_to_postfix(task)
-        postfix_result = "".join(map(str, postfix_expression))
+        postfix_result = ",".join(map(str, postfix_expression))
         
         tree = self.create_parsing_tree(postfix_expression)
         leaf_count = self.count_leaf_nodes(tree)
@@ -132,7 +145,9 @@ class Server:
         self.clock_events[finish_time].wait()
 
         self.result_queue.put([client_id,result,task,leaf_count, finish_time])
-        print(f"Clock  [{finish_time}]  {postfix_result} 연산 결과 : [{result}], 연산 시간 : {leaf_count}")
+
+        print(f"Clock [{finish_time}] Postfix : [{postfix_result}],\nResult : [{result}], \nOperTime : [{leaf_count}]")
+        self.log.log_write(f"Clock [{finish_time}] Postfix : [{postfix_result}],\nResult : [{result}],\nOperTime : [{leaf_count}]")
         
         return 0
     
@@ -143,7 +158,8 @@ class Server:
         final_clock = 0
         while True:
             if not is_rec_finish and (self.all_receive==4) and self.task_queue.empty():
-                print("모든 작업이 도착했습니다.")
+                print("All task Receive to All Client")
+                self.log.log_write("All task Receive to All Client")
                 is_rec_finish = True
             
             count = 0
@@ -164,10 +180,14 @@ class Server:
             #결과 전송  
             if self.result_queue.empty():
                 if is_send_finish:
-                    print("모든 작업이 종료되었습니다.")
+
+                    print("All task is complete Done...")
+                    self.log.log_write("All task is complete Done...")
+
                     send_json_data = json.dumps({"clock":0,"response":"전체 종료","task":"None","result":"None"})+"\n"
                     for i in range(1,5):
                         self.connected_clients[i].sendall(send_json_data.encode())
+
                     # 최종 로그 출력
                     self.clock_list[0] = final_clock
                     return
@@ -180,7 +200,10 @@ class Server:
                         task_client_id, send_result_data, requested_task, operate_time, clock= self.result_queue.get()
                         send_json_data = json.dumps({"clock":clock,"response":"None","task":requested_task,"result":send_result_data})+"\n"
                         self.connected_clients[task_client_id].sendall(send_json_data.encode())
+
                         print(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
+                        self.log.log_write(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
+
                         if final_clock < clock:
                             final_clock = clock
                     except Exception as e:
@@ -190,7 +213,10 @@ class Server:
                     task_client_id, send_result_data, requested_task, operate_time, clock= self.result_queue.get()
                     send_json_data = json.dumps({"clock":clock,"response":"None","task":requested_task,"result":send_result_data})+"\n"
                     self.connected_clients[task_client_id].sendall(send_json_data.encode())
+
                     print(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
+                    self.log.log_write(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
+
                     if final_clock < clock:
                         final_clock = clock
                 except Exception as e:
@@ -218,14 +244,18 @@ class Server:
 
                         if flag == "Complete":
                             self.all_receive+=1
-                            print(f"Client {client_id}의 작업이 모두 완료되었습니다. all_receive : {self.all_receive}")
+
+                            print(f"Client {client_id}'s task all complete")
+                            self.log.log_write(f"Client {client_id}'s task all complete")
+
                             client_items = [(cid, csock) for (cid, csock) in client_items if cid != client_id]
                             break
 
                         elif not data:
                             print(f"클라이언트 {client_id}와의 연결이 종료되었습니다.")
                         else:  # 데이터 받는 부분
-                            print(f"Clock  [{clock}]  클라이언트 {client_id}에서 받은 작업: {task}")
+                            print(f"Clock  [{clock}] Receive {task} to Client {client_id}")
+                            self.log.log_write(f"Clock  [{clock}] Receive {task} to Client {client_id}")
 
                             with self.clock_list_lock[client_id]:
                                 self.clock_list[client_id] += 1
@@ -234,24 +264,28 @@ class Server:
                             # 작업 큐가 다 찼다면 거절, 그렇지 않으면 작업 큐에 저장
                             if self.task_queue.full():
                                 print(f"task_queue is full, return to Client {client_id}")
+                                self.log.log_write(f"task_queue is full, return to Client {client_id}")
+
                                 response_data = json.dumps({"clock": clock, "response": "작업 거절", "task": task, "result": 0})+"\n"
                                 client_socket.sendall(response_data.encode())
                             else:
                                 self.task_queue.put((task, client_id, start_clock))
                 except ConnectionResetError:
                     # 클라이언트와의 연결이 끊어졌을 경우 처리
-                    print(f"클라이언트 {client_id}와의 연결이 비정상적으로 종료되었습니다.")
+                    print(f"Error : 클라이언트 {client_id}와의 연결이 비정상적으로 종료되었습니다.")
 
 
     def wait_for_all_clients(self):
         # 모든 클라이언트가 연결될 때까지 기다림
         while len(self.connected_clients) < self.max_clients:
             client_socket, address = self.server_socket.accept()
-            print(f"클라이언트가 연결되었습니다: {address}")
+            print(f"Client is connected : {address}")
+            self.log.log_write(f"Client is connected : {address}")
 
             # 클라이언트에게 ID 전송
             client_socket.sendall(str(self.client_id).encode())
-            print(f"클라이언트 {self.client_id}에게 ID를 전송했습니다.")
+            print(f"Send ID to Client{self.client_id}")
+            self.log.log_write(f"Send ID to Client{self.client_id}")
 
             # 연결된 클라이언트 목록에 추가
             self.connected_clients[self.client_id] = client_socket
@@ -259,7 +293,8 @@ class Server:
             # 다음 클라이언트 ID로 증가
             self.client_id += 1
 
-        print("모든 클라이언트가 연결되었습니다. 동작을 시작합니다.")
+        print("All Client is connecnted. Start Operate.")
+        self.log.log_write("All Client is connecnted. Start Operate.")
         self.notify_clients_ready()
 
     def notify_clients_ready(self):
@@ -272,7 +307,8 @@ class Server:
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind((self.host,self.port))
         self.server_socket.listen(4)
-        print(f"서버가 시작되었습니다. 최대 {self.max_clients}개의 클라이언트와 연결할 수 있습니다.")
+        print(f"Server is start. Can connect with max {self.max_clients} Client.")
+        self.log.log_write(f"Server is start. Can connect with max {self.max_clients} Client.")
 
         self.wait_for_all_clients()
 
