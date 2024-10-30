@@ -23,12 +23,12 @@ class Client:
         self.port = port
         self.client_id = None  # 서버로부터 받은 클라이언트 ID
         self.rejected_tasks = []
-
+        self.rejected_request = 0
         self.is_rec_end = False
         self.is_send_end = False
         self.master_clock = 0
         self.log_queue = []
-
+        self.count_clock = 0
         self.log = Log()
 
     def connect_to_server(self):
@@ -64,6 +64,7 @@ class Client:
 
                     # 거절된 작업이 있는 경우 먼저 처리
                     while self.rejected_tasks:
+                        self.rejected_request += 1
                         rejected_task = self.rejected_tasks.pop(0)
                         send_json_data = json.dumps({"clock": self.master_clock, "task": rejected_task, "flag": "None"}) + "\n"
                         self.client_socket.sendall(send_json_data.encode())
@@ -76,10 +77,10 @@ class Client:
                     # 현재 작업 전송
                     send_json_data = json.dumps({"clock": self.master_clock, "task": task, "flag": "None"}) + "\n"
                     self.client_socket.sendall(send_json_data.encode())
-                    log_message = f"Clock  [{self.master_clock}]  {task} 전송"
+                    log_message = f"Clock  [{self.master_clock}]  {task} send"
                     heapq.heappush(self.log_queue, (self.master_clock, log_message))
                     self.master_clock += 1
-                    time.sleep(0.3)
+                    time.sleep(0.1)
 
                 # EOF에 도달한 경우 'Complete' 메시지 전송
                 print("All Sending task to Server is Complete.")
@@ -103,17 +104,19 @@ class Client:
                     response = json_data.get('response')
                     task = json_data.get('task')
                     result = json_data.get('result')
-
+                    operate_time = json_data.get('operate_time')
+                    self.count_clock += int(operate_time) 
+                    self.count_clock+=2
                     if response=="작업 거절":
                         log_message = f"Clock  [{clock}]  Task Rejected : {task}"
                         heapq.heappush(self.log_queue, (clock, log_message))
                         self.rejected_tasks.append(task)
                     elif response == "전체 종료":
                         print("All task is Complete")
-                        self.is_end = True
+                        self.is_rec_end = True
                         return
                     else:
-                        log_message = f"Clock  [{clock}]  Task Complete : {task} = {result}"
+                        log_message = f"Clock  [{clock}]  Task Complete : {task} = {result:.2f}"
                         heapq.heappush(self.log_queue, (clock, log_message))
         except Exception as e:
             print(f"Error {e}")
@@ -121,13 +124,16 @@ class Client:
 
     def disconnect(self):
         self.client_socket.close()
-        print("서버와의 연결이 종료되었습니다.")
+        print("Connection to the server has been terminated.")
 
     def print_log(self):
         while True:
             if self.is_rec_end: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
-                input("Press Enter Any key")  # 프로그램이 종료되지 않도록 입력 대기
-                # 최종로그 내용 추가 필요
+                print(f"average wait time : {(self.count_clock/1000):.2f}")
+                self.log.log_write(f"average wait time : {(self.count_clock/1000):.2f}")
+                print(f"rejected request count {self.rejected_request}")
+                self.log.log_write(f"rejected request count {self.rejected_request}")
+                input("Press Enter Any key Process End")  # 프로그램이 종료되지 않도록 입력 대기
                 return
             
             if self.log_queue and (self.log_queue[0][0] <= self.master_clock or self.is_send_end):  # master_clock - 10 보다 작거나 같다면

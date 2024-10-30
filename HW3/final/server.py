@@ -35,7 +35,7 @@ class Server:
         self.max_clients = max_clients
         self.connected_clients = {} # 연결된 클라이언트 소켓과 ID를 저장할 리스트
         self.client_id = 1
-
+        
         self.task_queue =queue.Queue(maxsize=30) #heap 메모리에 위치 최대 사이즈가 30인 작업 대기 큐
         self.result_queue = queue.Queue() # heap 메모리에 위치하는 결과 저장 큐
         self.semaphore = threading.Semaphore(1)
@@ -146,8 +146,8 @@ class Server:
 
         self.result_queue.put([client_id,result,task,leaf_count, finish_time])
 
-        print(f"Clock [{finish_time}] Postfix : [{postfix_result}],\nResult : [{result}], \nOperTime : [{leaf_count}]")
-        self.log.log_write(f"Clock [{finish_time}] Postfix : [{postfix_result}],\nResult : [{result}],\nOperTime : [{leaf_count}]")
+        print(f"Clock [{finish_time}] Postfix : [{postfix_result}], Result : [{result:.2f}], OperTime : [{leaf_count}]")
+        self.log.log_write(f"Clock [{finish_time}] Postfix : [{postfix_result}],Result : [{result:.2f}],OperTime : [{leaf_count}]")
         
         return 0
     
@@ -184,12 +184,13 @@ class Server:
                     print("All task is complete Done...")
                     self.log.log_write("All task is complete Done...")
 
-                    send_json_data = json.dumps({"clock":0,"response":"전체 종료","task":"None","result":"None"})+"\n"
+                    send_json_data = json.dumps({"clock":0,"response":"전체 종료","task":"None","result":"None","operate_time":0})+"\n"
                     for i in range(1,5):
                         self.connected_clients[i].sendall(send_json_data.encode())
 
                     # 최종 로그 출력
                     self.clock_list[0] = final_clock
+                    input("Press Enter Any key Process End")
                     return
             elif is_rec_finish:
                 if self.clock_list[0] == self.check_max_clock[0]:
@@ -198,11 +199,11 @@ class Server:
                 while not self.result_queue.empty():
                     try:
                         task_client_id, send_result_data, requested_task, operate_time, clock= self.result_queue.get()
-                        send_json_data = json.dumps({"clock":clock,"response":"None","task":requested_task,"result":send_result_data})+"\n"
+                        send_json_data = json.dumps({"clock":clock,"response":"None","task":requested_task,"result":send_result_data,"operate_time":operate_time})+"\n"
                         self.connected_clients[task_client_id].sendall(send_json_data.encode())
 
-                        print(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
-                        self.log.log_write(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
+                        print(f"Clock  [{clock}]  Send result [{send_result_data:.2f}] to Client{task_client_id}")
+                        self.log.log_write(f"Clock  [{clock}]  Send result [{send_result_data:.2f}] to Client{task_client_id}")
 
                         if final_clock < clock:
                             final_clock = clock
@@ -211,11 +212,11 @@ class Server:
             else:
                 try:
                     task_client_id, send_result_data, requested_task, operate_time, clock= self.result_queue.get()
-                    send_json_data = json.dumps({"clock":clock,"response":"None","task":requested_task,"result":send_result_data})+"\n"
+                    send_json_data = json.dumps({"clock":clock,"response":"None","task":requested_task,"result":send_result_data,"operate_time":operate_time})+"\n"
                     self.connected_clients[task_client_id].sendall(send_json_data.encode())
 
-                    print(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
-                    self.log.log_write(f"Clock  [{clock}]  Send result [{send_result_data}] to Client{task_client_id}")
+                    print(f"Clock  [{clock}]  Send result [{send_result_data:.2f}] to Client{task_client_id}")
+                    self.log.log_write(f"Clock  [{clock}]  Send result [{send_result_data:.2f}] to Client{task_client_id}")
 
                     if final_clock < clock:
                         final_clock = clock
@@ -266,7 +267,7 @@ class Server:
                                 print(f"task_queue is full, return to Client {client_id}")
                                 self.log.log_write(f"task_queue is full, return to Client {client_id}")
 
-                                response_data = json.dumps({"clock": clock, "response": "작업 거절", "task": task, "result": 0})+"\n"
+                                response_data = json.dumps({"clock": clock, "response": "작업 거절", "task": task, "result": 0,"operate_time":0})+"\n"
                                 client_socket.sendall(response_data.encode())
                             else:
                                 self.task_queue.put((task, client_id, start_clock))
@@ -279,8 +280,8 @@ class Server:
         # 모든 클라이언트가 연결될 때까지 기다림
         while len(self.connected_clients) < self.max_clients:
             client_socket, address = self.server_socket.accept()
-            print(f"Client is connected : {address}")
-            self.log.log_write(f"Client is connected : {address}")
+            print(f"Client{self.client_id} is connected")
+            self.log.log_write(f"Client{self.client_id} is connected")
 
             # 클라이언트에게 ID 전송
             client_socket.sendall(str(self.client_id).encode())
