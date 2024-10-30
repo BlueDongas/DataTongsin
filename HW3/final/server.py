@@ -200,9 +200,9 @@ class Server:
 
     def handle_waiting_thread(self):
         # 모든 클라이언트와 무작위 순서로 통신을 시작
+        client_items = list(self.connected_clients.items())
         while self.connected_clients:
             # 매번 무작위로 클라이언트 순서를 섞음
-            client_items = list(self.connected_clients.items())
             random.shuffle(client_items)
 
             for client_id, client_socket in client_items:
@@ -217,8 +217,11 @@ class Server:
                         task = json_data.get('task')
 
                         if flag == "Complete":
-                            print(f"Client {client_id}의 작업이 모두 완료되었습니다. all_receive : {self.all_receive}")
                             self.all_receive+=1
+                            print(f"Client {client_id}의 작업이 모두 완료되었습니다. all_receive : {self.all_receive}")
+                            client_items = [(cid, csock) for (cid, csock) in client_items if cid != client_id]
+                            break
+
                         elif not data:
                             print(f"클라이언트 {client_id}와의 연결이 종료되었습니다.")
                         else:  # 데이터 받는 부분

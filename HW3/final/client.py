@@ -66,9 +66,11 @@ class Client:
 
                 # EOF에 도달한 경우 'Complete' 메시지 전송
                 print("모든 작업 전송 완료")
+                time.sleep(0.1)
                 send_json_data = json.dumps({"clock": 0, "task": "None", "flag": "Complete"})
                 self.client_socket.sendall(send_json_data.encode())
                 self.is_send_end = True
+                file.close()
 
         except FileNotFoundError:
             print(f"파일을 찾을 수 없습니다: {filename}")
@@ -92,7 +94,7 @@ class Client:
                     elif response == "전체 종료":
                         print("모든 작업이 종료되었습니다.")
                         self.is_end = True
-                        break
+                        return
                     else:
                         log_message = f"Clock  [{clock}]  작업 완료 : {task} = {result}"
                         heapq.heappush(self.log_queue, (clock, log_message))
