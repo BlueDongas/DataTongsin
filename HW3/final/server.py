@@ -152,8 +152,6 @@ class Server:
                     locate_task, client_id, start_clock = self.task_queue.get()
                     # print(f"Clock  [{start_clock}]  Processing task from client {client_id}: {locate_task}")
                     self.executor.submit(self.calcuate_task,locate_task,client_id,start_clock) # 스레드 풀에 작업 할당
-                else:
-                    break
                 count +=1
 
             if self.clock_list[0] < min(self.clock_list[1:]) or (is_rec_finish and self.clock_list[0] < self.check_max_clock[0]):
