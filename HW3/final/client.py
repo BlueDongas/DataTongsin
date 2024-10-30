@@ -153,22 +153,3 @@ if __name__ == "__main__":
     client.disconnect()
     input()
 
-    # def send_file_contents(self):
-    #     # 클라이언트 ID에 맞는 파일 이름 설정
-    #     filename = f"Expression{self.client_id}.txt"
-        
-    #     try:
-    #         # 파일 열기
-    #         with open(filename, 'r') as file:
-    #             # 파일의 각 줄을 읽어서 서버에 전송
-    #             for line in file:
-    #                 line = line.strip()  # 줄 끝의 공백 제거
-    #                 self.client_socket.sendall(line.encode())
-    #                 print(f"{filename}의 내용 전송: {line}")
-    #                 time.sleep(0.1)  # 각 줄 전송 후 약간의 지연을 줌
-    #     except FileNotFoundError:
-    #         print(f"파일을 찾을 수 없습니다: {filename}")
-
-    # def disconnect(self):
-    #     self.client_socket.close()
-    #     print("서버와의 연결이 종료되었습니다.")
