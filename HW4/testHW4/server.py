@@ -5,8 +5,11 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 import json
 import heapq
+import struct
 
+TOTAL_CHUNK = None
 BUFFER_SIZE = 1024*150
+SLEEP_TIME = 0.01
 class Server:
     def __init__(self, host, port, max_clients):
         self.host = host
@@ -22,11 +25,28 @@ class Server:
         self.executor = ThreadPoolExecutor()
 
         self.chunk_owner_data = {} #각 클라이언트가 보유한 청크 정보 저장 ex) {("B",chunk_id):client_id} <- 중복의 경우 스케줄링 알고리즘에 따라 교체
-        
+
+    def init_chunk_owner_data(self):
+        global TOTAL_CHUNK
+        file_list = ['A','B','C','D']
+        client_id = 1
+        for file in file_list:
+            for chunk_id in range(TOTAL_CHUNK):
+                self.chunk_owner_data[(file,chunk_id)] = client_id
+            client_id+=1
+    
     def notify_clients_ready(self):
+        global TOTAL_CHUNK
         # 모든 클라이언트에게 준비 완료 신호를 전송
         for client_id, client_socket in self.connected_clients.items():
+            data = client_socket.recv(4)
+            TOTAL_CHUNK = struct.unpack('!I', data)[0]
+
+        self.init_chunk_owner_data() #각 client 초기 청크 보유 정보 초기화
+
+        for client_id, client_socket in self.connected_clients.items():# 준비 완료 신호 전송
             client_socket.sendall("READY".encode())
+
             
     def wait_for_all_clients(self):
         # 모든 클라이언트가 연결될 때까지 기다림
@@ -71,13 +91,47 @@ class Server:
 
                 if flag == "request":
                     self.request_queue.put([clock,target_client_id,file_id,chunk_id])
+                    print(f"Clock [{clock}]:Receive [Request] file[{file_id}] chunk[{chunk_id}]")
                 elif flag =="response":
                     self.response_queue.put([clock,target_client_id,file_id,chunk_id,chunk_data])
-
-        print("request")    
+                    print(f"Clock [{clock}]:Receive [Data] file[{file_id}] chunk[{chunk_id}]")
       
     def send_to_client(self,client_id,client_socket):
-        print("send")
+        while True:
+            if not self.request_queue.empty():
+                clock,target_client_id,file_id,chunk_id = self.request_queue.get()
+                destinaton_client = self.chunk_owner_data[(file_id,chunk_id)]
+                json_data = {
+                    "clock":0,
+                    "target_client_id":target_client_id,
+                    "file_id":file_id,
+                    "chunk_id":chunk_id,
+                    "chunk_data":"None",
+                    "flag":"request"
+                }
+                data_to_send = json.dumps(json_data)
+                with self.semaphore:
+                    destiation_socket = self.connected_clients[destinaton_client]
+                    destiation_socket.sendall(data_to_send.encode())
+                print(f"Clock [0]:Send [Request] to [client{destinaton_client}] file[{file_id} chunk[{chunk_id}] data]")
+                time.sleep(SLEEP_TIME)
+
+            if not self.response_queue.empty():
+                clock,target_client_id,file_id,chunk_id,chunk_data = self.response_queue.get()
+                destiation_socket = self.connected_clients[target_client_id]
+                json_data = {
+                    "clock":0,
+                    "target_client_id":"None",
+                    "file_id":file_id,
+                    "chunk_id":chunk_id,
+                    "chunk_data":chunk_data,
+                    "flag":"response"
+                }
+                data_to_send = json.dumps(json_data)
+                with self.semaphore:
+                    destiation_socket = self.connected_clients[target_client_id]
+                    destiation_socket.sendall(data_to_send.encode())
+                time.sleep(SLEEP_TIME)
 
     def handle_client(self,client_id,client_socket):
         receive_thread = threading.Thread(target=server.receive_to_client,args=(client_id,client_socket))

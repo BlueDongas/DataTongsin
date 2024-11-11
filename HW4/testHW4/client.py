@@ -5,9 +5,12 @@ import time
 import queue
 import json
 import base64
+import struct
 
 TOTAL_CHUNK = None # maybe 3907 정확하게 파일 크기가 512,000,000 byte 기준
 CHUNK_SIZE = 128 * 1024 #128kb
+BUFFER_SIZE = 1024*150
+SLEEP_TIME = 0.01
 
 send_event=threading.Event()
 receive_event=threading.Event()
@@ -43,9 +46,10 @@ class Client:
                 if not chunk_data:
                     print("not chunk_data")
                     break
-                file_chunks[(self.my_file,str(chunk_id))] = chunk_data
+                file_chunks[(self.my_file,chunk_id)] = chunk_data
 
     def connect_to_server(self):
+        global TOTAL_CHUNK
         # 서버와의 연결 생성
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((self.host, self.port))
@@ -68,18 +72,20 @@ class Client:
         print("Connect to Server")
         print(f"Receive ID to Server: {self.client_id}")
         
-        self.client_socket.sendall
+        self.get_file_size()
+        self.make_file_chunk() # file 청크 데이터 key-value 형식으로 분할
+        data = struct.pack('!I', TOTAL_CHUNK)
+        self.client_socket.sendall(data)
+
         ready_signal = self.client_socket.recv(1024).decode()
         if ready_signal == "READY":
             print("Start Send task to Server")
 
         time.sleep(1)
-        self.get_file_size()
-        self.make_file_chunk() # file 청크 데이터 key-value 형식으로 분할
 
     def send_to_server(self):
         for file_id in self.target_files: # B,C,D
-            for chunk_id in range(CHUNK_SIZE): #1,2,3,4,5,...3907
+            for chunk_id in range(TOTAL_CHUNK): #1,2,3,4,5,...3907
                 send_event.wait()
                 while not self.request_queue.empty(): #요청 받은 파일 먼저 전송
                     clock,target_client_id,send_file_id,send_chunk_id = self.request_queue.get()
@@ -90,31 +96,35 @@ class Client:
                         "file_id":send_file_id,
                         "chunk_id":send_chunk_id,
                         "chunk_data":chunk_data_b64,
-                        "flag":"request"
+                        "flag":"response"
                     }
 
                     data_to_send = json.dumps(json_data)
                     self.client_socket.sendall(data_to_send.encode())
-                    print(f"Clock [{clock}]:Send to server chunk{send_chunk_id} of file{send_file_id}")
-                    send_event.clear()
-                    receive_event.set()
+                    time.sleep(SLEEP_TIME)
+                    print(f"Clock [0]:Send to server chunk{send_chunk_id+1} of file{send_file_id}")
+                    
 
-                if (file_id,str(chunk_id)) not in file_chunks:
+                if (file_id,chunk_id) not in file_chunks:
                     json_data={
                         "clock":0,
                         "target_client_id":self.client_id,
-                        "file_id":file_id,
-                        "chunk_id":chunk_id,
+                        "file_id":file_id, #A
+                        "chunk_id":chunk_id,#int 1
                         "chunk_data":"None",
-                        "flag":"response"
+                        "flag":"request"
                     }
                     data_to_send=json.dumps(json_data)
                     self.client_socket.sendall(data_to_send.encode())
-                    print(f"Clock [{clock}]:Request to server chunk{chunk_id} of file{file_id}")
-            return
+                    time.sleep(SLEEP_TIME)
+                    print(f"Clock [0]:Request to server chunk{chunk_id} of file{file_id}")
     def receive_to_server(self):
         while True:
-            receive_event.wait()
+            data = self.client_socket.recv(BUFFER_SIZE).decode()
+            for line in data.splitlines():
+                json_data = json.loads(line)
+
+                
             print("receive_chunk")
             return
 
