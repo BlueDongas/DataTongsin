@@ -14,7 +14,7 @@ receive_event=threading.Event()
 
 send_event.set()
 
-file_chunks = {} # ["("A","1"):chunk_data] 형식
+file_chunks = {} # [("A","1"):chunk_data] 형식
 
 class Client:
     def __init__(self, host = "localhost", port = 6000):
@@ -78,8 +78,8 @@ class Client:
         self.make_file_chunk() # file 청크 데이터 key-value 형식으로 분할
 
     def send_to_server(self):
-        for chunk_id in range(CHUNK_SIZE): #1,2,3,4,5,...3907
-            for file_id in self.target_files: # B,C,D
+        for file_id in self.target_files: # B,C,D
+            for chunk_id in range(CHUNK_SIZE): #1,2,3,4,5,...3907
                 send_event.wait()
                 while not self.request_queue.empty(): #요청 받은 파일 먼저 전송
                     clock,target_client_id,send_file_id,send_chunk_id = self.request_queue.get()
@@ -89,7 +89,8 @@ class Client:
                         "target_client_id":target_client_id,
                         "file_id":send_file_id,
                         "chunk_id":send_chunk_id,
-                        "chunk_data":chunk_data_b64
+                        "chunk_data":chunk_data_b64,
+                        "flag":"request"
                     }
 
                     data_to_send = json.dumps(json_data)
@@ -103,7 +104,9 @@ class Client:
                         "clock":0,
                         "target_client_id":self.client_id,
                         "file_id":file_id,
-                        "chunk_id":chunk_id
+                        "chunk_id":chunk_id,
+                        "chunk_data":"None",
+                        "flag":"response"
                     }
                     data_to_send=json.dumps(json_data)
                     self.client_socket.sendall(data_to_send.encode())

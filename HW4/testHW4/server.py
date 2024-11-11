@@ -1,7 +1,12 @@
 import socket
 import queue
 import threading
+from concurrent.futures import ThreadPoolExecutor
+import time
+import json
+import heapq
 
+BUFFER_SIZE = 1024*150
 class Server:
     def __init__(self, host, port, max_clients):
         self.host = host
@@ -10,9 +15,11 @@ class Server:
         self.connected_clients = {} # 연결된 클라이언트 소켓과 ID를 저장할 리스트
         self.client_id = 1
         
-        self.request_queue =queue.Queue()
-        self.response_queue = queue.Queue()
+        self.request_queue =queue.Queue() # [clock,target_client_id,file_id,chunk_id] 
+        self.response_queue = queue.Queue() # [clock,target_client_id,file_id,chunk_id,chunk_data]
         self.semaphore = threading.Semaphore(1)
+
+        self.executor = ThreadPoolExecutor()
 
         self.chunk_owner_data = {} #각 클라이언트가 보유한 청크 정보 저장 ex) {("B",chunk_id):client_id} <- 중복의 경우 스케줄링 알고리즘에 따라 교체
         
@@ -49,23 +56,50 @@ class Server:
 
         self.wait_for_all_clients()
 
-    def receive_to_client(self):
+    def receive_to_client(self,client_id,client_socket):
+        while True:
+            data = client_socket.recv(BUFFER_SIZE).decode()
+            for line in data.splitlines():
+                json_data = json.loads(line)
+
+                clock = json_data.get('clock')
+                target_client_id = json_data.get('target_client_id')
+                file_id = json_data.get('file_id')
+                chunk_id = json_data.get('chunk_id')
+                chunk_data = json_data.get('chunk_data')
+                flag = json_data.get('flag')
+
+                if flag == "request":
+                    self.request_queue.put([clock,target_client_id,file_id,chunk_id])
+                elif flag =="response":
+                    self.response_queue.put([clock,target_client_id,file_id,chunk_id,chunk_data])
+
         print("request")    
       
-    def send_to_client(self):
+    def send_to_client(self,client_id,client_socket):
         print("send")
-        
+
+    def handle_client(self,client_id,client_socket):
+        receive_thread = threading.Thread(target=server.receive_to_client,args=(client_id,client_socket))
+        response_thread = threading.Thread(target=server.send_to_client,args=(client_id,client_socket))
+        receive_thread.start()
+        response_thread.start()
+            
+            
 if __name__ == "__main__":
     server =  Server(host="0.0.0.0",port=6000,max_clients=4)
     server.Server_start()
+
+    client_items = list(server.connected_clients.items())
+    server_thread=[]
+    for client_id,client_socket in client_items:
+        handle_client_thread = threading.Thread(target=server.handle_client,args=(client_id,client_socket))
+        handle_client_thread.start()
+        server_thread.append(handle_client_thread)
     
-    waiting_thread = threading.Thread(target=server.receive_to_client)
-    manage_thread = threading.Thread(target=server.send_to_client)
-
-    manage_thread.start()
-    waiting_thread.start()
-
-    waiting_thread.join()
-    manage_thread.join()
+    for thread in server_thread:
+        thread.join()
+    
+    server.server_socket.close
     print("finish")
     input()
