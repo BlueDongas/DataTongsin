@@ -9,7 +9,7 @@ import struct
 
 TOTAL_CHUNK = None
 BUFFER_SIZE = 1024*150
-SLEEP_TIME = 0.1
+SLEEP_TIME = 0.01
 class Server:
     def __init__(self, host, port, max_clients):
         self.host = host
@@ -136,6 +136,7 @@ class Server:
                 with self.semaphore:
                     destination_socket = self.connected_clients[target_client_id]
                     destination_socket.sendall(data_to_send.encode())
+                print(f"Clock [0]:Send [Data] to [client{target_client_id}] file[{file_id} chunk[{chunk_id}] data]")
                 time.sleep(SLEEP_TIME)
 
     def handle_client(self,client_id,client_socket):

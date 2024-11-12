@@ -10,7 +10,7 @@ import struct
 TOTAL_CHUNK = None # maybe 3907 정확하게 파일 크기가 512,000,000 byte 기준
 CHUNK_SIZE = 128 * 1024 #128kb
 BUFFER_SIZE = 1024*150
-SLEEP_TIME = 0.1
+SLEEP_TIME = 0.01
 
 send_event=threading.Event()
 receive_event=threading.Event()
