@@ -9,7 +9,7 @@ import struct
 
 TOTAL_CHUNK = None
 BUFFER_SIZE = 1024*150
-SLEEP_TIME = 0.01
+SLEEP_TIME = 0.1
 class Server:
     def __init__(self, host, port, max_clients):
         self.host = host
@@ -77,25 +77,30 @@ class Server:
         self.wait_for_all_clients()
 
     def receive_to_client(self,client_id,client_socket):
+        buffer = ""
         while True:
             data = client_socket.recv(BUFFER_SIZE).decode()
-            for line in data.splitlines():
-                json_data = json.loads(line)
+            buffer += data
+            while '\n' in buffer:
+                line,buffer = buffer.split('\n',1)
+                try:
+                    json_data = json.loads(line)
 
-                clock = json_data.get('clock')
-                target_client_id = json_data.get('target_client_id')
-                file_id = json_data.get('file_id')
-                chunk_id = json_data.get('chunk_id')
-                chunk_data = json_data.get('chunk_data')
-                flag = json_data.get('flag')
+                    clock = json_data.get('clock')
+                    target_client_id = json_data.get('target_client_id')
+                    file_id = json_data.get('file_id')
+                    chunk_id = json_data.get('chunk_id')
+                    chunk_data = json_data.get('chunk_data')
+                    flag = json_data.get('flag')
 
-                if flag == "request":
-                    self.request_queue.put([clock,target_client_id,file_id,chunk_id])
-                    print(f"Clock [{clock}]:Receive [Request] file[{file_id}] chunk[{chunk_id}]")
-                elif flag =="response":
-                    self.response_queue.put([clock,target_client_id,file_id,chunk_id,chunk_data])
-                    print(f"Clock [{clock}]:Receive [Data] file[{file_id}] chunk[{chunk_id}]")
-      
+                    if flag == "request":
+                        self.request_queue.put([clock,target_client_id,file_id,chunk_id])
+                        print(f"Clock [{clock}]:Receive [Request] file[{file_id}] chunk[{chunk_id}]")
+                    elif flag =="response":
+                        self.response_queue.put([clock,target_client_id,file_id,chunk_id,chunk_data])
+                        print(f"Clock [{clock}]:Receive [Data] file[{file_id}] chunk[{chunk_id}]")
+                except json.JSONDecodeError as e:
+                    print("Error to Receive : {e}")
     def send_to_client(self,client_id,client_socket):
         while True:
             if not self.request_queue.empty():
@@ -109,16 +114,16 @@ class Server:
                     "chunk_data":"None",
                     "flag":"request"
                 }
-                data_to_send = json.dumps(json_data)
+                data_to_send = json.dumps(json_data)+'\n'
                 with self.semaphore:
-                    destiation_socket = self.connected_clients[destinaton_client]
-                    destiation_socket.sendall(data_to_send.encode())
+                    destination_socket = self.connected_clients[destinaton_client]
+                    destination_socket.sendall(data_to_send.encode())
                 print(f"Clock [0]:Send [Request] to [client{destinaton_client}] file[{file_id} chunk[{chunk_id}] data]")
                 time.sleep(SLEEP_TIME)
 
             if not self.response_queue.empty():
                 clock,target_client_id,file_id,chunk_id,chunk_data = self.response_queue.get()
-                destiation_socket = self.connected_clients[target_client_id]
+                destination_socket = self.connected_clients[target_client_id]
                 json_data = {
                     "clock":0,
                     "target_client_id":"None",
@@ -127,10 +132,10 @@ class Server:
                     "chunk_data":chunk_data,
                     "flag":"response"
                 }
-                data_to_send = json.dumps(json_data)
+                data_to_send = json.dumps(json_data)+'\n'
                 with self.semaphore:
-                    destiation_socket = self.connected_clients[target_client_id]
-                    destiation_socket.sendall(data_to_send.encode())
+                    destination_socket = self.connected_clients[target_client_id]
+                    destination_socket.sendall(data_to_send.encode())
                 time.sleep(SLEEP_TIME)
 
     def handle_client(self,client_id,client_socket):
