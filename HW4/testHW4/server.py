@@ -93,7 +93,7 @@ class Server:
             if self.complete_count == 4 and self.response_end and self.request_end: #종료
                 print("All task is complete")
                 break
-
+            
             data = client_socket.recv(BUFFER_SIZE).decode()
             buffer += data
             while '\n' in buffer:
@@ -104,6 +104,8 @@ class Server:
                     
                     if flag == "complete":
                         self.complete_count +=1
+                        print(f"recevie complete flag{self.complete_count}")
+                        break
 
                     if flag == "request":
                         _ = json_data.get('clock')
@@ -146,7 +148,6 @@ class Server:
                 clock,target_client_id,file_id,chunk_id = heapq.heappop(self.request_queue)
                 destination_client = self.chunk_owner_data[(file_id,chunk_id)]
 
-                
                 with self.clock_list_lock[destination_client]:
                     self.clock_list[destination_client] = max(self.clock_list[destination_client], clock)
                     clock = self.clock_list[destination_client]
@@ -181,7 +182,6 @@ class Server:
                     clock,target_client_id,file_id,chunk_id,chunk_data = heapq.heappop(self.response_queue)
                     destination_socket = self.connected_clients[target_client_id]
 
-                    
                     with self.clock_list_lock[target_client_id]:
                         self.clock_list[target_client_id] = max(self.clock_list[target_client_id], clock)
                         clock = self.clock_list[target_client_id]
@@ -234,9 +234,10 @@ class Server:
                 input("Press Enter Any key")  # 프로그램이 종료되지 않도록 입력 대기
                 return
             
-            if self.log_queue and (self.log_queue[0][0] <= self.clock_list[0] - 20):  # master_clock - 10 보다 작거나 같다면
-                _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
-                print(log_message)
+            if self.log_queue:
+                while self.log_queue[0][0] <= self.clock_list[0] - 20:  # master_clock - 10 보다 작거나 같다면
+                    _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
+                    print(log_message)
             
             
 if __name__ == "__main__":

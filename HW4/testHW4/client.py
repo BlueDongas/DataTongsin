@@ -19,6 +19,8 @@ send_event=threading.Event()
 receive_event=threading.Event()
 stop_event = threading.Event()
 
+finish_flag = False
+
 send_event.set()
 
 file_chunks = {} # [("A",1):chunk_data] 형식
@@ -54,7 +56,7 @@ class Client:
                 if not chunk_data:
                     print("not chunk_data")
                     break
-                file_chunks[(self.my_file,chunk_id)] = chunk_data
+                file_chunks[(self.my_file,chunk_id)] = base64.b64encode(chunk_data).decode('utf-8') #chunk_data base64로 문자열화
 
     def connect_to_server(self):
         global TOTAL_CHUNK
@@ -92,6 +94,7 @@ class Client:
         time.sleep(1)
 
     def send_to_server(self):
+        global finish_flag
         check_chunk_count = 0
         target_files = self.target_files
         random.shuffle(target_files)
@@ -121,7 +124,7 @@ class Client:
                 for _ in range(10):
                     if not self.request_queue.empty(): #요청 받은 파일 전송
                         clock,target_client_id,send_file_id,send_chunk_id = self.request_queue.get()
-                        chunk_data_b64 = base64.b64encode(file_chunks[(send_file_id,send_chunk_id)]).decode('utf-8') #chunk_data base64로 문자열화
+                        chunk_data_b64 = file_chunks[(send_file_id,send_chunk_id)]
 
                         json_data = {
                             "clock":clock,
@@ -131,18 +134,18 @@ class Client:
                             "chunk_data":chunk_data_b64,
                             "flag":"response"
                         }
-
                         data_to_send = json.dumps(json_data)+"\n"
-                        self.client_socket.sendall(data_to_send.encode())
+                        self.client_socket.sendall(data_to_send.encode('utf-8'))
                         # print(f"Clock [{clock}]:Send to server chunk{send_chunk_id+1} of file{send_file_id}")
                         log_message = f"Clock [{clock}]:Send to server chunk{send_chunk_id+1} of file{send_file_id}"
                         heapq.heappush(self.log_queue, (clock, log_message))
                     time.sleep(SLEEP_TIME/10)
-        print("Debug code")
-        while not stop_event.is_set():
+        print("Debug code1")
+        while not finish_flag:
+            time.sleep(1)
             if not self.request_queue.empty(): #요청 받은 파일 전송
                 clock,target_client_id,send_file_id,send_chunk_id = self.request_queue.get()
-                chunk_data_b64 = base64.b64encode(file_chunks[(send_file_id,send_chunk_id)]).decode('utf-8') #chunk_data base64로 문자열화
+                chunk_data_b64 = file_chunks[(send_file_id,send_chunk_id)] #chunk_data base64로 문자열화
                 json_data = {
                     "clock":clock,
                     "target_client_id":target_client_id,
@@ -151,7 +154,6 @@ class Client:
                     "chunk_data":chunk_data_b64,
                     "flag":"response"
                 }
-
                 data_to_send = json.dumps(json_data)+"\n"
                 self.client_socket.sendall(data_to_send.encode())
                 time.sleep(SLEEP_TIME)
@@ -159,16 +161,18 @@ class Client:
                 log_message = f"Clock [{clock}]:Send to server chunk{send_chunk_id+1} of file{send_file_id}"
                 heapq.heappush(self.log_queue, (clock, log_message))
             else:
+                print("Debug code2")
                 json_data = {"flag":"complete"}
-                data_to_send = json.dumps(json_data)
+                data_to_send = json.dumps(json_data) + '\n'
                 self.client_socket.sendall(data_to_send.encode())
         print("send 스레드 종료")
 
         
 
     def receive_to_server(self):
+        global finish_flag
         buffer = ""
-        while not stop_event.is_set():
+        while not finish_flag:
             data = self.client_socket.recv(BUFFER_SIZE).decode()
             buffer += data
             while '\n' in buffer:
@@ -179,7 +183,7 @@ class Client:
 
                     if flag == "complete":
                         print("All request file Receive")
-                        stop_event.set()
+                        finish_flag = True
                         break
 
                     clock = json_data.get('clock')
@@ -217,15 +221,18 @@ class Client:
 
     def assemble_chunk(self,file_id):
         file_path = f"./client{self.client_id}/{file_id}"
-        with open(file_path,'wb') as f:
-            for chunk_id in range(TOTAL_CHUNK):
-                chnuk_data_b64 = file_chunks.get((file_id,chunk_id))
-                if chnuk_data:
-                    chnuk_data = base64.b64decode(chnuk_data_b64)
-                    f.write(chnuk_data)
-                else:
-                    print(f"Missing chunk {chunk_id} in file {file_id}")
-                    return False
+        try:
+            with open(file_path,'wb') as f:
+                for chunk_id in range(TOTAL_CHUNK):
+                    chnuk_data_b64 = file_chunks.get((file_id,chunk_id))
+                    if chnuk_data_b64:
+                        chnuk_data = base64.b64decode(chnuk_data_b64)
+                        f.write(chnuk_data)
+                    else:
+                        print(f"Missing chunk {chunk_id} in file {file_id}")
+                        return False
+        except Exception as e:
+            print(f"Error assemble chunk {e}")
         print(f"{file_id}file complete assemble chunk as {file_path}")
         return file_path
 
@@ -241,8 +248,9 @@ class Client:
         return
     
     def print_log(self):
+        global finish_flag
         while True:
-            if False: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
+            if finish_flag: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
                 while self.log_queue:
                     _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                     print(log_message)
