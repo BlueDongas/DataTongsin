@@ -262,8 +262,8 @@ class Server:
         response_thread.start()
 
     def print_log(self):
+        global TOTAL_CHUNK
         while True:
-            
             if all(self.is_complete[1:]):
                 self.is_complete[0] = True
 
@@ -275,7 +275,10 @@ class Server:
                     _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                     print(log_message)
                     self.log.log_write(log_message)
-                # 최종로그 내용 추가 필요
+                final_clock = max(self.clock_list[1:])
+                average_chunk_send_clock = final_clock / (TOTAL_CHUNK * 4)
+                print(f"\nAverage transmission time for each chunk : {average_chunk_send_clock}")
+                self.log.log_write(f"\nAverage transmission time for each chunk : {average_chunk_send_clock}")
                 return
             
             if self.log_queue:

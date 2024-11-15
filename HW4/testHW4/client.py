@@ -56,6 +56,8 @@ class Client:
         self.receive_event = threading.Event()
         self.send_event = threading.Event()
 
+        self.download_clock_dic = {} # 각 파일을 다운로드 받는데 걸린 시간 기록
+
     def get_file_size(self):
         global TOTAL_CHUNK, CHUNK_SIZE
         self.file_path = f"./{self.my_file}.file"
@@ -88,13 +90,14 @@ class Client:
             self.target_files = ["B","C","D"]
         elif self.client_id == 2:
             self.my_file = "B"
-            self.target_files = ["A","C","D"]
+            self.target_files = ["C","D","A"]
         elif self.client_id == 3:
             self.my_file = "C"
-            self.target_files = ["A","B","D"]
+            self.target_files = ["D","A","B"]
         elif self.client_id == 4:
             self.my_file = "D"
             self.target_files = ["A","B","C"]
+        self.download_clock_dic[self.my_file] = 0
         print("Connect to Server")
         self.log.log_write("Connect to Server")
         print(f"Receive ID to Server: {self.client_id}")
@@ -116,8 +119,8 @@ class Client:
         #print("debug : send to server start")
         global finish_flag
         check_chunk_count = 0
-        target_files = self.target_files
-        random.shuffle(target_files)
+        target_files = self.target_files 
+        # random.shuffle(target_files)
         for file_id in target_files: # B,C,D
             chunk_id = 0
             while chunk_id < TOTAL_CHUNK: #1,2,3,4,5,...3907
@@ -201,11 +204,9 @@ class Client:
                 self.send_event.clear()
                 time.sleep(0.01)
 
-        
-
     def receive_to_server(self):
         # print("debug : receive to server start")
-        global finish_flag
+        global finish_flag, TOTAL_CHUNK
         buffer = ""
         # print("debug : receive_event wait")
         self.receive_event.wait()
@@ -242,6 +243,9 @@ class Client:
                         # print(f"Clock [{clock}]:Receive [data] from server chunk{chunk_id} of file{file_id}")
                         log_message = f"Clock [{clock}]:Receive [data] from server chunk{chunk_id} of file{file_id}"
                         heapq.heappush(self.log_queue, (clock, log_message))
+
+                        if chunk_id == TOTAL_CHUNK - 1:
+                            self.download_clock_dic[file_id] = clock
 
                     with self.master_clock_lock:
                         self.master_clock = clock
@@ -301,8 +305,17 @@ class Client:
                     _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                     print(log_message)
                     self.log.log_write(log_message)
-                # 최종로그 내용 추가 필요
-
+                # 최종로그
+                print(f"\nInitially Possessed Files : {self.my_file}")
+                self.log.log_write(f"\nInitially Possessed Files : {self.my_file}")
+                pre_file_download_time = 0
+                order_prefix = ["First", "Second", "Third"]
+                for count, file_id in enumerate(self.target_files):
+                    finish_time = round(self.download_clock_dic[file_id] - pre_file_download_time, 2)
+                    print(f"{order_prefix[count]} file {file_id} download time : {finish_time}")
+                    self.log.log_write(f"{order_prefix[count]} file {file_id} download time : {finish_time}")
+                    pre_file_download_time = self.download_clock_dic[file_id]
+                print()
                 return
             
             if self.log_queue and (self.log_queue[0][0] <= self.master_clock - 50):  # master_clock - 50 보다 작거나 같다면
