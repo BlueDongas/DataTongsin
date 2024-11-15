@@ -87,16 +87,16 @@ class Client:
         self.log.log_file = open(f"client{self.client_id}_Log.txt","w")
         if self.client_id == 1:
             self.my_file = "A"
-            self.target_files = ["B","C","D"]
+            self.target_files = ["B","D","C"]
         elif self.client_id == 2:
             self.my_file = "B"
-            self.target_files = ["C","D","A"]
+            self.target_files = ["C","A","D"]
         elif self.client_id == 3:
             self.my_file = "C"
-            self.target_files = ["D","A","B"]
+            self.target_files = ["D","B","A"]
         elif self.client_id == 4:
             self.my_file = "D"
-            self.target_files = ["A","B","C"]
+            self.target_files = ["A","C","B"]
         self.download_clock_dic[self.my_file] = 0
         print("Connect to Server")
         self.log.log_write("Connect to Server")
@@ -284,7 +284,7 @@ class Client:
                         return False
         except Exception as e:
             print(f"Error assemble chunk {e}")
-        print(f"{file_id}file complete assemble chunk as {file_path}")
+        print(f"{file_id} file complete assemble chunk as {file_path}")
         self.log.log_write(f"{file_id}file complete assemble chunk as {file_path}")
         return file_path
 
