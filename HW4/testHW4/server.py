@@ -6,6 +6,7 @@ import time
 import json
 import heapq
 import struct
+import os
 
 TOTAL_CHUNK = None
 BUFFER_SIZE = 1024*150
@@ -19,8 +20,8 @@ class Server:
         self.connected_clients = {} # 연결된 클라이언트 소켓과 ID를 저장할 리스트
         self.client_id = 1
         
-        self.request_queue = [] # [clock,target_client_id,file_id,chunk_id] 
-        self.response_queue = [] # [clock,target_client_id,file_id,chunk_id,chunk_data]
+        self.request_queue = [[], [], [], [], []] # [clock,target_client_id,file_id,chunk_id] 
+        self.response_queue = [[], [], [], [], []] # [clock,target_client_id,file_id,chunk_id,chunk_data]
         self.semaphore = threading.Semaphore(1)
 
         self.executor = ThreadPoolExecutor()
@@ -31,10 +32,11 @@ class Server:
         self.clock_list_lock = [threading.Lock() for _ in range(5)]
         self.log_queue = []
 
-        
+        self.receive_event_list = [threading.Event() for _ in range(5)]
+        self.send_event_list = [threading.Event() for _ in range(5)]
 
-        self.complete_count = 0 # client 요청이 끝났는지 여부 max 4
-        self.request_end = False # 요청큐가 비었고 client 요청이 끝났는지
+        self.is_complete = [False, False, False, False, False] # client 요청이 끝났는지 여부 max 4
+        self.request_end = [False, False, False, False, False] # 요청큐가 비었고 client 요청이 끝났는지
         self.response_end = False # 요청 큐가 비었고 client 요청이 끝났으며 응답도 끝남.
 
     def init_chunk_owner_data(self):
@@ -43,7 +45,7 @@ class Server:
         client_id = 1
         for file in file_list:
             for chunk_id in range(TOTAL_CHUNK):
-                self.chunk_owner_data[(file,chunk_id)] = client_id
+                self.chunk_owner_data[(file,chunk_id)] = [client_id]
             client_id+=1
     
     def notify_clients_ready(self):
@@ -90,7 +92,7 @@ class Server:
     def receive_to_client(self,client_id,client_socket):
         buffer = ""
         while True:
-            if self.complete_count == 4 and self.response_end and self.request_end: #종료
+            if all(self.is_complete[1:]) and self.response_end: #종료
                 print("All task is complete")
                 break
             
@@ -103,9 +105,8 @@ class Server:
                     flag = json_data.get('flag')
                     
                     if flag == "complete":
-                        self.complete_count +=1
-                        print(f"recevie complete flag{self.complete_count}")
-                        break
+                        self.is_complete[client_id] = True
+                        print(f"receive complete client{client_id} flag  {self.is_complete[client_id]}")
 
                     if flag == "request":
                         _ = json_data.get('clock')
@@ -118,7 +119,10 @@ class Server:
                             self.clock_list[client_id] = round(self.clock_list[client_id] + (5 + client_id) / 10, 1)
                             self.clock_list[0] = min(self.clock_list[1:4])
                             clock = self.clock_list[client_id]
-                        heapq.heappush(self.request_queue, (clock,target_client_id,file_id,chunk_id))
+
+                        destination_client = min(self.chunk_owner_data[(file_id,chunk_id)], key=lambda x: self.clock_list[x])
+
+                        heapq.heappush(self.request_queue[destination_client], (clock,destination_client,target_client_id,file_id,chunk_id))
                         #print(f"Clock [{clock}]:Receive [Request] file[{file_id}] chunk[{chunk_id}]")
                         log_message = f"Clock [{clock}]:Receive [Request] From [Client{client_id}] file[{file_id}] chunk[{chunk_id}]"
                         heapq.heappush(self.log_queue, (clock, log_message))
@@ -134,7 +138,7 @@ class Server:
                             self.clock_list[client_id] += 5 + client_id
                             self.clock_list[0] = min(self.clock_list[1:4])
                             clock = self.clock_list[client_id]
-                        heapq.heappush(self.response_queue, (clock,target_client_id,file_id,chunk_id,chunk_data))
+                        heapq.heappush(self.response_queue[target_client_id], (clock,target_client_id,file_id,chunk_id,chunk_data))
                         # print(f"Clock [{clock}]:Receive [Data] file[{file_id}] chunk[{chunk_id}]")
                         log_message = f"Clock [{clock}]:Receive [Data] from [Client{client_id}] file[{file_id}] chunk[{chunk_id}]"
                         heapq.heappush(self.log_queue, (clock, log_message))
@@ -142,12 +146,68 @@ class Server:
                 except json.JSONDecodeError as e:
                     print(f"Error to Receive from {client_id} : {e}")
 
-    def send_to_client(self,client_id,client_socket):
-        while True:
-            if self.request_queue:
-                clock,target_client_id,file_id,chunk_id = heapq.heappop(self.request_queue)
-                destination_client = self.chunk_owner_data[(file_id,chunk_id)]
+                # print(f"debug : send_event client{client_id} set")
+                self.send_event_list[client_id].set()
+                # print(f"debug : receive_event client{client_id} wait")
+                self.receive_event_list[client_id].wait()
+                self.receive_event_list[client_id].clear()
 
+    def send_to_client(self,client_id,client_socket):
+        # print(f"debug : send_event client{client_id} wait")
+        self.send_event_list[client_id].wait()
+        self.send_event_list[client_id].clear()
+        while True:
+            if not self.response_queue[client_id] and self.request_end[0]:
+                self.response_end = True
+                print("Response is complete")
+                json_data = {"flag":"complete"}
+                data_to_send = json.dumps(json_data)+'\n'
+                for client_id,client_socket in client_items:
+                    client_socket.sendall(data_to_send.encode())
+                return
+            elif self.response_queue[client_id]:
+                clock,target_client_id,file_id,chunk_id,chunk_data = heapq.heappop(self.response_queue[client_id])
+                destination_socket = self.connected_clients[target_client_id]
+
+                with self.clock_list_lock[target_client_id]:
+                    self.clock_list[target_client_id] = max(self.clock_list[target_client_id], clock)
+                    clock = self.clock_list[target_client_id]
+                    self.clock_list[target_client_id] += 5 + target_client_id
+                    receive_clock= self.clock_list[target_client_id]
+
+                json_data = {
+                    "clock":receive_clock,
+                    "target_client_id":"None",
+                    "file_id":file_id,
+                    "chunk_id":chunk_id,
+                    "chunk_data":chunk_data,
+                    "flag":"response"
+                }
+                data_to_send = json.dumps(json_data)+'\n'
+                with self.semaphore:
+                    destination_socket = self.connected_clients[target_client_id]
+                    destination_socket.sendall(data_to_send.encode())
+                # print(f"Clock [{clock}]:Send [Data] to [client{target_client_id}] file[{file_id}] chunk[{chunk_id}] data")
+                log_message = f"Clock [{clock}]:Send [Data] to [client{target_client_id}] file[{file_id}] chunk[{chunk_id}] data"
+                heapq.heappush(self.log_queue, (clock, log_message))
+
+                self.clock_list[0] = min(self.clock_list[1:4])
+
+                self.chunk_owner_data[(file_id, chunk_id)].append(client_id)
+                self.chunk_owner_data[(file_id, chunk_id)].sort()
+
+                # print(f"debug : receive_event client{client_id} set")
+                self.receive_event_list[client_id].set()
+                # print(f"debug : send_event client{client_id} wait")
+                self.send_event_list[client_id].wait()
+                self.send_event_list[client_id].clear()
+                time.sleep(SLEEP_TIME)
+            elif not self.request_queue[client_id] and self.is_complete[0]:
+                self.request_end[client_id] = True
+
+            elif self.request_queue[client_id]:
+                clock,destination_client,target_client_id,file_id,chunk_id = heapq.heappop(self.request_queue[client_id])
+                
                 with self.clock_list_lock[destination_client]:
                     self.clock_list[destination_client] = max(self.clock_list[destination_client], clock)
                     clock = self.clock_list[destination_client]
@@ -172,49 +232,12 @@ class Server:
                 heapq.heappush(self.log_queue, (clock, log_message))
 
                 self.clock_list[0] = min(self.clock_list[1:4])
+                # print(f"debug : receive_event client{client_id} set")
+                self.receive_event_list[client_id].set()
+                # print(f"debug : send_event client{client_id} wait")
+                self.send_event_list[client_id].wait()
+                self.send_event_list[client_id].clear()
                 time.sleep(SLEEP_TIME)
-            else:
-                if self.complete_count == 4:
-                    self.request_end = True
-                    print("Request is complete")
-            for _ in range(4):
-                if self.response_queue:
-                    clock,target_client_id,file_id,chunk_id,chunk_data = heapq.heappop(self.response_queue)
-                    destination_socket = self.connected_clients[target_client_id]
-
-                    with self.clock_list_lock[target_client_id]:
-                        self.clock_list[target_client_id] = max(self.clock_list[target_client_id], clock)
-                        clock = self.clock_list[target_client_id]
-                        self.clock_list[target_client_id] += 5 + target_client_id
-                        receive_clock= self.clock_list[target_client_id]
-
-                    json_data = {
-                        "clock":receive_clock,
-                        "target_client_id":"None",
-                        "file_id":file_id,
-                        "chunk_id":chunk_id,
-                        "chunk_data":chunk_data,
-                        "flag":"response"
-                    }
-                    data_to_send = json.dumps(json_data)+'\n'
-                    with self.semaphore:
-                        destination_socket = self.connected_clients[target_client_id]
-                        destination_socket.sendall(data_to_send.encode())
-                    # print(f"Clock [{clock}]:Send [Data] to [client{target_client_id}] file[{file_id}] chunk[{chunk_id}] data")
-                    log_message = f"Clock [{clock}]:Send [Data] to [client{target_client_id}] file[{file_id}] chunk[{chunk_id}] data"
-                    heapq.heappush(self.log_queue, (clock, log_message))
-
-                    self.clock_list[0] = min(self.clock_list[1:4])
-                    time.sleep(SLEEP_TIME)
-                else:
-                    if self.complete_count==4 and self.request_end:
-                        self.response_end = True
-                        print("Response is complete")
-                        json_data = {"flag":"complete"}
-                        data_to_send = json.dumps(json_data)+'\n'
-                        for client_id,client_socket in client_items:
-                            client_socket.sendall(data_to_send.encode())
-                        return
 
     def handle_client(self,client_id,client_socket):
         receive_thread = threading.Thread(target=server.receive_to_client,args=(client_id,client_socket))
@@ -224,14 +247,18 @@ class Server:
 
     def print_log(self):
         while True:
+            
+            if all(self.is_complete[1:]):
+                self.is_complete[0] = True
+
+            if all(self.request_end[1:]):
+                self.request_end[0] = True
+
             if self.response_end: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
                 while self.log_queue:
                     _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                     print(log_message)
                 # 최종로그 내용 추가 필요
-
-
-                input("Press Enter Any key")  # 프로그램이 종료되지 않도록 입력 대기
                 return
             
             if self.log_queue:
@@ -256,7 +283,10 @@ if __name__ == "__main__":
     for thread in server_thread:
         thread.join()
     log_thread.join()
-    
+
+    for client_id, client_socket in server.connected_clients.items():
+        client_socket.close()
     server.server_socket.close()
-    print("finish")
-    input()
+    
+    input("All task is finish Press Enter Any key")  # 프로그램이 종료되지 않도록 입력 대기
+    os._exit(0)
