@@ -1,0 +1,905 @@
+Connect to Server
+Receive ID to Server: 4
+Start Send task to Server
+Clock [0]:Request to server chunk0 of fileB
+Clock [1.8]:Receive [Request] from server chunk0 of fileD
+Clock [1.8]:Send to server chunk0 of fileD
+Clock [19.8]:Receive [data] from server chunk0 of fileB
+Clock [19.8]:Request to server chunk1 of fileB
+Clock [21.6]:Receive [Request] from server chunk0 of fileD
+Clock [21.6]:Send to server chunk0 of fileD
+Clock [31.5]:Receive [Request] from server chunk1 of fileD
+Clock [31.5]:Send to server chunk1 of fileD
+Clock [49.5]:Receive [data] from server chunk1 of fileB
+Clock [49.5]:Request to server chunk2 of fileB
+Clock [51.3]:Receive [Request] from server chunk1 of fileD
+Clock [51.3]:Send to server chunk1 of fileD
+Clock [69.3]:Receive [data] from server chunk2 of fileB
+Clock [69.3]:Request to server chunk3 of fileB
+Clock [71.1]:Receive [Request] from server chunk2 of fileD
+Clock [71.1]:Send to server chunk2 of fileD
+Clock [81.0]:Receive [Request] from server chunk2 of fileD
+Clock [81.0]:Send to server chunk2 of fileD
+Clock [90.9]:Receive [Request] from server chunk3 of fileD
+Clock [90.9]:Send to server chunk3 of fileD
+Clock [108.9]:Receive [data] from server chunk3 of fileB
+Clock [108.9]:Request to server chunk4 of fileB
+Clock [110.7]:Receive [Request] from server chunk3 of fileD
+Clock [110.7]:Send to server chunk3 of fileD
+Clock [128.7]:Receive [data] from server chunk4 of fileB
+Clock [128.7]:Request to server chunk5 of fileB
+Clock [130.5]:Receive [Request] from server chunk4 of fileD
+Clock [130.5]:Send to server chunk4 of fileD
+Clock [148.5]:Receive [data] from server chunk5 of fileB
+Clock [148.5]:Request to server chunk6 of fileB
+Clock [150.3]:Receive [Request] from server chunk4 of fileD
+Clock [150.3]:Send to server chunk4 of fileD
+Clock [168.3]:Receive [data] from server chunk6 of fileB
+Clock [168.3]:Request to server chunk7 of fileB
+Clock [170.1]:Receive [Request] from server chunk5 of fileD
+Clock [170.1]:Send to server chunk5 of fileD
+Clock [180.0]:Receive [Request] from server chunk5 of fileD
+Clock [180.0]:Send to server chunk5 of fileD
+Clock [189.9]:Receive [Request] from server chunk6 of fileD
+Clock [189.9]:Send to server chunk6 of fileD
+Clock [207.9]:Receive [data] from server chunk7 of fileB
+Clock [207.9]:Request to server chunk8 of fileB
+Clock [209.7]:Receive [Request] from server chunk6 of fileD
+Clock [209.7]:Send to server chunk6 of fileD
+Clock [227.7]:Receive [data] from server chunk8 of fileB
+Clock [227.7]:Request to server chunk9 of fileB
+Clock [229.5]:Receive [Request] from server chunk7 of fileD
+Clock [229.5]:Send to server chunk7 of fileD
+Clock [247.5]:Receive [data] from server chunk9 of fileB
+Clock [247.5]:Request to server chunk10 of fileB
+Clock [249.3]:Receive [Request] from server chunk7 of fileD
+Clock [249.3]:Send to server chunk7 of fileD
+Clock [267.3]:Receive [data] from server chunk10 of fileB
+Clock [267.3]:Request to server chunk11 of fileB
+Clock [269.1]:Receive [Request] from server chunk8 of fileD
+Clock [269.1]:Send to server chunk8 of fileD
+Clock [279.0]:Receive [Request] from server chunk8 of fileD
+Clock [279.0]:Send to server chunk8 of fileD
+Clock [297.0]:Receive [data] from server chunk11 of fileB
+Clock [297.0]:Request to server chunk12 of fileB
+Clock [298.8]:Receive [Request] from server chunk9 of fileD
+Clock [298.8]:Send to server chunk9 of fileD
+Clock [316.8]:Receive [data] from server chunk12 of fileB
+Clock [316.8]:Request to server chunk13 of fileB
+Clock [318.6]:Receive [Request] from server chunk9 of fileD
+Clock [318.6]:Send to server chunk9 of fileD
+Clock [336.6]:Receive [data] from server chunk13 of fileB
+Clock [336.6]:Request to server chunk14 of fileB
+Clock [338.4]:Receive [Request] from server chunk10 of fileD
+Clock [338.4]:Send to server chunk10 of fileD
+Clock [356.4]:Receive [data] from server chunk14 of fileB
+Clock [356.4]:Request to server chunk15 of fileB
+Clock [358.2]:Receive [Request] from server chunk10 of fileD
+Clock [358.2]:Send to server chunk10 of fileD
+Clock [368.1]:Receive [Request] from server chunk11 of fileD
+Clock [368.1]:Send to server chunk11 of fileD
+Clock [386.1]:Receive [data] from server chunk15 of fileB
+Clock [386.1]:Request to server chunk16 of fileB
+Clock [387.9]:Receive [Request] from server chunk11 of fileD
+Clock [387.9]:Send to server chunk11 of fileD
+Clock [405.9]:Receive [data] from server chunk16 of fileB
+Clock [405.9]:Request to server chunk17 of fileB
+Clock [407.7]:Receive [Request] from server chunk12 of fileD
+Clock [407.7]:Send to server chunk12 of fileD
+Clock [425.7]:Receive [data] from server chunk17 of fileB
+Clock [425.7]:Request to server chunk18 of fileB
+Clock [427.5]:Receive [Request] from server chunk12 of fileD
+Clock [427.5]:Send to server chunk12 of fileD
+Clock [437.4]:Receive [Request] from server chunk13 of fileD
+Clock [437.4]:Send to server chunk13 of fileD
+Clock [455.4]:Receive [data] from server chunk18 of fileB
+Clock [455.4]:Request to server chunk19 of fileB
+Clock [457.2]:Receive [Request] from server chunk14 of fileD
+Clock [457.2]:Send to server chunk14 of fileD
+Clock [475.2]:Receive [data] from server chunk19 of fileB
+Clock [475.2]:Request to server chunk20 of fileB
+Clock [477.0]:Receive [Request] from server chunk15 of fileD
+Clock [477.0]:Send to server chunk15 of fileD
+Clock [495.0]:Receive [data] from server chunk20 of fileB
+Clock [495.0]:Request to server chunk21 of fileB
+Clock [496.8]:Receive [Request] from server chunk16 of fileD
+Clock [496.8]:Send to server chunk16 of fileD
+Clock [514.8]:Receive [data] from server chunk21 of fileB
+Clock [514.8]:Request to server chunk22 of fileB
+Clock [516.6]:Receive [Request] from server chunk17 of fileD
+Clock [516.6]:Send to server chunk17 of fileD
+Clock [534.6]:Receive [data] from server chunk22 of fileB
+Clock [534.6]:Request to server chunk23 of fileB
+Clock [536.4]:Receive [Request] from server chunk18 of fileD
+Clock [536.4]:Send to server chunk18 of fileD
+Clock [554.4]:Receive [data] from server chunk23 of fileB
+Clock [554.4]:Request to server chunk24 of fileB
+Clock [556.2]:Receive [Request] from server chunk19 of fileD
+Clock [556.2]:Send to server chunk19 of fileD
+Clock [574.2]:Receive [data] from server chunk24 of fileB
+Clock [574.2]:Request to server chunk25 of fileB
+Clock [576.0]:Receive [Request] from server chunk20 of fileD
+Clock [576.0]:Send to server chunk20 of fileD
+Clock [594.0]:Receive [data] from server chunk25 of fileB
+Clock [594.0]:Request to server chunk26 of fileB
+Clock [595.8]:Receive [Request] from server chunk21 of fileD
+Clock [595.8]:Send to server chunk21 of fileD
+Clock [613.8]:Receive [data] from server chunk26 of fileB
+Clock [613.8]:Request to server chunk27 of fileB
+Clock [615.6]:Receive [Request] from server chunk22 of fileD
+Clock [615.6]:Send to server chunk22 of fileD
+Clock [633.6]:Receive [data] from server chunk27 of fileB
+Clock [633.6]:Request to server chunk28 of fileB
+Clock [635.4]:Receive [Request] from server chunk23 of fileD
+Clock [635.4]:Send to server chunk23 of fileD
+Clock [653.4]:Receive [data] from server chunk28 of fileB
+Clock [653.4]:Request to server chunk29 of fileB
+Clock [655.2]:Receive [Request] from server chunk24 of fileD
+Clock [655.2]:Send to server chunk24 of fileD
+Clock [673.2]:Receive [data] from server chunk29 of fileB
+Clock [673.2]:Request to server chunk30 of fileB
+Clock [675.0]:Receive [Request] from server chunk25 of fileD
+Clock [675.0]:Send to server chunk25 of fileD
+Clock [693.0]:Receive [data] from server chunk30 of fileB
+Clock [693.0]:Request to server chunk31 of fileB
+Clock [694.8]:Receive [Request] from server chunk26 of fileD
+Clock [694.8]:Send to server chunk26 of fileD
+Clock [712.8]:Receive [data] from server chunk31 of fileB
+Clock [712.8]:Request to server chunk32 of fileB
+Clock [714.6]:Receive [Request] from server chunk27 of fileD
+Clock [714.6]:Send to server chunk27 of fileD
+Clock [732.6]:Receive [data] from server chunk32 of fileB
+Clock [732.6]:Request to server chunk33 of fileB
+Clock [750.2]:Receive [data] from server chunk33 of fileB
+Clock [750.2]:Request to server chunk34 of fileB
+Clock [752.0]:Receive [Request] from server chunk28 of fileD
+Clock [752.0]:Send to server chunk28 of fileD
+Clock [770.0]:Receive [data] from server chunk34 of fileB
+Clock [770.0]:Request to server chunk35 of fileB
+Clock [771.8]:Receive [Request] from server chunk29 of fileD
+Clock [771.8]:Send to server chunk29 of fileD
+Clock [789.8]:Receive [data] from server chunk35 of fileB
+Clock [789.8]:Request to server chunk36 of fileB
+Clock [791.6]:Receive [Request] from server chunk30 of fileD
+Clock [791.6]:Send to server chunk30 of fileD
+Clock [809.6]:Receive [data] from server chunk36 of fileB
+Clock [809.6]:Request to server chunk37 of fileB
+Clock [827.2]:Receive [data] from server chunk37 of fileB
+Clock [827.2]:Request to server chunk38 of fileB
+Clock [829.0]:Receive [Request] from server chunk31 of fileD
+Clock [829.0]:Send to server chunk31 of fileD
+Clock [847.0]:Receive [data] from server chunk38 of fileB
+Clock [847.0]:Request to server chunk39 of fileB
+Clock [848.8]:Receive [Request] from server chunk32 of fileD
+Clock [848.8]:Send to server chunk32 of fileD
+Clock [865.3]:Receive [Request] from server chunk33 of fileD
+Clock [865.3]:Send to server chunk33 of fileD
+Clock [883.3]:Receive [data] from server chunk39 of fileB
+Clock [883.3]:Request to server chunk40 of fileB
+Clock [885.1]:Receive [Request] from server chunk34 of fileD
+Clock [885.1]:Send to server chunk34 of fileD
+Clock [903.1]:Receive [data] from server chunk40 of fileB
+Clock [903.1]:Request to server chunk41 of fileB
+Clock [904.9]:Receive [Request] from server chunk35 of fileD
+Clock [904.9]:Send to server chunk35 of fileD
+Clock [922.9]:Receive [data] from server chunk41 of fileB
+Clock [922.9]:Request to server chunk42 of fileB
+Clock [924.7]:Receive [Request] from server chunk36 of fileD
+Clock [924.7]:Send to server chunk36 of fileD
+Clock [942.7]:Receive [data] from server chunk42 of fileB
+Clock [942.7]:Request to server chunk43 of fileB
+Clock [944.5]:Receive [Request] from server chunk29 of fileD
+Clock [944.5]:Send to server chunk29 of fileD
+Clock [962.5]:Receive [data] from server chunk43 of fileB
+Clock [962.5]:Request to server chunk44 of fileB
+Clock [964.3]:Receive [Request] from server chunk37 of fileD
+Clock [964.3]:Send to server chunk37 of fileD
+Clock [982.3]:Receive [data] from server chunk44 of fileB
+Clock [982.3]:Request to server chunk45 of fileB
+Clock [984.1]:Receive [Request] from server chunk30 of fileD
+Clock [984.1]:Send to server chunk30 of fileD
+Clock [1002.1]:Receive [data] from server chunk45 of fileB
+Clock [1002.1]:Request to server chunk46 of fileB
+Clock [1003.9]:Receive [Request] from server chunk38 of fileD
+Clock [1003.9]:Send to server chunk38 of fileD
+Clock [1021.9]:Receive [data] from server chunk46 of fileB
+Clock [1021.9]:Request to server chunk47 of fileB
+Clock [1023.7]:Receive [Request] from server chunk31 of fileD
+Clock [1023.7]:Send to server chunk31 of fileD
+Clock [1033.6]:Receive [Request] from server chunk39 of fileD
+Clock [1033.6]:Send to server chunk39 of fileD
+Clock [1051.6]:Receive [data] from server chunk47 of fileB
+Clock [1051.6]:Request to server chunk48 of fileB
+Clock [1053.4]:Receive [Request] from server chunk32 of fileD
+Clock [1053.4]:Send to server chunk32 of fileD
+Clock [1071.4]:Receive [data] from server chunk48 of fileB
+Clock [1071.4]:Request to server chunk49 of fileB
+Clock [1073.2]:Receive [Request] from server chunk40 of fileD
+Clock [1073.2]:Send to server chunk40 of fileD
+Clock [1091.2]:Receive [data] from server chunk49 of fileB
+Clock [1091.2]:Request to server chunk50 of fileB
+Clock [1093.0]:Receive [Request] from server chunk41 of fileD
+Clock [1093.0]:Send to server chunk41 of fileD
+Clock [1111.0]:Receive [data] from server chunk50 of fileB
+Clock [1111.0]:Request to server chunk51 of fileB
+Clock [1112.8]:Receive [Request] from server chunk42 of fileD
+Clock [1112.8]:Send to server chunk42 of fileD
+Clock [1130.8]:Receive [data] from server chunk51 of fileB
+Clock [1130.8]:Request to server chunk52 of fileB
+Clock [1132.6]:Receive [Request] from server chunk43 of fileD
+Clock [1132.6]:Send to server chunk43 of fileD
+Clock [1150.6]:Receive [data] from server chunk52 of fileB
+Clock [1150.6]:Request to server chunk53 of fileB
+Clock [1152.4]:Receive [Request] from server chunk36 of fileD
+Clock [1152.4]:Send to server chunk36 of fileD
+Clock [1170.4]:Receive [data] from server chunk53 of fileB
+Clock [1170.4]:Request to server chunk54 of fileB
+Clock [1172.2]:Receive [Request] from server chunk44 of fileD
+Clock [1172.2]:Send to server chunk44 of fileD
+Clock [1190.2]:Receive [data] from server chunk54 of fileB
+Clock [1190.2]:Request to server chunk55 of fileB
+Clock [1192.0]:Receive [Request] from server chunk45 of fileD
+Clock [1192.0]:Send to server chunk45 of fileD
+Clock [1210.0]:Receive [data] from server chunk55 of fileB
+Clock [1210.0]:Request to server chunk56 of fileB
+Clock [1211.8]:Receive [Request] from server chunk46 of fileD
+Clock [1211.8]:Send to server chunk46 of fileD
+Clock [1229.8]:Receive [data] from server chunk56 of fileB
+Clock [1229.8]:Request to server chunk57 of fileB
+Clock [1231.6]:Receive [Request] from server chunk39 of fileD
+Clock [1231.6]:Send to server chunk39 of fileD
+Clock [1241.5]:Receive [Request] from server chunk47 of fileD
+Clock [1241.5]:Send to server chunk47 of fileD
+Clock [1259.5]:Receive [data] from server chunk57 of fileB
+Clock [1259.5]:Request to server chunk58 of fileB
+Clock [1261.3]:Receive [Request] from server chunk48 of fileD
+Clock [1261.3]:Send to server chunk48 of fileD
+Clock [1279.3]:Receive [data] from server chunk58 of fileB
+Clock [1279.3]:Request to server chunk59 of fileB
+Clock [1281.1]:Receive [Request] from server chunk49 of fileD
+Clock [1281.1]:Send to server chunk49 of fileD
+Clock [1299.1]:Receive [data] from server chunk59 of fileB
+Clock [1299.1]:Request to server chunk60 of fileB
+Clock [1300.9]:Receive [Request] from server chunk50 of fileD
+Clock [1300.9]:Send to server chunk50 of fileD
+Clock [1318.9]:Receive [data] from server chunk60 of fileB
+Clock [1318.9]:Request to server chunk61 of fileB
+Clock [1320.7]:Receive [Request] from server chunk51 of fileD
+Clock [1320.7]:Send to server chunk51 of fileD
+Clock [1338.7]:Receive [data] from server chunk61 of fileB
+Clock [1338.7]:Request to server chunk62 of fileB
+Clock [1340.5]:Receive [Request] from server chunk52 of fileD
+Clock [1340.5]:Send to server chunk52 of fileD
+Clock [1358.5]:Receive [data] from server chunk62 of fileB
+Clock [1358.5]:Request to server chunk63 of fileB
+Clock [1360.3]:Receive [Request] from server chunk53 of fileD
+Clock [1360.3]:Send to server chunk53 of fileD
+Clock [1378.3]:Receive [data] from server chunk63 of fileB
+Clock [1378.3]:Request to server chunk64 of fileB
+Clock [1380.1]:Receive [Request] from server chunk54 of fileD
+Clock [1380.1]:Send to server chunk54 of fileD
+Clock [1398.1]:Receive [data] from server chunk64 of fileB
+Clock [1398.1]:Request to server chunk65 of fileB
+Clock [1399.9]:Receive [Request] from server chunk55 of fileD
+Clock [1399.9]:Send to server chunk55 of fileD
+Clock [1417.9]:Receive [data] from server chunk65 of fileB
+Clock [1417.9]:Request to server chunk66 of fileB
+Clock [1419.7]:Receive [Request] from server chunk56 of fileD
+Clock [1419.7]:Send to server chunk56 of fileD
+Clock [1437.7]:Receive [data] from server chunk66 of fileB
+Clock [1437.7]:Request to server chunk67 of fileB
+Clock [1439.5]:Receive [Request] from server chunk57 of fileD
+Clock [1439.5]:Send to server chunk57 of fileD
+Clock [1457.5]:Receive [data] from server chunk67 of fileB
+Clock [1457.5]:Request to server chunk68 of fileB
+Clock [1459.3]:Receive [Request] from server chunk58 of fileD
+Clock [1459.3]:Send to server chunk58 of fileD
+Clock [1477.3]:Receive [data] from server chunk68 of fileB
+Clock [1477.3]:Request to server chunk69 of fileB
+Clock [1479.1]:Receive [Request] from server chunk59 of fileD
+Clock [1479.1]:Send to server chunk59 of fileD
+Clock [1497.1]:Receive [data] from server chunk69 of fileB
+Clock [1497.1]:Request to server chunk70 of fileB
+Clock [1498.9]:Receive [Request] from server chunk60 of fileD
+Clock [1498.9]:Send to server chunk60 of fileD
+Clock [1516.9]:Receive [data] from server chunk70 of fileB
+Clock [1516.9]:Request to server chunk71 of fileB
+Clock [1518.7]:Receive [Request] from server chunk61 of fileD
+Clock [1518.7]:Send to server chunk61 of fileD
+Clock [1536.7]:Receive [data] from server chunk71 of fileB
+Clock [1536.7]:Request to server chunk72 of fileB
+Clock [1538.5]:Receive [Request] from server chunk62 of fileD
+Clock [1538.5]:Send to server chunk62 of fileD
+Clock [1556.5]:Receive [data] from server chunk72 of fileB
+Clock [1556.5]:Request to server chunk73 of fileB
+Clock [1558.3]:Receive [Request] from server chunk63 of fileD
+Clock [1558.3]:Send to server chunk63 of fileD
+Clock [1576.3]:Receive [data] from server chunk73 of fileB
+Clock [1576.3]:Request to server chunk74 of fileB
+Clock [1578.1]:Receive [Request] from server chunk64 of fileD
+Clock [1578.1]:Send to server chunk64 of fileD
+Clock [1596.1]:Receive [data] from server chunk74 of fileB
+Clock [1596.1]:Request to server chunk75 of fileB
+Clock [1597.9]:Receive [Request] from server chunk65 of fileD
+Clock [1597.9]:Send to server chunk65 of fileD
+Clock [1615.9]:Receive [data] from server chunk75 of fileB
+Clock [1615.9]:Request to server chunk76 of fileB
+Clock [1617.7]:Receive [Request] from server chunk66 of fileD
+Clock [1617.7]:Send to server chunk66 of fileD
+Clock [1635.7]:Receive [data] from server chunk76 of fileB
+Clock [1635.7]:Request to server chunk77 of fileB
+Clock [1653.3]:Receive [data] from server chunk77 of fileB
+Clock [1653.3]:Request to server chunk78 of fileB
+Clock [1655.1]:Receive [Request] from server chunk67 of fileD
+Clock [1655.1]:Send to server chunk67 of fileD
+Clock [1673.1]:Receive [data] from server chunk78 of fileB
+Clock [1673.1]:Request to server chunk79 of fileB
+Clock [1674.9]:Receive [Request] from server chunk68 of fileD
+Clock [1674.9]:Send to server chunk68 of fileD
+Clock [1692.9]:Receive [data] from server chunk79 of fileB
+Clock [1692.9]:Request to server chunk0 of fileC
+Clock [1694.7]:Receive [Request] from server chunk69 of fileD
+Clock [1694.7]:Send to server chunk69 of fileD
+Clock [1712.7]:Receive [data] from server chunk0 of fileC
+Clock [1712.7]:Request to server chunk1 of fileC
+Clock [1714.5]:Receive [Request] from server chunk70 of fileD
+Clock [1714.5]:Send to server chunk70 of fileD
+Clock [1732.5]:Receive [data] from server chunk1 of fileC
+Clock [1732.5]:Request to server chunk2 of fileC
+Clock [1734.3]:Receive [Request] from server chunk71 of fileD
+Clock [1734.3]:Send to server chunk71 of fileD
+Clock [1752.3]:Receive [data] from server chunk2 of fileC
+Clock [1752.3]:Request to server chunk3 of fileC
+Clock [1754.1]:Receive [Request] from server chunk72 of fileD
+Clock [1754.1]:Send to server chunk72 of fileD
+Clock [1772.1]:Receive [data] from server chunk3 of fileC
+Clock [1772.1]:Request to server chunk4 of fileC
+Clock [1773.9]:Receive [Request] from server chunk73 of fileD
+Clock [1773.9]:Send to server chunk73 of fileD
+Clock [1791.9]:Receive [data] from server chunk4 of fileC
+Clock [1791.9]:Request to server chunk5 of fileC
+Clock [1793.7]:Receive [Request] from server chunk74 of fileD
+Clock [1793.7]:Send to server chunk74 of fileD
+Clock [1811.7]:Receive [data] from server chunk5 of fileC
+Clock [1811.7]:Request to server chunk6 of fileC
+Clock [1830.4]:Receive [data] from server chunk6 of fileC
+Clock [1830.4]:Request to server chunk7 of fileC
+Clock [1832.2]:Receive [Request] from server chunk75 of fileD
+Clock [1832.2]:Send to server chunk75 of fileD
+Clock [1850.2]:Receive [data] from server chunk7 of fileC
+Clock [1850.2]:Request to server chunk8 of fileC
+Clock [1852.0]:Receive [Request] from server chunk76 of fileD
+Clock [1852.0]:Send to server chunk76 of fileD
+Clock [1870.0]:Receive [data] from server chunk8 of fileC
+Clock [1870.0]:Request to server chunk9 of fileC
+Clock [1871.8]:Receive [Request] from server chunk77 of fileD
+Clock [1871.8]:Send to server chunk77 of fileD
+Clock [1889.8]:Receive [data] from server chunk9 of fileC
+Clock [1889.8]:Request to server chunk10 of fileC
+Clock [1891.6]:Receive [Request] from server chunk78 of fileD
+Clock [1891.6]:Send to server chunk78 of fileD
+Clock [1909.6]:Receive [data] from server chunk10 of fileC
+Clock [1909.6]:Request to server chunk11 of fileC
+Clock [1911.4]:Receive [Request] from server chunk79 of fileD
+Clock [1911.4]:Send to server chunk79 of fileD
+Clock [1929.4]:Receive [data] from server chunk11 of fileC
+Clock [1929.4]:Request to server chunk12 of fileC
+Clock [1943.3]:Receive [Request] from server chunk66 of fileD
+Clock [1943.3]:Send to server chunk66 of fileD
+Clock [1961.3]:Receive [data] from server chunk12 of fileC
+Clock [1961.3]:Request to server chunk13 of fileC
+Clock [1963.1]:Receive [Request] from server chunk1 of fileC
+Clock [1963.1]:Send to server chunk1 of fileC
+Clock [1981.1]:Receive [data] from server chunk13 of fileC
+Clock [1981.1]:Request to server chunk14 of fileC
+Clock [1998.3]:Receive [Request] from server chunk1 of fileB
+Clock [1998.3]:Send to server chunk1 of fileB
+Clock [2016.3]:Receive [data] from server chunk14 of fileC
+Clock [2016.3]:Request to server chunk15 of fileC
+Clock [2018.1]:Receive [Request] from server chunk3 of fileC
+Clock [2018.1]:Send to server chunk3 of fileC
+Clock [2028.0]:Receive [Request] from server chunk70 of fileD
+Clock [2028.0]:Send to server chunk70 of fileD
+Clock [2046.0]:Receive [data] from server chunk15 of fileC
+Clock [2046.0]:Request to server chunk16 of fileC
+Clock [2047.8]:Receive [Request] from server chunk71 of fileD
+Clock [2047.8]:Send to server chunk71 of fileD
+Clock [2069.1]:Receive [data] from server chunk16 of fileC
+Clock [2069.1]:Request to server chunk17 of fileC
+Clock [2070.9]:Receive [Request] from server chunk5 of fileC
+Clock [2070.9]:Send to server chunk5 of fileC
+Clock [2088.9]:Receive [data] from server chunk17 of fileC
+Clock [2088.9]:Request to server chunk18 of fileC
+Clock [2114.2]:Receive [data] from server chunk18 of fileC
+Clock [2114.2]:Request to server chunk19 of fileC
+Clock [2130.3]:Receive [Request] from server chunk75 of fileD
+Clock [2130.3]:Send to server chunk75 of fileD
+Clock [2140.2]:Receive [Request] from server chunk8 of fileC
+Clock [2140.2]:Send to server chunk8 of fileC
+Clock [2158.2]:Receive [data] from server chunk19 of fileC
+Clock [2158.2]:Request to server chunk20 of fileC
+Clock [2174.3]:Receive [Request] from server chunk9 of fileB
+Clock [2174.3]:Send to server chunk9 of fileB
+Clock [2192.3]:Receive [data] from server chunk20 of fileC
+Clock [2192.3]:Request to server chunk21 of fileC
+Clock [2208.4]:Receive [Request] from server chunk11 of fileC
+Clock [2208.4]:Send to server chunk11 of fileC
+Clock [2226.4]:Receive [data] from server chunk21 of fileC
+Clock [2226.4]:Request to server chunk22 of fileC
+Clock [2228.2]:Receive [Request] from server chunk12 of fileC
+Clock [2228.2]:Send to server chunk12 of fileC
+Clock [2246.2]:Receive [data] from server chunk22 of fileC
+Clock [2246.2]:Request to server chunk23 of fileC
+Clock [2263.4]:Receive [Request] from server chunk13 of fileB
+Clock [2263.4]:Send to server chunk13 of fileB
+Clock [2281.4]:Receive [data] from server chunk23 of fileC
+Clock [2281.4]:Request to server chunk24 of fileC
+Clock [2299.7]:Receive [Request] from server chunk15 of fileB
+Clock [2299.7]:Send to server chunk15 of fileB
+Clock [2317.7]:Receive [data] from server chunk24 of fileC
+Clock [2317.7]:Request to server chunk25 of fileC
+Clock [2334.9]:Receive [Request] from server chunk17 of fileB
+Clock [2334.9]:Send to server chunk17 of fileB
+Clock [2353.6]:Receive [Request] from server chunk18 of fileB
+Clock [2353.6]:Send to server chunk18 of fileB
+Clock [2371.6]:Receive [data] from server chunk25 of fileC
+Clock [2371.6]:Request to server chunk26 of fileC
+Clock [2387.7]:Receive [Request] from server chunk17 of fileC
+Clock [2387.7]:Send to server chunk17 of fileC
+Clock [2398.7]:Receive [Request] from server chunk20 of fileB
+Clock [2398.7]:Send to server chunk20 of fileB
+Clock [2416.7]:Receive [data] from server chunk26 of fileC
+Clock [2416.7]:Request to server chunk27 of fileC
+Clock [2435.0]:Receive [Request] from server chunk22 of fileB
+Clock [2435.0]:Send to server chunk22 of fileB
+Clock [2453.7]:Receive [Request] from server chunk23 of fileB
+Clock [2453.7]:Send to server chunk23 of fileB
+Clock [2471.7]:Receive [data] from server chunk27 of fileC
+Clock [2471.7]:Request to server chunk28 of fileC
+Clock [2487.8]:Receive [Request] from server chunk20 of fileC
+Clock [2487.8]:Send to server chunk20 of fileC
+Clock [2506.9]:Receive [data] from server chunk28 of fileC
+Clock [2506.9]:Request to server chunk29 of fileC
+Clock [2533.3]:Receive [data] from server chunk29 of fileC
+Clock [2533.3]:Request to server chunk30 of fileC
+Clock [2535.1]:Receive [Request] from server chunk22 of fileC
+Clock [2535.1]:Send to server chunk22 of fileC
+Clock [2553.8]:Receive [Request] from server chunk28 of fileB
+Clock [2553.8]:Send to server chunk28 of fileB
+Clock [2571.8]:Receive [data] from server chunk30 of fileC
+Clock [2571.8]:Request to server chunk31 of fileC
+Clock [2587.9]:Receive [Request] from server chunk24 of fileC
+Clock [2587.9]:Send to server chunk24 of fileC
+Clock [2607.0]:Receive [data] from server chunk31 of fileC
+Clock [2607.0]:Request to server chunk32 of fileC
+Clock [2608.8]:Receive [Request] from server chunk30 of fileB
+Clock [2608.8]:Send to server chunk30 of fileB
+Clock [2631.9]:Receive [Request] from server chunk26 of fileC
+Clock [2631.9]:Send to server chunk26 of fileC
+Clock [2649.9]:Receive [data] from server chunk32 of fileC
+Clock [2649.9]:Request to server chunk33 of fileC
+Clock [2651.7]:Receive [Request] from server chunk27 of fileC
+Clock [2651.7]:Send to server chunk27 of fileC
+Clock [2669.7]:Receive [data] from server chunk33 of fileC
+Clock [2669.7]:Request to server chunk34 of fileC
+Clock [2686.9]:Receive [Request] from server chunk34 of fileB
+Clock [2686.9]:Send to server chunk34 of fileB
+Clock [2704.9]:Receive [data] from server chunk34 of fileC
+Clock [2704.9]:Request to server chunk35 of fileC
+Clock [2721.0]:Receive [Request] from server chunk30 of fileC
+Clock [2721.0]:Send to server chunk30 of fileC
+Clock [2737.5]:Receive [Request] from server chunk31 of fileC
+Clock [2737.5]:Send to server chunk31 of fileC
+Clock [2747.4]:Receive [Request] from server chunk37 of fileB
+Clock [2747.4]:Send to server chunk37 of fileB
+Clock [2765.4]:Receive [data] from server chunk35 of fileC
+Clock [2765.4]:Request to server chunk36 of fileC
+Clock [2781.5]:Receive [Request] from server chunk33 of fileC
+Clock [2781.5]:Send to server chunk33 of fileC
+Clock [2791.4]:Receive [Request] from server chunk39 of fileB
+Clock [2791.4]:Send to server chunk39 of fileB
+Clock [2809.4]:Receive [data] from server chunk36 of fileC
+Clock [2809.4]:Request to server chunk37 of fileC
+Clock [2827.7]:Receive [Request] from server chunk41 of fileB
+Clock [2827.7]:Send to server chunk41 of fileB
+Clock [2845.7]:Receive [data] from server chunk37 of fileC
+Clock [2845.7]:Request to server chunk38 of fileC
+Clock [2872.1]:Receive [data] from server chunk38 of fileC
+Clock [2872.1]:Request to server chunk39 of fileC
+Clock [2890.4]:Receive [Request] from server chunk44 of fileB
+Clock [2890.4]:Send to server chunk44 of fileB
+Clock [2908.4]:Receive [data] from server chunk39 of fileC
+Clock [2908.4]:Request to server chunk40 of fileC
+Clock [2924.5]:Receive [Request] from server chunk38 of fileC
+Clock [2924.5]:Send to server chunk38 of fileC
+Clock [2943.6]:Receive [data] from server chunk40 of fileC
+Clock [2943.6]:Request to server chunk41 of fileC
+Clock [2970.0]:Receive [data] from server chunk41 of fileC
+Clock [2970.0]:Request to server chunk42 of fileC
+Clock [2986.1]:Receive [Request] from server chunk41 of fileC
+Clock [2986.1]:Send to server chunk41 of fileC
+Clock [3005.2]:Receive [data] from server chunk42 of fileC
+Clock [3005.2]:Request to server chunk43 of fileC
+Clock [3023.5]:Receive [Request] from server chunk51 of fileB
+Clock [3023.5]:Send to server chunk51 of fileB
+Clock [3041.5]:Receive [data] from server chunk43 of fileC
+Clock [3041.5]:Request to server chunk44 of fileC
+Clock [3067.5]:Receive [Request] from server chunk53 of fileB
+Clock [3067.5]:Send to server chunk53 of fileB
+Clock [3085.5]:Receive [data] from server chunk44 of fileC
+Clock [3085.5]:Request to server chunk45 of fileC
+Clock [3087.3]:Receive [Request] from server chunk54 of fileB
+Clock [3087.3]:Send to server chunk54 of fileB
+Clock [3122.9]:Receive [data] from server chunk45 of fileC
+Clock [3122.9]:Request to server chunk46 of fileC
+Clock [3141.2]:Receive [Request] from server chunk57 of fileB
+Clock [3141.2]:Send to server chunk57 of fileB
+Clock [3176.8]:Receive [data] from server chunk46 of fileC
+Clock [3176.8]:Request to server chunk47 of fileC
+Clock [3203.2]:Receive [data] from server chunk47 of fileC
+Clock [3203.2]:Request to server chunk48 of fileC
+Clock [3229.6]:Receive [data] from server chunk48 of fileC
+Clock [3229.6]:Request to server chunk49 of fileC
+Clock [3247.9]:Receive [Request] from server chunk62 of fileB
+Clock [3247.9]:Send to server chunk62 of fileB
+Clock [3265.9]:Receive [data] from server chunk49 of fileC
+Clock [3265.9]:Request to server chunk50 of fileC
+Clock [3284.2]:Receive [Request] from server chunk64 of fileB
+Clock [3284.2]:Send to server chunk64 of fileB
+Clock [3302.2]:Receive [data] from server chunk50 of fileC
+Clock [3302.2]:Request to server chunk51 of fileC
+Clock [3320.5]:Receive [Request] from server chunk66 of fileB
+Clock [3320.5]:Send to server chunk66 of fileB
+Clock [3338.5]:Receive [data] from server chunk51 of fileC
+Clock [3338.5]:Request to server chunk52 of fileC
+Clock [3365.6]:Receive [Request] from server chunk68 of fileB
+Clock [3365.6]:Send to server chunk68 of fileB
+Clock [3383.6]:Receive [data] from server chunk52 of fileC
+Clock [3383.6]:Request to server chunk53 of fileC
+Clock [3401.9]:Receive [Request] from server chunk70 of fileB
+Clock [3401.9]:Send to server chunk70 of fileB
+Clock [3419.9]:Receive [data] from server chunk53 of fileC
+Clock [3419.9]:Request to server chunk54 of fileC
+Clock [3438.2]:Receive [Request] from server chunk72 of fileB
+Clock [3438.2]:Send to server chunk72 of fileB
+Clock [3456.9]:Receive [Request] from server chunk73 of fileB
+Clock [3456.9]:Send to server chunk73 of fileB
+Clock [3474.9]:Receive [data] from server chunk54 of fileC
+Clock [3474.9]:Request to server chunk55 of fileC
+Clock [3501.3]:Receive [data] from server chunk55 of fileC
+Clock [3501.3]:Request to server chunk56 of fileC
+Clock [3527.7]:Receive [data] from server chunk56 of fileC
+Clock [3527.7]:Request to server chunk57 of fileC
+Clock [3546.0]:Receive [Request] from server chunk77 of fileB
+Clock [3546.0]:Send to server chunk77 of fileB
+Clock [3564.0]:Receive [data] from server chunk57 of fileC
+Clock [3564.0]:Request to server chunk58 of fileC
+Clock [3590.4]:Receive [data] from server chunk58 of fileC
+Clock [3590.4]:Request to server chunk59 of fileC
+Clock [3608.7]:Receive [Request] from server chunk0 of fileD
+Clock [3608.7]:Send to server chunk0 of fileD
+Clock [3644.3]:Receive [data] from server chunk59 of fileC
+Clock [3644.3]:Request to server chunk60 of fileC
+Clock [3662.6]:Receive [Request] from server chunk3 of fileD
+Clock [3662.6]:Send to server chunk3 of fileD
+Clock [3680.6]:Receive [data] from server chunk60 of fileC
+Clock [3680.6]:Request to server chunk61 of fileC
+Clock [3698.9]:Receive [Request] from server chunk5 of fileD
+Clock [3698.9]:Send to server chunk5 of fileD
+Clock [3717.6]:Receive [Request] from server chunk6 of fileD
+Clock [3717.6]:Send to server chunk6 of fileD
+Clock [3735.6]:Receive [data] from server chunk61 of fileC
+Clock [3735.6]:Request to server chunk62 of fileC
+Clock [3753.9]:Receive [Request] from server chunk8 of fileD
+Clock [3753.9]:Send to server chunk8 of fileD
+Clock [3771.9]:Receive [data] from server chunk62 of fileC
+Clock [3771.9]:Request to server chunk63 of fileC
+Clock [3799.0]:Receive [Request] from server chunk10 of fileD
+Clock [3799.0]:Send to server chunk10 of fileD
+Clock [3817.0]:Receive [data] from server chunk63 of fileC
+Clock [3817.0]:Request to server chunk64 of fileC
+Clock [3842.3]:Receive [data] from server chunk64 of fileC
+Clock [3842.3]:Request to server chunk65 of fileC
+Clock [3868.7]:Receive [data] from server chunk65 of fileC
+Clock [3868.7]:Request to server chunk66 of fileC
+Clock [3878.2]:Receive [Request] from server chunk13 of fileD
+Clock [3878.2]:Send to server chunk13 of fileD
+Clock [3896.9]:Receive [Request] from server chunk14 of fileD
+Clock [3896.9]:Send to server chunk14 of fileD
+Clock [3914.9]:Receive [data] from server chunk66 of fileC
+Clock [3914.9]:Request to server chunk67 of fileC
+Clock [3950.8]:Receive [Request] from server chunk17 of fileD
+Clock [3950.8]:Send to server chunk17 of fileD
+Clock [3968.8]:Receive [data] from server chunk67 of fileC
+Clock [3968.8]:Request to server chunk68 of fileC
+Clock [3994.1]:Receive [data] from server chunk68 of fileC
+Clock [3994.1]:Request to server chunk69 of fileC
+Clock [4021.2]:Receive [Request] from server chunk20 of fileD
+Clock [4021.2]:Send to server chunk20 of fileD
+Clock [4039.2]:Receive [data] from server chunk69 of fileC
+Clock [4039.2]:Request to server chunk70 of fileC
+Clock [4074.4]:Receive [data] from server chunk70 of fileC
+Clock [4074.4]:Request to server chunk71 of fileC
+Clock [4100.8]:Receive [data] from server chunk71 of fileC
+Clock [4100.8]:Request to server chunk72 of fileC
+Clock [4127.2]:Receive [data] from server chunk72 of fileC
+Clock [4127.2]:Request to server chunk73 of fileC
+Clock [4143.3]:Receive [Request] from server chunk1 of fileC
+Clock [4143.3]:Send to server chunk1 of fileC
+Clock [4162.4]:Receive [data] from server chunk73 of fileC
+Clock [4162.4]:Request to server chunk74 of fileC
+Clock [4188.8]:Receive [data] from server chunk74 of fileC
+Clock [4188.8]:Request to server chunk75 of fileC
+Clock [4190.6]:Receive [Request] from server chunk3 of fileC
+Clock [4190.6]:Send to server chunk3 of fileC
+Clock [4215.2]:Receive [data] from server chunk75 of fileC
+Clock [4215.2]:Request to server chunk76 of fileC
+Clock [4241.6]:Receive [data] from server chunk76 of fileC
+Clock [4241.6]:Request to server chunk77 of fileC
+Clock [4276.8]:Receive [data] from server chunk77 of fileC
+Clock [4276.8]:Request to server chunk78 of fileC
+Clock [4303.2]:Receive [data] from server chunk78 of fileC
+Clock [4303.2]:Request to server chunk79 of fileC
+Clock [4305.0]:Receive [Request] from server chunk7 of fileC
+Clock [4305.0]:Send to server chunk7 of fileC
+Clock [4321.5]:Receive [Request] from server chunk34 of fileD
+Clock [4321.5]:Send to server chunk34 of fileD
+Clock [4339.5]:Receive [data] from server chunk79 of fileC
+Clock [4339.5]:Request to server chunk0 of fileA
+Clock [4347.9]:Receive [Request] from server chunk35 of fileD
+Clock [4347.9]:Send to server chunk35 of fileD
+Clock [4365.9]:Receive [data] from server chunk0 of fileA
+Clock [4365.9]:Request to server chunk1 of fileA
+Clock [4383.5]:Receive [data] from server chunk1 of fileA
+Clock [4383.5]:Request to server chunk2 of fileA
+Clock [4398.5]:Receive [Request] from server chunk12 of fileC
+Clock [4398.5]:Send to server chunk12 of fileC
+Clock [4408.4]:Receive [Request] from server chunk2 of fileB
+Clock [4408.4]:Send to server chunk2 of fileB
+Clock [4426.4]:Receive [data] from server chunk2 of fileA
+Clock [4426.4]:Request to server chunk3 of fileA
+Clock [4428.2]:Receive [Request] from server chunk13 of fileC
+Clock [4428.2]:Send to server chunk13 of fileC
+Clock [4448.4]:Receive [data] from server chunk3 of fileA
+Clock [4448.4]:Request to server chunk4 of fileA
+Clock [4471.1]:Receive [Request] from server chunk15 of fileC
+Clock [4471.1]:Send to server chunk15 of fileC
+Clock [4489.1]:Receive [data] from server chunk4 of fileA
+Clock [4489.1]:Request to server chunk5 of fileA
+Clock [4518.4]:Receive [Request] from server chunk43 of fileD
+Clock [4518.4]:Send to server chunk43 of fileD
+Clock [4537.5]:Receive [data] from server chunk5 of fileA
+Clock [4537.5]:Request to server chunk6 of fileA
+Clock [4539.3]:Receive [Request] from server chunk9 of fileB
+Clock [4539.3]:Send to server chunk9 of fileB
+Clock [4555.8]:Receive [Request] from server chunk18 of fileC
+Clock [4555.8]:Send to server chunk18 of fileC
+Clock [4573.8]:Receive [data] from server chunk6 of fileA
+Clock [4573.8]:Request to server chunk7 of fileA
+Clock [4577.8]:Receive [Request] from server chunk46 of fileD
+Clock [4577.8]:Send to server chunk46 of fileD
+Clock [4596.9]:Receive [data] from server chunk7 of fileA
+Clock [4596.9]:Request to server chunk8 of fileA
+Clock [4609.7]:Receive [Request] from server chunk13 of fileB
+Clock [4609.7]:Send to server chunk13 of fileB
+Clock [4634.3]:Receive [data] from server chunk8 of fileA
+Clock [4634.3]:Request to server chunk9 of fileA
+Clock [4636.1]:Receive [Request] from server chunk48 of fileD
+Clock [4636.1]:Send to server chunk48 of fileD
+Clock [4654.1]:Receive [data] from server chunk9 of fileA
+Clock [4654.1]:Request to server chunk10 of fileA
+Clock [4655.9]:Receive [Request] from server chunk15 of fileB
+Clock [4655.9]:Send to server chunk15 of fileB
+Clock [4673.9]:Receive [data] from server chunk10 of fileA
+Clock [4673.9]:Request to server chunk11 of fileA
+Clock [4675.7]:Receive [Request] from server chunk49 of fileD
+Clock [4675.7]:Send to server chunk49 of fileD
+Clock [4693.7]:Receive [data] from server chunk11 of fileA
+Clock [4693.7]:Request to server chunk12 of fileA
+Clock [4710.2]:Receive [data] from server chunk12 of fileA
+Clock [4710.2]:Request to server chunk13 of fileA
+Clock [4718.6]:Receive [Request] from server chunk25 of fileC
+Clock [4718.6]:Send to server chunk25 of fileC
+Clock [4735.1]:Receive [Request] from server chunk52 of fileD
+Clock [4735.1]:Send to server chunk52 of fileD
+Clock [4753.1]:Receive [data] from server chunk13 of fileA
+Clock [4753.1]:Request to server chunk14 of fileA
+Clock [4777.3]:Receive [data] from server chunk14 of fileA
+Clock [4777.3]:Request to server chunk15 of fileA
+Clock [4791.2]:Receive [Request] from server chunk55 of fileD
+Clock [4791.2]:Send to server chunk55 of fileD
+Clock [4813.6]:Receive [data] from server chunk15 of fileA
+Clock [4813.6]:Request to server chunk16 of fileA
+Clock [4835.6]:Receive [data] from server chunk16 of fileA
+Clock [4835.6]:Request to server chunk17 of fileA
+Clock [4837.4]:Receive [Request] from server chunk22 of fileB
+Clock [4837.4]:Send to server chunk22 of fileB
+Clock [4855.4]:Receive [data] from server chunk17 of fileA
+Clock [4855.4]:Request to server chunk18 of fileA
+Clock [4873.0]:Receive [data] from server chunk18 of fileA
+Clock [4873.0]:Request to server chunk19 of fileA
+Clock [4889.5]:Receive [data] from server chunk19 of fileA
+Clock [4889.5]:Request to server chunk20 of fileA
+Clock [4902.3]:Receive [Request] from server chunk25 of fileB
+Clock [4902.3]:Send to server chunk25 of fileB
+Clock [4912.2]:Receive [Request] from server chunk61 of fileD
+Clock [4912.2]:Send to server chunk61 of fileD
+Clock [4930.2]:Receive [data] from server chunk20 of fileA
+Clock [4930.2]:Request to server chunk21 of fileA
+Clock [4932.0]:Receive [Request] from server chunk34 of fileC
+Clock [4932.0]:Send to server chunk34 of fileC
+Clock [4950.0]:Receive [data] from server chunk21 of fileA
+Clock [4950.0]:Request to server chunk22 of fileA
+Clock [4962.8]:Receive [Request] from server chunk63 of fileD
+Clock [4962.8]:Send to server chunk63 of fileD
+Clock [4980.8]:Receive [data] from server chunk22 of fileA
+Clock [4980.8]:Request to server chunk23 of fileA
+Clock [4991.4]:Receive [Request] from server chunk37 of fileC
+Clock [4991.4]:Send to server chunk37 of fileC
+Clock [5001.3]:Receive [Request] from server chunk30 of fileB
+Clock [5001.3]:Send to server chunk30 of fileB
+Clock [5019.3]:Receive [data] from server chunk23 of fileA
+Clock [5019.3]:Request to server chunk24 of fileA
+Clock [5031.0]:Receive [Request] from server chunk39 of fileC
+Clock [5031.0]:Send to server chunk39 of fileC
+Clock [5045.3]:Receive [Request] from server chunk32 of fileB
+Clock [5045.3]:Send to server chunk32 of fileB
+Clock [5064.4]:Receive [data] from server chunk24 of fileA
+Clock [5064.4]:Request to server chunk25 of fileA
+Clock [5066.2]:Receive [Request] from server chunk40 of fileC
+Clock [5066.2]:Send to server chunk40 of fileC
+Clock [5084.2]:Receive [data] from server chunk25 of fileA
+Clock [5084.2]:Request to server chunk26 of fileA
+Clock [5094.8]:Receive [Request] from server chunk35 of fileB
+Clock [5094.8]:Send to server chunk35 of fileB
+Clock [5111.3]:Receive [Request] from server chunk36 of fileB
+Clock [5111.3]:Send to server chunk36 of fileB
+Clock [5129.3]:Receive [data] from server chunk26 of fileA
+Clock [5129.3]:Request to server chunk27 of fileA
+Clock [5132.2]:Receive [Request] from server chunk43 of fileC
+Clock [5132.2]:Send to server chunk43 of fileC
+Clock [5149.8]:Receive [Request] from server chunk44 of fileC
+Clock [5149.8]:Send to server chunk44 of fileC
+Clock [5167.8]:Receive [data] from server chunk27 of fileA
+Clock [5167.8]:Request to server chunk28 of fileA
+Clock [5181.7]:Receive [Request] from server chunk39 of fileB
+Clock [5181.7]:Send to server chunk39 of fileB
+Clock [5199.7]:Receive [data] from server chunk28 of fileA
+Clock [5199.7]:Request to server chunk29 of fileA
+Clock [5213.6]:Receive [Request] from server chunk47 of fileC
+Clock [5213.6]:Send to server chunk47 of fileC
+Clock [5223.5]:Receive [Request] from server chunk75 of fileD
+Clock [5223.5]:Send to server chunk75 of fileD
+Clock [5241.5]:Receive [data] from server chunk29 of fileA
+Clock [5241.5]:Request to server chunk30 of fileA
+Clock [5243.3]:Receive [Request] from server chunk76 of fileD
+Clock [5243.3]:Send to server chunk76 of fileD
+Clock [5261.3]:Receive [data] from server chunk30 of fileA
+Clock [5261.3]:Request to server chunk31 of fileA
+Clock [5267.5]:Receive [Request] from server chunk43 of fileB
+Clock [5267.5]:Send to server chunk43 of fileB
+Clock [5285.5]:Receive [data] from server chunk31 of fileA
+Clock [5285.5]:Request to server chunk32 of fileA
+Clock [5308.6]:Receive [data] from server chunk32 of fileA
+Clock [5308.6]:Request to server chunk33 of fileA
+Clock [5336.1]:Receive [data] from server chunk33 of fileA
+Clock [5336.1]:Request to server chunk34 of fileA
+Clock [5357.7]:Receive [Request] from server chunk53 of fileC
+Clock [5357.7]:Send to server chunk53 of fileC
+Clock [5375.7]:Receive [data] from server chunk34 of fileA
+Clock [5375.7]:Request to server chunk35 of fileA
+Clock [5392.2]:Receive [data] from server chunk35 of fileA
+Clock [5392.2]:Request to server chunk36 of fileA
+Clock [5406.1]:Receive [Request] from server chunk55 of fileC
+Clock [5406.1]:Send to server chunk55 of fileC
+Clock [5424.1]:Receive [data] from server chunk36 of fileA
+Clock [5424.1]:Request to server chunk37 of fileA
+Clock [5440.6]:Receive [data] from server chunk37 of fileA
+Clock [5440.6]:Request to server chunk38 of fileA
+Clock [5454.5]:Receive [Request] from server chunk57 of fileC
+Clock [5454.5]:Send to server chunk57 of fileC
+Clock [5472.5]:Receive [data] from server chunk38 of fileA
+Clock [5472.5]:Request to server chunk39 of fileA
+Clock [5489.0]:Receive [data] from server chunk39 of fileA
+Clock [5489.0]:Request to server chunk40 of fileA
+Clock [5502.9]:Receive [Request] from server chunk59 of fileC
+Clock [5502.9]:Send to server chunk59 of fileC
+Clock [5520.9]:Receive [data] from server chunk40 of fileA
+Clock [5520.9]:Request to server chunk41 of fileA
+Clock [5537.4]:Receive [data] from server chunk41 of fileA
+Clock [5537.4]:Request to server chunk42 of fileA
+Clock [5551.3]:Receive [Request] from server chunk61 of fileC
+Clock [5551.3]:Send to server chunk61 of fileC
+Clock [5569.3]:Receive [data] from server chunk42 of fileA
+Clock [5569.3]:Request to server chunk43 of fileA
+Clock [5585.8]:Receive [data] from server chunk43 of fileA
+Clock [5585.8]:Request to server chunk44 of fileA
+Clock [5599.7]:Receive [Request] from server chunk63 of fileC
+Clock [5599.7]:Send to server chunk63 of fileC
+Clock [5617.7]:Receive [data] from server chunk44 of fileA
+Clock [5617.7]:Request to server chunk45 of fileA
+Clock [5634.2]:Receive [data] from server chunk45 of fileA
+Clock [5634.2]:Request to server chunk46 of fileA
+Clock [5648.1]:Receive [Request] from server chunk65 of fileC
+Clock [5648.1]:Send to server chunk65 of fileC
+Clock [5666.1]:Receive [data] from server chunk46 of fileA
+Clock [5666.1]:Request to server chunk47 of fileA
+Clock [5682.6]:Receive [data] from server chunk47 of fileA
+Clock [5682.6]:Request to server chunk48 of fileA
+Clock [5696.5]:Receive [Request] from server chunk67 of fileC
+Clock [5696.5]:Send to server chunk67 of fileC
+Clock [5714.5]:Receive [data] from server chunk48 of fileA
+Clock [5714.5]:Request to server chunk49 of fileA
+Clock [5731.0]:Receive [data] from server chunk49 of fileA
+Clock [5731.0]:Request to server chunk50 of fileA
+Clock [5744.9]:Receive [Request] from server chunk69 of fileC
+Clock [5744.9]:Send to server chunk69 of fileC
+Clock [5762.9]:Receive [data] from server chunk50 of fileA
+Clock [5762.9]:Request to server chunk51 of fileA
+Clock [5779.4]:Receive [data] from server chunk51 of fileA
+Clock [5779.4]:Request to server chunk52 of fileA
+Clock [5793.3]:Receive [Request] from server chunk71 of fileC
+Clock [5793.3]:Send to server chunk71 of fileC
+Clock [5811.3]:Receive [data] from server chunk52 of fileA
+Clock [5811.3]:Request to server chunk53 of fileA
+Clock [5827.8]:Receive [data] from server chunk53 of fileA
+Clock [5827.8]:Request to server chunk54 of fileA
+Clock [5841.7]:Receive [Request] from server chunk73 of fileC
+Clock [5841.7]:Send to server chunk73 of fileC
+Clock [5859.7]:Receive [data] from server chunk54 of fileA
+Clock [5859.7]:Request to server chunk55 of fileA
+Clock [5876.2]:Receive [data] from server chunk55 of fileA
+Clock [5876.2]:Request to server chunk56 of fileA
+Clock [5894.9]:Receive [data] from server chunk56 of fileA
+Clock [5894.9]:Request to server chunk57 of fileA
+Clock [5911.4]:Receive [data] from server chunk57 of fileA
+Clock [5911.4]:Request to server chunk58 of fileA
+Clock [5925.3]:Receive [Request] from server chunk76 of fileC
+Clock [5925.3]:Send to server chunk76 of fileC
+Clock [5943.3]:Receive [data] from server chunk58 of fileA
+Clock [5943.3]:Request to server chunk59 of fileA
+Clock [5959.8]:Receive [data] from server chunk59 of fileA
+Clock [5959.8]:Request to server chunk60 of fileA
+Clock [5973.7]:Receive [Request] from server chunk78 of fileC
+Clock [5973.7]:Send to server chunk78 of fileC
+Clock [5991.7]:Receive [data] from server chunk60 of fileA
+Clock [5991.7]:Request to server chunk61 of fileA
+Clock [6008.2]:Receive [data] from server chunk61 of fileA
+Clock [6008.2]:Request to server chunk62 of fileA
+Clock [6021.0]:Receive [Request] from server chunk76 of fileB
+Clock [6021.0]:Send to server chunk76 of fileB
+Clock [6039.0]:Receive [data] from server chunk62 of fileA
+Clock [6039.0]:Request to server chunk63 of fileA
+Clock [6056.6]:Receive [data] from server chunk63 of fileA
+Clock [6056.6]:Request to server chunk64 of fileA
+Clock [6075.3]:Receive [data] from server chunk64 of fileA
+Clock [6075.3]:Request to server chunk65 of fileA
+Clock [6092.9]:Receive [data] from server chunk65 of fileA
+Clock [6092.9]:Request to server chunk66 of fileA
+Clock [6109.4]:Receive [data] from server chunk66 of fileA
+Clock [6109.4]:Request to server chunk67 of fileA
+Clock [6128.1]:Receive [data] from server chunk67 of fileA
+Clock [6128.1]:Request to server chunk68 of fileA
+Clock [6145.7]:Receive [data] from server chunk68 of fileA
+Clock [6145.7]:Request to server chunk69 of fileA
+Clock [6162.2]:Receive [data] from server chunk69 of fileA
+Clock [6162.2]:Request to server chunk70 of fileA
+Clock [6180.9]:Receive [data] from server chunk70 of fileA
+Clock [6180.9]:Request to server chunk71 of fileA
+Clock [6198.5]:Receive [data] from server chunk71 of fileA
+Clock [6198.5]:Request to server chunk72 of fileA
+Clock [6215.0]:Receive [data] from server chunk72 of fileA
+Clock [6215.0]:Request to server chunk73 of fileA
+Clock [6233.7]:Receive [data] from server chunk73 of fileA
+Clock [6233.7]:Request to server chunk74 of fileA
+Clock [6251.3]:Receive [data] from server chunk74 of fileA
+Clock [6251.3]:Request to server chunk75 of fileA
+Clock [6267.8]:Receive [data] from server chunk75 of fileA
+Clock [6267.8]:Request to server chunk76 of fileA
+Clock [6286.5]:Receive [data] from server chunk76 of fileA
+Clock [6286.5]:Request to server chunk77 of fileA
+Clock [6304.1]:Receive [data] from server chunk77 of fileA
+Clock [6304.1]:Request to server chunk78 of fileA
+Clock [6320.6]:Receive [data] from server chunk78 of fileA
+Clock [6320.6]:Request to server chunk79 of fileA
+Clock [6339.3]:Receive [data] from server chunk79 of fileA

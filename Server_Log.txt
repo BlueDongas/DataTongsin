@@ -1,0 +1,10 @@
+Server is start. Can connect with max 4 Client.
+Client1 is connected
+Send ID to Client1
+Client2 is connected
+Send ID to Client2
+Client3 is connected
+Send ID to Client3
+Client4 is connected
+Send ID to Client4
+All Client is connecnted. Start Operate.

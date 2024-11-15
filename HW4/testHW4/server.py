@@ -11,7 +11,18 @@ import os
 TOTAL_CHUNK = None
 BUFFER_SIZE = 1024*150
 SLEEP_TIME = 0
-
+class Log:
+    def __init__(self):
+        self.log_file = open("Server_Log.txt","w")
+        self.file_lock = threading.Lock()
+    def log_write(self,event):
+        self.log_file
+        with self.file_lock:  # 락을 사용하여 동기화
+            if self.log_file is not None:
+                self.log_file.write(f"{event}\n")
+                self.log_file.flush()
+            else:
+                print("log_file is not initialized")   
 class Server:
     def __init__(self, host, port, max_clients):
         self.host = host
@@ -19,6 +30,7 @@ class Server:
         self.max_clients = max_clients
         self.connected_clients = {} # 연결된 클라이언트 소켓과 ID를 저장할 리스트
         self.client_id = 1
+        self.log = Log()
         
         self.request_queue = [[], [], [], [], []] # [clock,target_client_id,file_id,chunk_id] 
         self.response_queue = [[], [], [], [], []] # [clock,target_client_id,file_id,chunk_id,chunk_data]
@@ -66,10 +78,12 @@ class Server:
         while len(self.connected_clients) < self.max_clients:
             client_socket, address = self.server_socket.accept()
             print(f"Client{self.client_id} is connected")
+            self.log.log_write(f"Client{self.client_id} is connected")
 
             # 클라이언트에게 ID 전송
             client_socket.sendall(str(self.client_id).encode())
             print(f"Send ID to Client{self.client_id}")
+            self.log.log_write(f"Send ID to Client{self.client_id}")
 
             # 연결된 클라이언트 목록에 추가
             self.connected_clients[self.client_id] = client_socket
@@ -78,6 +92,7 @@ class Server:
             self.client_id += 1
 
         print("All Client is connecnted. Start Operate.")
+        self.log.log_write("All Client is connecnted. Start Operate.")
         self.notify_clients_ready()
             
     def Server_start(self):
@@ -86,7 +101,7 @@ class Server:
         self.server_socket.bind((self.host,self.port))
         self.server_socket.listen(4)
         print(f"Server is start. Can connect with max {self.max_clients} Client.")
-
+        self.log.log_write(f"Server is start. Can connect with max {self.max_clients} Client.")
         self.wait_for_all_clients()
 
     def receive_to_client(self,client_id,client_socket):
@@ -94,6 +109,7 @@ class Server:
         while True:
             if all(self.is_complete[1:]) and self.response_end: #종료
                 print("All task is complete")
+                self.log.log_write("All task is complete")
                 break
             
             data = client_socket.recv(BUFFER_SIZE).decode()
@@ -107,7 +123,7 @@ class Server:
                     if flag == "complete":
                         self.is_complete[client_id] = True
                         print(f"receive complete client{client_id} flag  {self.is_complete[client_id]}")
-
+                        self.log.log_write(f"receive complete client{client_id} flag  {self.is_complete[client_id]}")
                     if flag == "request":
                         _ = json_data.get('clock')
                         target_client_id = json_data.get('target_client_id')
@@ -159,7 +175,7 @@ class Server:
         while True:
             if not self.response_queue[client_id] and self.request_end[0]:
                 self.response_end = True
-                print("Response is complete")
+                #print("Response is complete")
                 json_data = {"flag":"complete"}
                 data_to_send = json.dumps(json_data)+'\n'
                 for client_id,client_socket in client_items:
@@ -258,6 +274,7 @@ class Server:
                 while self.log_queue:
                     _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                     print(log_message)
+                    self.log.log_write(log_message)
                 # 최종로그 내용 추가 필요
                 return
             
@@ -265,6 +282,7 @@ class Server:
                 while self.log_queue[0][0] <= self.clock_list[0] - 20:  # master_clock - 10 보다 작거나 같다면
                     _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                     print(log_message)
+                    self.log.log_write(log_message)
             
             
 if __name__ == "__main__":

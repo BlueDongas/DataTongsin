@@ -25,6 +25,18 @@ send_event.set()
 
 file_chunks = {} # [("A",1):chunk_data] 형식
 
+class Log:
+    def __init__(self):
+        self.log_file = None
+        self.file_lock = threading.Lock()
+    def log_write(self,event):
+        self.log_file
+        with self.file_lock:  # 락을 사용하여 동기화
+            if self.log_file is not None:
+                self.log_file.write(f"{event}\n")
+                self.log_file.flush()
+            else:
+                print("log_file is not initialized") 
 class Client:
     def __init__(self, host = "localhost", port = 6000):
         self.host = host
@@ -33,6 +45,7 @@ class Client:
         self.my_file = None
         self.file_path = None
         self.target_files = None
+        self.log = Log()
         
         self.request_queue = queue.Queue() #서버의 요청을 저장하는 큐 [clock,target_client_id,send_file_id,send_chunk_id]
 
@@ -69,7 +82,7 @@ class Client:
 
         # 서버로부터 클라이언트 ID 수신, 가지고 있는 파일 설정
         self.client_id = int(self.client_socket.recv(1024).decode())
-        #open(f"client{self.client_id}_Log.txt","w")
+        self.log.log_file = open(f"client{self.client_id}_Log.txt","w")
         if self.client_id == 1:
             self.my_file = "A"
             self.target_files = ["B","C","D"]
@@ -83,7 +96,9 @@ class Client:
             self.my_file = "D"
             self.target_files = ["A","B","C"]
         print("Connect to Server")
+        self.log.log_write("Connect to Server")
         print(f"Receive ID to Server: {self.client_id}")
+        self.log.log_write(f"Receive ID to Server: {self.client_id}")
         
         self.get_file_size()
         self.make_file_chunk() # file 청크 데이터 key-value 형식으로 분할
@@ -93,6 +108,7 @@ class Client:
         ready_signal = self.client_socket.recv(1024).decode()
         if ready_signal == "READY":
             print("Start Send task to Server")
+            self.log.log_write("Start Send task to Server")
 
         time.sleep(1)
 
@@ -248,6 +264,7 @@ class Client:
             if file_path:
                 md5_value = self.verify_file_md5(file_path)
                 print(f"{file_id} file's md5 is {md5_value}")
+                self.log.log_write(f"{file_id} file's md5 is {md5_value}")
 
     def assemble_chunk(self,file_id):
         file_path = f"./client{self.client_id}/{file_id}"
@@ -264,6 +281,7 @@ class Client:
         except Exception as e:
             print(f"Error assemble chunk {e}")
         print(f"{file_id}file complete assemble chunk as {file_path}")
+        self.log.log_write(f"{file_id}file complete assemble chunk as {file_path}")
         return file_path
 
     def verify_file_md5(self,file_path):
@@ -274,9 +292,6 @@ class Client:
         final_md5 = md5_hash.hexdigest()
         return final_md5
     
-    def disconnect(self):
-        return
-    
     def print_log(self):
         global finish_flag
         while True:
@@ -284,6 +299,7 @@ class Client:
                 while self.log_queue:
                     _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                     print(log_message)
+                    self.log.log_write(log_message)
                 # 최종로그 내용 추가 필요
 
                 return
@@ -291,6 +307,7 @@ class Client:
             if self.log_queue and (self.log_queue[0][0] <= self.master_clock):  # master_clock - 10 보다 작거나 같다면
                 _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                 print(log_message)
+                self.log.log_write(log_message)
     
 if __name__ == "__main__":
     client = Client()

@@ -1,0 +1,2 @@
+Connect to Server
+Receive ID to Server: 1
