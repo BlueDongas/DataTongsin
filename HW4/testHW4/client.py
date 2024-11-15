@@ -296,6 +296,7 @@ class Client:
         global finish_flag
         while True:
             if finish_flag: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
+                time.sleep(1.5)
                 while self.log_queue:
                     _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                     print(log_message)
@@ -304,7 +305,7 @@ class Client:
 
                 return
             
-            if self.log_queue and (self.log_queue[0][0] <= self.master_clock):  # master_clock - 10 보다 작거나 같다면
+            if self.log_queue and (self.log_queue[0][0] <= self.master_clock - 50):  # master_clock - 50 보다 작거나 같다면
                 _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
                 print(log_message)
                 self.log.log_write(log_message)
