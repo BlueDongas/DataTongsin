@@ -233,7 +233,7 @@ def client_program():
     # 메시지 입력 및 종료 처리
     while True:
         
-        message = input(f"Clock {client_clock} 메시지를 입력하세요 : ")
+        message = input(f"메시지를 입력하세요 : ")
         if not message:
             print(f"Clock {client_clock} : 빈 메시지는 보낼 수 없습니다.")
             continue
