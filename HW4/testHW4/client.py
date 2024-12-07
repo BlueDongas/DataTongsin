@@ -1,343 +1,176 @@
 import socket
 import threading
-import os
+import json
 import time
 import queue
-import json
-import base64
-import struct
-import hashlib
-import random
-import heapq
 
-TOTAL_CHUNK = None # maybe 3907 정확하게 파일 크기가 512,000,000 byte 기준
-CHUNK_SIZE = 128 * 1024 #128kb
-BUFFER_SIZE = 1024*150
-SLEEP_TIME =0.0000001
+connected_peers = [] # 현재 연결된 피어 소켓 리스트
+connected_client_id = []
+peer_to_connect = queue.Queue() # 연결해야하는 피어 소켓 큐
+client_id = -1
+is_exit = False
 
-send_event=threading.Event()
-receive_event=threading.Event()
-stop_event = threading.Event()
+def start_peer_listener(port):
+    global is_exit, connected_peers, connected_client_id
+    """
+    다른 클라이언트의 연결 요청을 리슨
+    """
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listener.bind(('0.0.0.0', port))
+    listener.listen(4)
+    print(f"리슨 소켓 시작 (포트: {port})")
 
-finish_flag = False
-
-send_event.set()
-
-file_chunks = {} # [("A",1):chunk_data] 형식
-
-class Log:
-    def __init__(self):
-        self.log_file = None
-        self.file_lock = threading.Lock()
-    def log_write(self,event):
-        self.log_file
-        with self.file_lock:  # 락을 사용하여 동기화
-            if self.log_file is not None:
-                self.log_file.write(f"{event}\n")
-                self.log_file.flush()
-            else:
-                print("log_file is not initialized") 
-class Client:
-    def __init__(self, host = "localhost", port = 6000):
-        self.host = host
-        self.port = port
-        self.client_id = None
-        self.my_file = None
-        self.file_path = None
-        self.target_files = None
-        self.log = Log()
+    while not is_exit:
+        peer_socket, peer_address = listener.accept()
         
-        self.request_queue = queue.Queue() #서버의 요청을 저장하는 큐 [clock,target_client_id,send_file_id,send_chunk_id]
+        # receive_client_id = json.loads(peer_socket.recv(4096).decode('utf-8'))
 
-        self.master_clock = 0
-        self.master_clock_lock = threading.Lock()
-        self.log_queue = []
+        print(f"피어 ID : [] {peer_address}와 연결됨")
+        connected_peers.append(peer_socket)
+        # connected_client_id.append(receive_client_id)
+        threading.Thread(target=handle_peer, args=(peer_socket,)).start()
 
-        self.receive_event = threading.Event()
-        self.send_event = threading.Event()
 
-        self.download_clock_dic = {} # 각 파일을 다운로드 받는데 걸린 시간 기록
-
-    def get_file_size(self):
-        global TOTAL_CHUNK, CHUNK_SIZE
-        self.file_path = f"./{self.my_file}.file"
-        time.sleep(0.3)
-        file_size = os.path.getsize(self.file_path)
-        TOTAL_CHUNK = int((file_size+CHUNK_SIZE-1)//CHUNK_SIZE)
-        print(f"{TOTAL_CHUNK}")
-
-    def make_file_chunk(self):
-        global TOTAL_CHUNK,CHUNK_SIZE
-        with open(self.file_path,'rb') as f:
-            for chunk_id in range(TOTAL_CHUNK):
-                chunk_data = f.read(CHUNK_SIZE)
-                if not chunk_data:
-                    print("not chunk_data")
-                    break
-                file_chunks[(self.my_file,chunk_id)] = base64.b64encode(chunk_data).decode('utf-8') #chunk_data base64로 문자열화
-
-    def connect_to_server(self):
-        global TOTAL_CHUNK
-        # 서버와의 연결 생성
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect((self.host, self.port))
-
-        # 서버로부터 클라이언트 ID 수신, 가지고 있는 파일 설정
-        self.client_id = int(self.client_socket.recv(1024).decode())
-        self.log.log_file = open(f"client{self.client_id}_Log.txt","w")
-        if self.client_id == 1:
-            self.my_file = "A"
-            self.target_files = ["B","D","C"]
-        elif self.client_id == 2:
-            self.my_file = "B"
-            self.target_files = ["C","A","D"]
-        elif self.client_id == 3:
-            self.my_file = "C"
-            self.target_files = ["D","B","A"]
-        elif self.client_id == 4:
-            self.my_file = "D"
-            self.target_files = ["A","C","B"]
-        self.download_clock_dic[self.my_file] = 0
-        print("Connect to Server")
-        self.log.log_write("Connect to Server")
-        print(f"Receive ID to Server: {self.client_id}")
-        self.log.log_write(f"Receive ID to Server: {self.client_id}")
-        
-        self.get_file_size()
-        self.make_file_chunk() # file 청크 데이터 key-value 형식으로 분할
-        data = struct.pack('!I', TOTAL_CHUNK)
-        self.client_socket.sendall(data)
-
-        ready_signal = self.client_socket.recv(1024).decode()
-        if ready_signal == "READY":
-            print("Start Send task to Server")
-            self.log.log_write("Start Send task to Server")
-
-        time.sleep(1)
-
-    def send_to_server(self):
-        #print("debug : send to server start")
-        global finish_flag
-        check_chunk_count = 0
-        target_files = self.target_files 
-        # random.shuffle(target_files)
-        for file_id in target_files: # B,C,D
-            chunk_id = 0
-            while chunk_id < TOTAL_CHUNK: #1,2,3,4,5,...3907
-                if not self.request_queue.empty(): #요청 받은 파일 전송
-                    clock,target_client_id,send_file_id,send_chunk_id = self.request_queue.get()
-                    chunk_data_b64 = file_chunks[(send_file_id,send_chunk_id)]
-
-                    json_data = {
-                        "clock":clock,
-                        "target_client_id":target_client_id,
-                        "file_id":send_file_id,
-                        "chunk_id":send_chunk_id,
-                        "chunk_data":chunk_data_b64,
-                        "flag":"response"
-                    }
-                    data_to_send = json.dumps(json_data)+"\n"
-                    self.client_socket.sendall(data_to_send.encode('utf-8'))
-                    # print(f"Clock [{clock}]:Send to server chunk{send_chunk_id} of file{send_file_id}")
-                    log_message = f"Clock [{clock}]:Send to server chunk{send_chunk_id} of file{send_file_id}"
-                    heapq.heappush(self.log_queue, (clock, log_message))
-                elif (file_id,chunk_id) not in file_chunks:
-                    with self.master_clock_lock:
-                        clock = self.master_clock
-
-                    json_data={
-                        "clock":clock, 
-                        "target_client_id":self.client_id,
-                        "file_id":file_id, #A
-                        "chunk_id":chunk_id,#int 1
-                        "chunk_data":"None",
-                        "flag":"request"
-                    }
-                    data_to_send=json.dumps(json_data) + "\n"
-                    self.client_socket.sendall(data_to_send.encode())
-                    time.sleep(SLEEP_TIME)
-                    # print(f"Clock [{clock}]:Request to server chunk{chunk_id} of file{file_id}")
-                    log_message = f"Clock [{clock}]:Request to server chunk{chunk_id} of file{file_id}"
-                    heapq.heappush(self.log_queue, (clock, log_message))
-
-                    check_chunk_count+=1
-                    chunk_id += 1
-
-                # print("debug : receive_event set")
-                self.receive_event.set()
-                # print("debug : send_event wait")
-                self.send_event.wait()
-                self.send_event.clear()
-
-                time.sleep(SLEEP_TIME/10)
-
-        # print("Debug code1")
-        while not finish_flag or not self.request_queue.empty():
-            time.sleep(1)
-            if not self.request_queue.empty(): #요청 받은 파일 전송
-                clock,target_client_id,send_file_id,send_chunk_id = self.request_queue.get()
-                chunk_data_b64 = file_chunks[(send_file_id,send_chunk_id)] #chunk_data base64로 문자열화
-                json_data = {
-                    "clock":clock,
-                    "target_client_id":target_client_id,
-                    "file_id":send_file_id,
-                    "chunk_id":send_chunk_id,
-                    "chunk_data":chunk_data_b64,
-                    "flag":"response"
-                }
-                data_to_send = json.dumps(json_data)+"\n"
-                self.client_socket.sendall(data_to_send.encode())
-                self.receive_event.set()
-                self.send_event.wait()
-                self.send_event.clear()
-                time.sleep(0.001)
-                # print(f"Clock [{clock}]:Send to server chunk{send_chunk_id} of file{send_file_id}")
-                log_message = f"Clock [{clock}]:Send to server chunk{send_chunk_id} of file{send_file_id}"
-                heapq.heappush(self.log_queue, (clock, log_message))
-            else:
-                # print("Debug code2")
-                json_data = {"flag":"complete"}
-                data_to_send = json.dumps(json_data) + '\n'
-                self.client_socket.sendall(data_to_send.encode())
-                self.receive_event.set()
-                self.send_event.wait()
-                self.send_event.clear()
-                time.sleep(0.01)
-
-    def receive_to_server(self):
-        # print("debug : receive to server start")
-        global finish_flag, TOTAL_CHUNK
-        buffer = ""
-        # print("debug : receive_event wait")
-        self.receive_event.wait()
-        self.receive_event.clear()
-
-        while not finish_flag:
-            data = self.client_socket.recv(BUFFER_SIZE).decode()
-            buffer += data
-            while '\n' in buffer:
-                line, buffer = buffer.split('\n',1)
-                try:
-                    json_data = json.loads(line)
-                    flag = json_data.get('flag')
-
-                    if flag == "complete":
-                        print("All request file Receive")
-                        finish_flag = True
-                        self.send_event.set()
-                        break
-
-                    clock = json_data.get('clock')
-                    target_client_id = json_data.get('target_client_id')
-                    file_id = json_data.get('file_id')
-                    chunk_id = json_data.get('chunk_id')
-                    chunk_data = json_data.get('chunk_data')
-                    
-                    if flag == "request":
-                        self.request_queue.put([clock,target_client_id,file_id,chunk_id])
-                        # print(f"Clock [{clock}]:Receive [Request] from server chunk{chunk_id} of file{file_id}")
-                        log_message = f"Clock [{clock}]:Receive [Request] from server chunk{chunk_id} of file{file_id}"
-                        heapq.heappush(self.log_queue, (clock, log_message))
-                    elif flag == "response":
-                        file_chunks[(file_id,chunk_id)] = chunk_data
-                        # print(f"Clock [{clock}]:Receive [data] from server chunk{chunk_id} of file{file_id}")
-                        log_message = f"Clock [{clock}]:Receive [data] from server chunk{chunk_id} of file{file_id}"
-                        heapq.heappush(self.log_queue, (clock, log_message))
-
-                        if chunk_id == TOTAL_CHUNK - 1:
-                            self.download_clock_dic[file_id] = clock
-
-                    with self.master_clock_lock:
-                        self.master_clock = clock
-                except json.JSONDecodeError as e:
-                    print(f"Error to receive : {e}")
-                
-                #print("debug : send_event set")
-                self.send_event.set()
-                #print("debug : receive_event wait")
-                self.receive_event.wait()
-                self.receive_event.clear()
-
-    def merge_file(self):
-        directory_path = f"./client{self.client_id}"
-        if not os.path.exists(directory_path):
-            os.makedirs(directory_path)
-
-        for file_id in ['A','B','C','D']:
-            file_path = self.assemble_chunk(file_id)
-            if file_path:
-                md5_value = self.verify_file_md5(file_path)
-                print(f"{file_id} file's md5 is {md5_value}")
-                self.log.log_write(f"{file_id} file's md5 is {md5_value}")
-
-    def assemble_chunk(self,file_id):
-        file_path = f"./client{self.client_id}/{file_id}"
+def handle_peer(peer_socket):
+    global is_exit, connected_peers, peer_to_connect, connected_client_id
+    """
+    다른 클라이언트와의 연결 처리
+    """
+    while not is_exit:
         try:
-            with open(file_path,'wb') as f:
-                for chunk_id in range(TOTAL_CHUNK):
-                    chnuk_data_b64 = file_chunks.get((file_id,chunk_id))
-                    if chnuk_data_b64:
-                        chnuk_data = base64.b64decode(chnuk_data_b64)
-                        f.write(chnuk_data)
-                    else:
-                        print(f"Missing chunk {chunk_id} in file {file_id}")
-                        return False
-        except Exception as e:
-            print(f"Error assemble chunk {e}")
-        print(f"{file_id} file complete assemble chunk as {file_path}")
-        self.log.log_write(f"{file_id}file complete assemble chunk as {file_path}")
-        return file_path
-
-    def verify_file_md5(self,file_path):
-        md5_hash = hashlib.md5()
-        with open(file_path,'rb') as f:
-            for chunk in iter(lambda:f.read(4096),b""):
-                md5_hash.update(chunk)
-        final_md5 = md5_hash.hexdigest()
-        return final_md5
-    
-    def print_log(self):
-        global finish_flag
-        while True:
-            if finish_flag: # 모든 작업 수행 시 최종 통계 로그 찍고 함수 종료 코드
-                time.sleep(1.5)
-                while self.log_queue:
-                    _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
-                    print(log_message)
-                    self.log.log_write(log_message)
-                # 최종로그
-                print(f"\nInitially Possessed Files : {self.my_file}")
-                self.log.log_write(f"\nInitially Possessed Files : {self.my_file}")
-                pre_file_download_time = 0
-                order_prefix = ["First", "Second", "Third"]
-                for count, file_id in enumerate(self.target_files):
-                    finish_time = round(self.download_clock_dic[file_id] - pre_file_download_time, 2)
-                    print(f"{order_prefix[count]} file {file_id} download time : {finish_time}")
-                    self.log.log_write(f"{order_prefix[count]} file {file_id} download time : {finish_time}")
-                    pre_file_download_time = self.download_clock_dic[file_id]
-                print()
-                return
+            receive_data = json.loads(peer_socket.recv(4096).decode('utf-8'))
+            type = receive_data["type"]
+            # receive_client_id = receive_data["client_id"]
+            data = receive_data["data"]
             
-            if self.log_queue and (self.log_queue[0][0] <= self.master_clock - 50):  # master_clock - 50 보다 작거나 같다면
-                _, log_message = heapq.heappop(self.log_queue)  # 해당 값을 pop
-                print(log_message)
-                self.log.log_write(log_message)
-    
-if __name__ == "__main__":
-    client = Client()
-    client.connect_to_server()
-    
-    send_thread = threading.Thread(target=client.send_to_server)
-    receive_thread = threading.Thread(target=client.receive_to_server)
-    log_thread = threading.Thread(target=client.print_log)
+            if type == "DISCONNECT":
+                print("disconnect 감지")
+                connected_addresses = [sock.getpeername() for sock in connected_peers]
 
-    log_thread.start()
-    send_thread.start()
-    receive_thread.start()
+                missing_peer = None
+                self_address = peer_socket.getsockname()  # 자신의 주소와 포트
+
+                for peer in data: # 연결된 피어와 자신을 제외한 첫 번째 클라이언트를 찾음
+                    if peer not in connected_addresses and peer != self_address:
+                        missing_peer = peer
+                        break  # 첫 번째 조건에 맞는 클라이언트를 찾으면 종료
+                
+                if missing_peer:
+                    peer_to_connect.put(missing_peer)
+                else:
+                    print(f"이미 연결이 모두 진행되어있습니다.")
+                
+                disconnecting_peer = peer_socket.getpeername() # DISCONNECT 메시지를 보낸 클라이언트 정보 추출
+                connected_peers = [sock for sock in connected_peers if sock.getpeername() != disconnecting_peer] # connected_peers에서 해당 소켓 제거
+                # connected_client_id.remove(receive_client_id)
+                peer_socket.close()
+                print(f"피어 {disconnecting_peer['ip']}:{disconnecting_peer['port']}와의 연결이 종료되었습니다.")
+                break
+            elif type == "MESSAGE":
+                if not data:
+                    break
+                print(f"피어 메시지: {data}")
+        except:
+            break
+        
+
+
+def connect_to_peers():
+    global is_exit, connected_peers, peer_to_connect
+    """
+    서버에서 받은 피어 정보로 연결 시도
+    """
+    while not is_exit:
+        try:
+            peer = peer_to_connect.get()
+            peer_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            peer_socket.connect((peer["ip"], peer["port"]))
+
+            connected_peers.append(peer_socket)
+
+            # connect_message = json.dumps({"client_id": client_id})
+            # peer_socket.send(connect_message.encode('utf-8'))  # 클라이언트 id 전송
+
+            print(f"피어 {peer['ip']}:{peer['port']}와 연결됨")
+            threading.Thread(target=handle_peer, args=(peer_socket,)).start()
+        except Exception as e:
+            print(f"피어 {peer['ip']}:{peer['port']} 연결 실패: {e}")
+
+
+def client_program():
+    global is_exit, connected_peers, peer_to_connect, client_id
+    # 서버에 최초 연결
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.connect(('127.0.0.1', 12345))
+    print("서버에 연결됨")
+    connect_message = json.dumps({"type": "CONNECT"})
+    server_socket.send(connect_message.encode('utf-8'))  # 연결 요청
+
+    # 서버로부터 JSON 데이터를 수신
+    response = json.loads(server_socket.recv(4096).decode('utf-8'))
+    # client_id = response["client_id"]
+    # print(f"클라이언트 ID: {client_id}")
+    listening_port = response["port"]
+    print(f"서버가 할당한 포트: {listening_port}")
+    peer_list = response["peers"]
+    print(f"연결 가능한 피어: {peer_list}")
+
+    server_socket.close()
+    print("서버와 연결 종료")
     
-    log_thread.join()
-    send_thread.join()
-    receive_thread.join()
-                   
-    client.merge_file() ## 종료되고 최종적으로 모인 청크 합치기
-    input("All task is finish Press Enter Any key")  # 프로그램이 종료되지 않도록 입력 대기
+    # 리슨 소켓 시작
+    threading.Thread(target=start_peer_listener, args=(listening_port,)).start()
+    threading.Thread(target=connect_to_peers).start()
+
+    time.sleep(1)
+
+    for peer in peer_list:
+        peer_to_connect.put(peer)
+
+    # 메시지 입력 및 종료 처리
+    while True:
+        message = input()
+        if message.lower() == "exit":
+            # 서버에 다시 연결하여 종료 요청
+            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            server_socket.connect(('127.0.0.1', 12345))
+            disconnect_message = json.dumps({"type": "DISCONNECT"})
+            server_socket.send(disconnect_message.encode('utf-8'))
+
+            # 서버에서 연결된 다른 클라이언트 정보 수신
+            remaining_clients = json.loads(server_socket.recv(4096).decode('utf-8'))
+            print(f"서버로부터 받은 종료 후 연결할 클라이언트 정보: {remaining_clients}")
+            server_socket.close()
+
+            response_data = {
+                "type": "DISCONNECT",
+                # "client_id": client_id,
+                "data": remaining_clients
+            }
+
+            # 연결된 피어들에게 새로운 클라이언트 정보 전달
+            for peer_socket in connected_peers:
+                try:
+                    peer_socket.send(json.dumps(response_data).encode('utf-8'))
+                except:
+                    pass
+                peer_socket.close()  # 기존 연결 종료
+
+            print("모든 연결 종료. 프로그램 종료.")
+            is_exit = True
+            return  # 프로그램 종료
+
+        # 메시지 브로드캐스트
+        for peer_socket in connected_peers:
+            try:
+                send_data = {
+                "type": "MESSAGE",
+                "data": message
+                }
+                peer_socket.send(json.dumps(send_data).encode('utf-8'))
+            except Exception as e:
+                print(f"메시지 전송 실패: {e}")
+
+
+if __name__ == "__main__":
+    client_program()

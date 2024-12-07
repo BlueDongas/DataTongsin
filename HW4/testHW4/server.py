@@ -276,8 +276,10 @@ class Server:
                     print(log_message)
                     self.log.log_write(log_message)
                 final_clock = max(self.clock_list[1:])
+                print(f"\nAll tasks complete time : {final_clock}")
+                self.log.log_write(f"\nAll tasks complete time : {final_clock}")
                 average_chunk_send_clock = final_clock / (TOTAL_CHUNK * 4)
-                print(f"\nAverage transmission time for each chunk : {average_chunk_send_clock}")
+                print(f"Average transmission time for each chunk : {average_chunk_send_clock}")
                 self.log.log_write(f"\nAverage transmission time for each chunk : {average_chunk_send_clock}")
                 return
             
