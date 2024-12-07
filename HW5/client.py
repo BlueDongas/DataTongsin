@@ -9,9 +9,11 @@ connected_peers = [] # 현재 연결된 피어 소켓 리스트
 # connected_client_id = []
 peer_to_connect = queue.Queue() # 연결해야하는 피어 소켓 큐
 client_id = -1
+is_start = False
 is_exit = False
 message_id = 0
 message_log = queue.Queue()
+connect_event = threading.Event()
 
 client_clock = 0
 time_lock = threading.Lock()
@@ -106,10 +108,13 @@ def handle_overflow(new_client_id):
     connected_peers = [peer for peer in connected_peers if peer["id"] != random_peer["id"]]
 
 def handle_peer(peer_socket):
-    global is_exit, connected_peers, peer_to_connect, message_id, message_log,client_clock
+    global is_exit, connected_peers, peer_to_connect, message_id, message_log,client_clock, connect_event
     """
     다른 클라이언트로부터 받은 통신 처리
     """
+
+    connect_event.wait()
+
     while not is_exit:
         try:
             receive_data = json.loads(peer_socket.recv(4096).decode('utf-8'))
@@ -141,6 +146,34 @@ def handle_peer(peer_socket):
                 peer_socket.close()
                 log_message(f"Clock {client_clock} : 피어 {disconnecting_peer['ip']}:{disconnecting_peer['port']}와의 연결이 종료되었습니다.")
                 break
+            
+            elif type == "REQUEST":
+                requested_message_id = data["message_id"]
+                log_message(f"Clock {client_clock} : 클라이언트 {receive_client_id}가 메시지 ID {requested_message_id} 요청")
+
+                # 요청된 메시지가 있는지 확인
+                found_message = None
+                for log in list(message_log.queue):
+                    if log[0] == requested_message_id:
+                        found_message = log
+                        break
+
+                # 메시지 존재 여부에 따라 응답
+                if found_message:
+                    success_response = {
+                        "type": "SUCCESS",
+                        "data": found_message
+                    }
+                    peer_socket.send(json.dumps(success_response).encode('utf-8'))
+                    log_message(f"Clock {client_clock} : 메시지 ID {requested_message_id} 전송 완료")
+                else:
+                    fail_response = {
+                        "type": "FAIL",
+                        "data": None
+                    }
+                    peer_socket.send(json.dumps(fail_response).encode('utf-8'))
+                    log_message(f"Clock {client_clock} : 메시지 ID {requested_message_id} 없음 - FAIL 전송")
+
             elif type == "MESSAGE":
                 if not data:
                     break
@@ -172,7 +205,7 @@ def handle_peer(peer_socket):
 
 
 def connect_to_peers():
-    global is_exit, connected_peers, peer_to_connect,client_clock
+    global is_exit, connected_peers, peer_to_connect,client_clock, is_start
     """
     서버에서 받은 피어 정보로 연결 시도
     """
@@ -185,15 +218,68 @@ def connect_to_peers():
             connect_message = json.dumps({"type": "CONNECT", "client_id": client_id}) #?
             peer_socket.send(connect_message.encode('utf-8'))
 
-            log_message(f"Clock {client_clock} : 피어 {peer['ip']}:{peer['port']}와 연결됨")
+            if is_start:
+                log_message(f"Clock {client_clock} : 피어 {peer['ip']}:{peer['port']}와 연결됨")
+            else:
+                print(f"Clock {client_clock} : 피어 {peer['ip']}:{peer['port']}와 연결됨")
+            
             connected_peers.append({"socket": peer_socket, "id": peer["id"]})
             threading.Thread(target=handle_peer, args=(peer_socket,)).start()
         except Exception as e:
             log_message(f"Clock {client_clock} : 피어 {peer['ip']}:{peer['port']} 연결 실패: {e}")
 
+def synchronize_logs():
+    global connected_peers, message_id, message_log, client_clock, connect_event
+
+    print(f"Clock {client_clock} : 동기화 시작")
+    count = 0
+
+    while True:
+        if len(connected_peers) == 0:
+            print(f"Clock {client_clock} : 연결된 클라이언트가 없습니다.")
+            connect_event.set()
+            break
+
+        # 순환적으로 클라이언트 선택
+        target_peer = connected_peers[count % len(connected_peers)]
+        target_socket = target_peer["socket"]
+        target_id = target_peer["id"]
+
+        # 메시지 요청
+        try:
+            request_data = {
+                "type": "REQUEST",
+                "client_id": client_id,
+                "data": {"message_id": message_id + 1}  # 다음 메시지 ID 요청
+            }
+            target_socket.send(json.dumps(request_data).encode('utf-8'))
+
+            # 응답 수신
+            response = json.loads(target_socket.recv(4096).decode('utf-8'))
+            response_type = response["type"]
+            response_data = response["data"]
+
+            if response_type == "SUCCESS":
+                received_message_id, message_content = response_data
+                print(f"Clock {client_clock} : [동기화] ID: {received_message_id}, 내용: {message_content}")
+
+                # 메시지 로그에 추가
+                message_log.put((received_message_id, message_content))
+                message_id = max(message_id, received_message_id)  # 메시지 ID 갱신
+
+            elif response_type == "FAIL":
+                print(f"Clock {client_clock} : 동기화 완료")
+                connect_event.set()
+                break
+
+        except Exception as e:
+            print(f"Clock {client_clock} : 동기화 요청 실패 - 클라이언트 {target_id}: {e}")
+            break
+
+        count += 1
 
 def client_program():
-    global is_exit, connected_peers, peer_to_connect, client_id, message_id, client_clock,time_lock
+    global is_exit, connected_peers, peer_to_connect, client_id, message_id, client_clock,time_lock, is_start
     # 서버에 최초 연결
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.connect(('127.0.0.1', 12345))
@@ -225,14 +311,19 @@ def client_program():
     threading.Thread(target=start_peer_listener, args=(listening_port,)).start()
     threading.Thread(target=connect_to_peers).start()
 
-    time.sleep(1)
+    time.sleep(0.1)
 
     for peer in peer_list:
         peer_to_connect.put(peer)
 
+    time.sleep(1)
+
+    synchronize_logs() # 동기화 코드
+
+    is_start = True
+
     # 메시지 입력 및 종료 처리
     while True:
-        
         message = input(f"메시지를 입력하세요 : ")
         if not message:
             print(f"Clock {client_clock} : 빈 메시지는 보낼 수 없습니다.")
@@ -264,7 +355,7 @@ def client_program():
                     pass
                 peer_socket.close()  # 기존 연결 종료
 
-            print("Clock {client_clock} : 모든 연결 종료. 프로그램 종료.")
+            print(f"Clock {client_clock} : 모든 연결 종료. 프로그램 종료.")
             is_exit = True
             return  # 프로그램 종료
 
@@ -274,7 +365,7 @@ def client_program():
 
         else:
             message_id += 1
-
+            message_log.put((message_id, message))
             # 메시지 브로드캐스트
             for peer in connected_peers:  # connected_peers의 각 항목은 딕셔너리
                 peer_socket = peer["socket"]
