@@ -7,7 +7,7 @@ import time
 import heapq
 from concurrent.futures import ThreadPoolExecutor
 
-server_address = '54.175.143.40'
+server_address = 'ip-address'
 
 total_file_size = 0 # 전체 파일 크기 변수
 file_counter = 1000 # 총 다운 받을 파일 개수 설정
